@@ -6,8 +6,7 @@ export interface IdDto {
 }
 
 // Generic Mongo Collection Builders
-type MongoCollectionBuilder<T> = (db: mongo.Db) => CollectionBuilder<T>
-type CollectionBuilder<T> = (collectionName: string) => Collection<T>
+export type CollectionBuilder<T> = (collectionName: string) => Collection<T>
 
 export const buildCollection = <T>(db: mongo.Db) =>
     (collectionName: string) => db.collection<T>(collectionName)

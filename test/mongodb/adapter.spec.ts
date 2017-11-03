@@ -1,7 +1,7 @@
 import "jest"
 import * as mongo from "mongodb"
 
-import { buildCollection, buildGetCollectionMongoAdapter } from "../../src/mongodb/Adapter"
+import { buildCollectionFactory, buildGetCollectionMongoAdapter } from "../../src/mongodb/Adapter"
 
 let connection: mongo.Db
 
@@ -10,7 +10,7 @@ let books: mongo.Collection
 beforeAll(async () => {
     // create connection
     connection = await createConnection("mongodb://localhost:27017/equalsoftware")
-    books = await buildCollection(connection)("books")
+    books = await buildCollectionFactory(connection)("books")
 
     await cleanCollection(books)
 })

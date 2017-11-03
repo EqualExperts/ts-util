@@ -1,0 +1,59 @@
+{
+    "name": "ts-util",
+    "version": "1.0.0",
+    "description": "typescript utilities and functions",
+    "main": "lib/index.js",
+    "scripts": {
+        "prebuild": "npm run clean; npm test",
+        "build": "./node_modules/typescript/bin/tsc",
+        "pretest": "npm run lint",
+        "test": "jest --verbose",
+        "lint": "npm run lint:ts",
+        "lint:ts": "tslint {lib,test}/**/*.{ts,tsx}",
+        "clean": "rm -rf lib"
+    },
+    "files": [
+        "lib/"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/EqualExperts/ts-util.git"
+    },
+    "keywords": [
+        "typescript",
+        "mongodb",
+        "integration"
+    ],
+    "author": "EqualExperts",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/EqualExperts/ts-util/issues"
+    },
+    "homepage": "https://github.com/EqualExperts/ts-util#readme",
+    "jest": {
+        "moduleFileExtensions": [
+            "ts",
+            "tsx",
+            "js"
+        ],
+        "transform": {
+            "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+        },
+        "testRegex": ".*\\.spec\\.(ts|tsx|js)$",
+        "roots": [
+            "<rootDir>/test"
+        ]
+    },
+    "devDependencies": {
+        "@types/jest": "^21.1.5",
+        "@types/mongodb": "^2.2.15",
+        "@types/node": "^8.0.47",
+        "jest": "^21.2.1",
+        "ts-jest": "^21.1.4",
+        "tslint": "^5.8.0",
+        "typescript": "^2.5.3"
+    },
+    "dependencies": {
+        "mongodb": "^2.2.33"
+    }
+}

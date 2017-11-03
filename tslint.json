@@ -1,0 +1,10 @@
+{
+    "extends": "tslint:recommended",
+    "rules": {
+      "no-console": [ true ],
+      "semicolon": [true, "never"],
+      "ordered-imports": false,
+      "interface-over-type-literal": false
+    }
+  }
+  

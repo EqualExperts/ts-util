@@ -41,7 +41,7 @@
         },
         "testRegex": ".*\\.spec\\.(ts|tsx|js)$",
         "roots": [
-            "<rootDir>/test"
+            "<rootDir>"
         ]
     },
     "devDependencies": {

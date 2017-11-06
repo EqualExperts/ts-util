@@ -9,7 +9,7 @@
         "pretest": "npm run lint",
         "test": "jest --verbose",
         "lint": "npm run lint:ts",
-        "lint:ts": "tslint {lib,test}/**/*.{ts,tsx}",
+        "lint:ts": "tslint {src,test}/**/*.{ts,tsx}",
         "clean": "rm -rf lib"
     },
     "files": [

@@ -5,4 +5,4 @@ install:
   - npm install
 script:
   - ls -la
-  - npm build
+  - npm run build

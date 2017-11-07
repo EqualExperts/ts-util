@@ -12,6 +12,9 @@
         "lint:ts": "tslint {src,test}/**/*.{ts,tsx}",
         "clean": "rm -rf lib"
     },
+    "files": [
+        "lib/"
+    ],
     "repository": {
         "type": "git",
         "url": "git+https://github.com/EqualExperts/ts-util.git"

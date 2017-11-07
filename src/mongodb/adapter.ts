@@ -1,5 +1,5 @@
 import * as mongo from "mongodb"
-import { Collection } from "mongodb"
+import { Collection } from "mongodb";
 
 export interface IdDto {
     _id: string

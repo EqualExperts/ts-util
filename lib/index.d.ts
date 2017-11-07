@@ -1,2 +1,2 @@
-import * as MongoAdapter from "./mongodb/Adapter";
+import * as MongoAdapter from "./mongodb/adapter";
 export { MongoAdapter };

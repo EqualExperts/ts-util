@@ -1,5 +1,5 @@
 {
-    "name": "ts-util",
+    "name": "ee-ts-util",
     "version": "1.0.0",
     "description": "typescript utilities and functions",
     "main": "lib/index.js",

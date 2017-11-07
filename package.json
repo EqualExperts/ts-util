@@ -41,8 +41,11 @@
         },
         "testRegex": ".*\\.spec\\.(ts|tsx|js)$",
         "roots": [
-            "<rootDir>"
-        ]
+            "<rootDir>/test"
+        ],
+        "moduleNameMapper": {
+            "@app/(.*)": "<rootDir>/src/$1"
+          }
     },
     "devDependencies": {
         "@types/jest": "^21.1.5",

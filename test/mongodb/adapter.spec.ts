@@ -1,7 +1,7 @@
 import "jest"
 import * as mongo from "mongodb"
 
-import { buildCollectionFactory, buildGetCollectionMongoAdapter } from "../../src/mongodb/Adapter"
+import { buildCollectionFactory, buildGetCollectionMongoAdapter } from "../../src/mongodb/adapter"
 
 let connection: mongo.Db
 

@@ -13,3 +13,4 @@ deploy:
   provider: npm
   email: "esoftware@equalexperts.com"
   api_key: $NPM_TOKEN
+  skip_cleanup: true

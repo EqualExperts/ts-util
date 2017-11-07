@@ -7,7 +7,7 @@
         "prebuild": "npm run clean; npm test",
         "build": "./node_modules/typescript/bin/tsc",
         "pretest": "npm run lint",
-        "test": "jest --verbose",
+        "test": "jest --verbose --showConfig",
         "lint": "npm run lint:ts",
         "lint:ts": "tslint {src,test}/**/*.{ts,tsx}",
         "clean": "rm -rf lib"

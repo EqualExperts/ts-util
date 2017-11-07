@@ -1,0 +1,8 @@
+test/
+src/
+.travis.yml
+node_modules/
+scripts/
+docker-compose.yml
+tsconfig.json
+tslint.json

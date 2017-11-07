@@ -1,6 +1,6 @@
 {
     "name": "ee-ts-util",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "typescript utilities and functions",
     "main": "lib/index.js",
     "scripts": {

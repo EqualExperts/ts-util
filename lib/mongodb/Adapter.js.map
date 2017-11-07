@@ -1,1 +1,0 @@
-{"version":3,"file":"adapter.js","sourceRoot":"","sources":["../../src/mongodb/adapter.ts"],"names":[],"mappings":";;AAUa,QAAA,sBAAsB,GAAG,CAAI,EAAY,EAAE,EAAE,CACtD,CAAC,cAAsB,EAAE,EAAE,CAAC,EAAE,CAAC,UAAU,CAAI,cAAc,CAAC,CAAA;AAEnD,QAAA,8BAA8B,GAAG,CAAI,UAAyB,EAAE,EAAE,CAC3E,GAAG,EAAE,CAAC,UAAU,CAAC,IAAI,EAAK,CAAC,OAAO,EAAE,CAAA"}

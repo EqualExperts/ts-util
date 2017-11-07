@@ -6,6 +6,10 @@ services:
 install:
   - npm install
 before_script:
-  - sleep 30
+  - sleep 10
 script:
   - npm test
+deploy:
+  provider: npm
+  email: "esoftware@equalexperts.com"
+  api_key: $NPM_TOKEN

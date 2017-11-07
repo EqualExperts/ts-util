@@ -4,7 +4,8 @@
       "no-console": [ true ],
       "semicolon": [true, "never"],
       "ordered-imports": false,
-      "interface-over-type-literal": false
+      "interface-over-type-literal": false,
+      "member-ordering": false
     }
   }
   

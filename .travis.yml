@@ -1,16 +1,23 @@
 language: node_js
+
 node_js:
   - "8"
+
 services:
   - mongodb
+
 install:
   - npm install
+
 before_script:
   - sleep 10
+
 script:
   - npm run build
+
 deploy:
   provider: npm
   email: "esoftware@equalexperts.com"
+  tag: next
   api_key: $NPM_TOKEN
   skip_cleanup: true

@@ -9,6 +9,7 @@ before_script:
   - sleep 10
 script:
   - npm test
+before_deploy: ls -la
 deploy:
   provider: npm
   email: "esoftware@equalexperts.com"

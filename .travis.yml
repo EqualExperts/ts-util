@@ -8,7 +8,7 @@ install:
 before_script:
   - sleep 10
 script:
-  - npm build
+  - npm run build
 deploy:
   provider: npm
   email: "esoftware@equalexperts.com"

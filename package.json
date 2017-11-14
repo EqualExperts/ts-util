@@ -1,6 +1,6 @@
 {
     "name": "ee-ts-util",
-    "version": "1.0.9",
+    "version": "1.0.10",
     "description": "typescript utilities and functions",
     "main": "lib/index.js",
     "scripts": {
@@ -54,6 +54,7 @@
     "dependencies": {
         "convict": "^4.0.1",
         "fp-ts": "^0.6.2",
-        "mongodb": "^2.2.33"
+        "mongodb": "^2.2.33",
+        "xero-node": "^2.10.1"
     }
 }

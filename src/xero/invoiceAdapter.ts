@@ -21,16 +21,24 @@ export type LineItemDto = {
     Quantity: number,
 }
 
-export const buildXeroClient = (config: any) => {
+export type Config = {
+    userAgent: string,
+    consumerKey: string,
+    consumerSecret: string,
+    privateKeyPath: string,
+    privateKey: string,
+}
+
+export const buildXeroClient = (config: Config) => {
     if (config.privateKeyPath && !config.privateKey) {
         config.privateKey = fs.readFileSync(config.privateKeyPath, "utf8")
     }
     return new xero.PrivateApplication(config)
 }
 
-export const buildCreateInvoiceAdapter = (xeroClient: any) => {
-    return (invoiceDto: InvoiceDto) => {
+export const buildCreateInvoiceAdapter = (xeroClient: any) =>
+    async (invoiceDto: InvoiceDto) => {
         const invoiceToBeSaved = xeroClient.core.invoices.newInvoice(invoiceDto)
-        return invoiceToBeSaved.save()
+        const result = await invoiceToBeSaved.save()
+        return result.entities[0]._obj.InvoiceID as string
     }
-}

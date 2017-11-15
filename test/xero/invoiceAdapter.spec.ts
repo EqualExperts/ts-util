@@ -1,5 +1,5 @@
 import "jest"
-import { buildXeroClient, buildCreateInvoiceAdapter, InvoiceDto } from "../../src/xero/invoiceAdapter"
+import { buildXeroClient, buildCreateInvoiceAdapter, InvoiceDto, Config } from "../../src/xero/invoiceAdapter"
 import * as path from "path"
 
 describe("Invoice Adapter", () => {
@@ -7,7 +7,7 @@ describe("Invoice Adapter", () => {
         // given
         const pemPath = path.join(__dirname, "xero-int-test-privatekey.pem")
         // TODO - Think about the appropriate place for these creds (This is test account)
-        const config = {
+        const config: Config = {
             userAgent: "XERO_INTEGRATION_TESTS",
             consumerKey: "MX7882OECQWAPJUC6F6TAZZWWP8K2O",
             consumerSecret: "UQYQKKPXRAVZGYMBL9DQVNPJVO9XQF",
@@ -31,6 +31,6 @@ describe("Invoice Adapter", () => {
         const result = await createInvoiceAdapter(invoiceDto)
 
         // then
-        expect(result.entities[0]._obj.InvoiceID).toBeTruthy()
+        expect(result).toBeTruthy()
     })
 })

@@ -3,4 +3,6 @@
 # ts-util
 typescript utilities and functions. Contents:
 
--   `mongodb/Adapter`: contains an adapter to connect to mongodb
+- `mongodb/adapter`: contains an adapter to connect to mongodb
+
+- `xero/invoiceAdapter`: contains an adapter to connect to the XERO API

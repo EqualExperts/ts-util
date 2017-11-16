@@ -5,7 +5,8 @@ import * as path from "path"
 let xeroClient: any
 
 beforeAll(() => {
-    const pemPath = path.join(__dirname, "xero-int-test-privatekey.pem")
+    const pemFolder = process.env.XERO_PRIVATE_KEY_PATH.replace("{__dirname}", __dirname)
+    const pemPath = path.join(pemFolder, "xero-int-test-privatekey.pem")
     const config: Config = {
         userAgent: "XERO_INTEGRATION_TESTS",
         consumerKey: "MX7882OECQWAPJUC6F6TAZZWWP8K2O",

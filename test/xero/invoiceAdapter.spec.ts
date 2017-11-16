@@ -2,19 +2,23 @@ import "jest"
 import { buildXeroClient, buildCreateInvoiceAdapter, InvoiceDto, Config } from "../../src/xero/invoiceAdapter"
 import * as path from "path"
 
+let xeroClient: any
+
+beforeAll(() => {
+    const pemPath = path.join(__dirname, "xero-int-test-privatekey.pem")
+    const config: Config = {
+        userAgent: "XERO_INTEGRATION_TESTS",
+        consumerKey: "MX7882OECQWAPJUC6F6TAZZWWP8K2O",
+        consumerSecret: "UQYQKKPXRAVZGYMBL9DQVNPJVO9XQF",
+        privateKeyPath: pemPath,
+        privateKey: "",
+    }
+    xeroClient = buildXeroClient(config)
+})
+
 describe("Invoice Adapter", () => {
     it("should create invoice", async () => {
-        // given
-        const pemPath = path.join(__dirname, "xero-int-test-privatekey.pem")
-        // TODO - Think about the appropriate place for these creds (This is test account)
-        const config: Config = {
-            userAgent: "XERO_INTEGRATION_TESTS",
-            consumerKey: "MX7882OECQWAPJUC6F6TAZZWWP8K2O",
-            consumerSecret: "UQYQKKPXRAVZGYMBL9DQVNPJVO9XQF",
-            privateKeyPath: pemPath,
-            privateKey: "",
-        }
-        const xeroClient = buildXeroClient(config)
+        // when
         const createInvoiceAdapter = buildCreateInvoiceAdapter(xeroClient)
         const invoiceDto: InvoiceDto = {
             Type: "ACCPAY",
@@ -26,11 +30,9 @@ describe("Invoice Adapter", () => {
                 AccountCode: "200",
             }],
         }
-
-        // when
         const result = await createInvoiceAdapter(invoiceDto)
 
         // then
-        expect(result).toBeTruthy()
+        expect(result).toBeTruthy() // containsAnId
     })
 })

@@ -25,8 +25,8 @@ export type Config = {
     userAgent: string,
     consumerKey: string,
     consumerSecret: string,
-    privateKeyPath: string,
-    privateKey: string,
+    privateKeyPath?: string,
+    privateKey?: string,
 }
 
 export const buildXeroClient = (config: Config) => {

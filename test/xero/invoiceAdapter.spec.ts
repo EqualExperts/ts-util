@@ -1,24 +1,31 @@
 import "jest"
 import { buildXeroClient, buildCreateInvoiceAdapter, InvoiceDto, Config } from "../../src/xero/invoiceAdapter"
 import * as path from "path"
+import { buildConfigAdapter } from "../../src/config/adapter"
 
 let xeroClient: any
 
 beforeAll(() => {
-    const pemFolder = process.env.XERO_PRIVATE_KEY_PATH.replace("{__dirname}", __dirname)
-    const pemPath = path.join(pemFolder, "xero-int-test-privatekey.pem")
+
+    const envVars = buildConfigAdapter({
+        XERO_CONSUMER_KEY: {},
+        XERO_CONSUMER_SECRET: {},
+        XERO_PRIVATE_KEY: {},
+    }).getOrElse(
+        (wrongConfigMessage) => { throw new Error(wrongConfigMessage) },
+    )
+
     const config: Config = {
         userAgent: "XERO_INTEGRATION_TESTS",
-        consumerKey: "MX7882OECQWAPJUC6F6TAZZWWP8K2O",
-        consumerSecret: "UQYQKKPXRAVZGYMBL9DQVNPJVO9XQF",
-        privateKeyPath: pemPath,
-        privateKey: "",
+        consumerKey: envVars("XERO_CONSUMER_KEY"),
+        consumerSecret: envVars("XERO_CONSUMER_SECRET"),
+        privateKey: envVars("XERO_PRIVATE_KEY"),
     }
     xeroClient = buildXeroClient(config)
 })
 
 describe("Invoice Adapter", () => {
-    it("should create invoice", async () => {
+    it("creates an invoice", async () => {
         // when
         const createInvoiceAdapter = buildCreateInvoiceAdapter(xeroClient)
         const invoiceDto: InvoiceDto = {

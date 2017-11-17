@@ -12,7 +12,7 @@ beforeAll(() => {
     const envVars = buildConfigAdapter({
         XERO_CONSUMER_KEY: {},
         XERO_CONSUMER_SECRET: {},
-        XERO_PRIVATE_KEY: {},
+        XERO_PRIVATE_KEY_PATH: {},
     }).getOrElse(
         (wrongConfigMessage) => { throw new Error(wrongConfigMessage) },
     )
@@ -21,7 +21,7 @@ beforeAll(() => {
         userAgent: "XERO_INTEGRATION_TESTS",
         consumerKey: envVars("XERO_CONSUMER_KEY"),
         consumerSecret: envVars("XERO_CONSUMER_SECRET"),
-        privateKey: envVars("XERO_PRIVATE_KEY"),
+        privateKeyPath: envVars("XERO_PRIVATE_KEY_PATH"),
     }
     xeroClient = buildXeroClient(config)
 })

@@ -7,6 +7,8 @@ let xeroClient: any
 
 beforeAll(() => {
 
+    process.env.XERO_PRIVATE_KEY_PATH = path.join(__dirname, "xero-int-test-privatekey.pem")
+
     const envVars = buildConfigAdapter({
         XERO_CONSUMER_KEY: {},
         XERO_CONSUMER_SECRET: {},

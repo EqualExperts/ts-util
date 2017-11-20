@@ -1,10 +1,10 @@
 import "jest"
 import * as mongo from "mongodb"
+import { MongoError } from "mongodb"
 
 import { buildCollectionFactory, buildGetCollectionMongoAdapter } from "../../src/mongodb/adapter"
 
 let connection: mongo.Db
-
 let books: mongo.Collection
 
 beforeAll(async () => {
@@ -34,6 +34,14 @@ describe("MongoDB Adaptor", () => {
         expect(result).toContainEqual(mileDuasNoites)
         expect(result).toContainEqual(daVinciCore)
         expect(result).toHaveLength(2) /// bleeeeeeeeerrrrrrrghhhhhhh :(
+    })
+
+    it("catches promise rejection from mongo error", async () => {
+        // given
+        connection.close()
+
+        // when/then
+        await expect(buildGetCollectionMongoAdapter(books)()).rejects.toEqual(new MongoError("Topology was destroyed"))
     })
 })
 

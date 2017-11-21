@@ -6,23 +6,47 @@ export type TimeEntryDto = {
     userId: number,
 }
 
-export const transform: (json: any) => TimeEntryDto[] = (json: any) =>
-        (json.data.map(
-            (data: any) => ({
-                hours: data.hours,
-                day: new Date(data.date),
-                userId: data.user_id,
-            } as TimeEntryDto)))
-
 export type FetchTimeEntryAdapter = (from: string, to: string) => Promise<TimeEntryDto[]>
 
-export const buildFetchTimeEntryAdapter: (apiUrl: string, token: string) => FetchTimeEntryAdapter =
-    (apiUrl: string, token: string) =>
+export const buildFetchTimeEntryAdapterWithResultsPerPage
+    : (baseUrl: string, token: string, resultsPerPage: number) => FetchTimeEntryAdapter =
+    (baseUrl: string, token: string, resultsPerPage: number) =>
         (from: string, to: string) => {
-            return fetch(`${apiUrl}/time_entries?from=${from}&to=${to}`, {
-                headers: new Headers({ "content-type": "application/json", "auth": token }),
-            }).then((response: Response) => (
-                response.json().then(transform)
-            ),
-            )
+            return fetchPageData(baseUrl, `/api/v1/time_entries?from=${from}&to=${to}&per_page=${resultsPerPage}`
+                , token, [] as TimeEntryDto[])
         }
+
+export const buildFetchTimeEntryAdapter: (baseUrl: string, token: string) => FetchTimeEntryAdapter =
+    (baseUrl: string, token: string) =>
+        buildFetchTimeEntryAdapterWithResultsPerPage(baseUrl, token, 50)
+
+const fetchPageData:
+    (baseUrl: string, apiPath: string, token: string, dtoAccumulator: TimeEntryDto[]) => Promise<TimeEntryDto[]> =
+    (baseUrl: string, apiPath: string, token: string, dtoAccumulator: TimeEntryDto[]) =>
+        (fetch(`${baseUrl}${apiPath}`, {
+            headers: new Headers({ "content-type": "application/json", "auth": token }),
+        }).then((response: Response) => (
+            response.json().then(
+                (nextPageJson: any) => extractPageData(nextPageJson, dtoAccumulator, baseUrl, token))
+        )))
+
+const extractPageData =
+    (responseJson: any, dtoAccumulator: TimeEntryDto[], baseUrl: string, token: string) => {
+        const currentPageDtos = transform(responseJson.data)
+        dtoAccumulator.push(...currentPageDtos)
+
+        if (responseJson.paging.next != null) {
+            return fetchPageData(baseUrl, responseJson.paging.next, token, dtoAccumulator)
+        } else {
+            return Promise.resolve(dtoAccumulator)
+        }
+    }
+
+export const transform =
+    (data: any) =>
+        (data.map(
+            (element: any) => ({
+                hours: element.hours,
+                day: new Date(element.date),
+                userId: element.user_id,
+            } as TimeEntryDto)))

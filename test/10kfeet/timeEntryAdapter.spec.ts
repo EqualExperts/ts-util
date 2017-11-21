@@ -1,26 +1,30 @@
 import "jest"
 import * as fs from "fs"
 import * as path from "path"
-import { transform, buildFetchTimeEntryAdapter, TimeEntryDto} from "../../src/10kfeet/timeEntryAdapter"
+import { transform, TimeEntryDto } from "../../src/10kfeet/timeEntryAdapter"
+import { buildFetchTimeEntryAdapterWithResultsPerPage } from "../../src/10kfeet/timeEntryAdapter"
 
 describe("10K Feet Time Entries", () => {
-   // This test is ignored because we don't have test creds for 10kFt
-   xtest(" should fetch TimeEntries", async () => {
+    // This test is ignored because we don't have test creds for 10kFt
+    test(" should fetch all TimeEntries from all pages", async () => {
         // given
-        const from = "2017-1-12"
+        const from = "2017-1-1"
         const to = "2017-11-11"
-        const apiUrl = "https://api.10000ft.com/api/v1"
+        const baseUrl = "https://api.10000ft.com"
+        const resultsPerPage = 2
         /* tslint:disable */
-        const token = "1234"
-         /* tslint:enable */
+        const token = "ABCD"
+        /* tslint:enable */
         const fetchTimeEntryAdapter: (from: string, to: string) => Promise<TimeEntryDto[]> =
-         buildFetchTimeEntryAdapter(apiUrl, token)
+            buildFetchTimeEntryAdapterWithResultsPerPage(baseUrl, token, resultsPerPage)
 
         const result = await fetchTimeEntryAdapter(from, to)
 
         expect(result.length).toBe(4)
-   } )
-} )
+    })
+
+    // Add no result tests
+})
 
 describe(" TimeEntries from 10KFeet  ", () => {
     test(" should transform into required fields", () => {
@@ -29,7 +33,7 @@ describe(" TimeEntries from 10KFeet  ", () => {
 
         const tenKJSON = JSON.parse(tenKResponse)
 
-        const dto: TimeEntryDto = transform(tenKJSON)[0]
+        const dto: TimeEntryDto = transform(tenKJSON.data)[0]
 
         expect(dto.day).toEqual(new Date("2017-11-07"))
         expect(dto.hours).toBe(1)

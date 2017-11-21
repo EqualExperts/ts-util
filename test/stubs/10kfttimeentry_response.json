@@ -1,0 +1,43 @@
+{
+    "paging": {
+        "per_page": 2,
+        "page": 1,
+        "previous": null,
+        "self": "/api/v1/time_entries?from=2016-01-01&to=2017-11-30&per_page=2&assignable_id=&page=1",
+        "next": "/api/v1/time_entries?from=2016-01-01&to=2017-11-30&per_page=2&assignable_id=&page=2"
+    },
+    "data": [
+        {
+            "id": 671188304,
+            "assignable_id": 1682479,
+            "assignable_type": "Project",
+            "user_id": 380187,
+            "bill_rate": 1,
+            "bill_rate_id": 24351449,
+            "date": "2017-11-07",
+            "hours": 1,
+            "scheduled_hours": null,
+            "notes": null,
+            "task": null,
+            "is_suggestion": false,
+            "created_at": "2017-11-08T14:46:38Z",
+            "updated_at": "2017-11-08T14:46:38Z"
+        },
+        {
+            "id": 671188313,
+            "assignable_id": 1682479,
+            "assignable_type": "Project",
+            "user_id": 380187,
+            "bill_rate": 1,
+            "bill_rate_id": 24351449,
+            "date": "2017-11-08",
+            "hours": 1,
+            "scheduled_hours": null,
+            "notes": null,
+            "task": null,
+            "is_suggestion": false,
+            "created_at": "2017-11-08T14:46:39Z",
+            "updated_at": "2017-11-08T14:46:39Z"
+        }
+    ]
+}

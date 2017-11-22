@@ -6,7 +6,7 @@ import { buildFetchTimeEntryAdapterWithResultsPerPage } from "../../src/10kfeet/
 
 describe("10K Feet Time Entries", () => {
     // This test is ignored because we don't have test creds for 10kFt
-    test(" should fetch all TimeEntries from all pages", async () => {
+    xtest(" should fetch all TimeEntries from all pages", async () => {
         // given
         const from = "2017-1-1"
         const to = "2017-11-11"

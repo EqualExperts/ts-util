@@ -19,12 +19,12 @@ beforeAll(() => {
 
 describe("10K Feet Time Entries", () => {
     // This test is ignored because we don't have test creds for 10kFt
-    xtest(" should fetch all TimeEntries from all pages", async () => {
+    it(" should fetch all TimeEntries from all pages", async () => {
         // given
         const from = "2017-1-1"
-        const to = "2017-11-11"
+        const to = "2017-11-31"
         const resultsPerPage = 2
-        const baseUrl = "https://api.10000ft.com"
+        const baseUrl = "https://vnext-api.10000ft.com"
         const token = envVars("TENKFT_API_TOKEN")
 
         const underTest: (from: string, to: string) => Promise<TimeEntryDto[]> =
@@ -36,7 +36,7 @@ describe("10K Feet Time Entries", () => {
 })
 
 describe(" TimeEntries from 10KFeet  ", () => {
-    test(" should extract into required fields", () => {
+    it(" should extract into required fields", () => {
         const tenKResponse: string =
             fs.readFileSync(path.resolve(__dirname, "../stubs/10kfttimeentry_response.json"), "utf-8")
 

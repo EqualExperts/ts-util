@@ -1,4 +1,4 @@
-import { ServiceHealthCheckAdapter, OK, FAIL } from "../healthcheck"
+import { ServiceHealthCheckAdapter, OK, FAIL } from "../healthCheck"
 import * as mongo from "mongodb"
 import { Collection } from "mongodb"
 

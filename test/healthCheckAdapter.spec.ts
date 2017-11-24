@@ -4,59 +4,58 @@ import {
     ServiceHealthCheck,
     OK,
     FAIL,
-} from "../../src/healthCheck"
-import { build10KFeetHealthCheckAdapter } from "../../src/10kfeet/healthCheck"
+} from "../src/healthCheck"
+import { buildWebServiceHealthCheckAdapter } from "../src/healthCheck"
 
-describe("10KFeet Adapter", () => {
-    it("returns healthcheck status as ok when 10kFeet service is in good health", async () => {
+describe("Healthcheck Adapter", () => {
+    it("returns healthcheck status as ok when service is in good health", async () => {
         // given
-        const baseUrl = "https://api.10000ft.com"
-        const underTest: () => Promise<ServiceHealthCheck> = build10KFeetHealthCheckAdapter(baseUrl)
+        const baseUrl = "https://httpstat.us/200"
+        const underTest: () => Promise<ServiceHealthCheck> = buildWebServiceHealthCheckAdapter(baseUrl, "some-service")
 
         // when
         const serviceHealthCheck: ServiceHealthCheck = await underTest()
 
         // then
         const expectedServiceHealthCheck = {
-            name: "10KFeet",
+            name: "some-service",
             status: OK,
             reason: "",
         }
         expect(serviceHealthCheck).toEqual(expectedServiceHealthCheck)
     })
 
-    it("returns healthcheck status as fail when 10kFeet service is not responding", async () => {
+    it("returns healthcheck status as fail when service is not responding", async () => {
         // given
         const fakeBaseUrl = "http://x:0"
-        const underTest: () => Promise<ServiceHealthCheck> = build10KFeetHealthCheckAdapter(fakeBaseUrl)
+        const underTest = buildWebServiceHealthCheckAdapter(fakeBaseUrl, "some-service")
 
         // when
         const serviceHealthCheck: ServiceHealthCheck = await underTest()
 
         // then
         const expectedServiceHealthCheck = {
-            name: "10KFeet",
+            name: "some-service",
             status: FAIL,
             reason: "FetchError: request to http://x:0 failed, reason: getaddrinfo ENOTFOUND x x:0",
         }
         expect(serviceHealthCheck).toEqual(expectedServiceHealthCheck)
     })
 
-    it("returns healthcheck status as fail when 10kFeet service is not in good health", async () => {
+    it("returns healthcheck status as fail when service is not in good health", async () => {
         // given
         const baseUrl = "https://httpstat.us/500"
-        const underTest: () => Promise<ServiceHealthCheck> = build10KFeetHealthCheckAdapter(baseUrl)
+        const underTest = buildWebServiceHealthCheckAdapter(baseUrl, "some-service")
 
         // when
         const serviceHealthCheck: ServiceHealthCheck = await underTest()
 
         // then
         const expectedServiceHealthCheck = {
-            name: "10KFeet",
+            name: "some-service",
             status: FAIL,
             reason: "status code is 500",
         }
         expect(serviceHealthCheck).toEqual(expectedServiceHealthCheck)
     })
-
 })

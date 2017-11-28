@@ -20,21 +20,14 @@ describe("Exporting ", () => {
     })
 })
 
+const firstEntryOf = (csvFile: string) => readFileLine(csvFile, 0)
+
+const secondEntryOf = (csvFile: string) => readFileLine(csvFile, 1)
+
+const readFileLine = (csvFile: string, lineNum: number) =>
+    readFileSync(csvFile, "utf8").split("\n")[lineNum]
+
 // TODO remove me
 function log(msg: string) {
     appendFileSync("/tmp/jest.log.txt", msg + "\n", { encoding: "utf8" })
-}
-
-const firstEntryOf = (csvFile: string) => {
-    log("first line is " + readFileLine(csvFile, 0))
-    return readFileLine(csvFile, 0)
-}
-
-const secondEntryOf = (csvFile: string) => {
-    log("second line is " + readFileLine(csvFile, 1))
-    return readFileLine(csvFile, 1)
-}
-
-const readFileLine = (csvFile: string, lineNum: number) => {
-    return readFileSync(csvFile, "utf8").split("\n")[lineNum]
 }

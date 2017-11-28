@@ -11,14 +11,14 @@ describe("Exporting ", () => {
             { name: "John Fraga", age: 30, height: 1.5 },
             { name: "Mary Perrera", age: 20, height: 3.2 },
         ]
-        const transformer: (obj: any) => string = (obj: any) => `${obj.name}|${obj.age}|${obj.height}`
+        const transformer: (obj: any) => string = (obj: any) => `${obj.name},${obj.age},${obj.height}`
 
         // when
         const csvFile = await exportCsv(content, transformer)
 
         // then
-        expect(firstEntryOf(csvFile)).toBe("John Fraga|30|1.5")
-        expect(secondEntryOf(csvFile)).toBe("Mary Perrera|20|3.2")
+        expect(firstEntryOf(csvFile)).toBe("John Fraga,30,1.5")
+        expect(secondEntryOf(csvFile)).toBe("Mary Perrera,20,3.2")
     })
 
     it("exports to new csv file on each export call", async () => {

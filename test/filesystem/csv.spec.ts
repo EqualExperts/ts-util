@@ -1,9 +1,9 @@
 import "jest"
-import { readFile } from "fs"
+import { readFile, readFileSync, appendFileSync } from "fs"
 import { exportCsv } from "../../src/filesystem/csv"
 
 describe("Exporting ", () => {
-    xit("exports content to csv", () => {
+    it("exports content to csv", async () => {
         // given
         const content = [
             { name: "John Fraga", age: 30, height: 1.5 },
@@ -12,7 +12,7 @@ describe("Exporting ", () => {
         const transformer: (obj: any) => string = (obj: any) => `${obj.name}|${obj.age}|${obj.height}`
 
         // when
-        const csvPath = exportCsv(content, transformer)
+        const csvPath = await exportCsv(content, transformer)
 
         // then
         expect(firstEntryOf(csvPath)).toBe("John Fraga|30|1.5")
@@ -20,18 +20,21 @@ describe("Exporting ", () => {
     })
 })
 
-const firstEntryOf = (csvPath: string) => {
-    let a: string
-    readFile(csvPath, (err, data) => {
-        a = data.toString().split("\n")[0]
-    })
-    return a
+// TODO remove me
+function log(msg: string) {
+    appendFileSync("/tmp/jest.log.txt", msg + "\n", { encoding: "utf8" })
 }
 
-const secondEntryOf = (csvPath: string) => {
-    let a: string
-    readFile(csvPath, (err, data) => {
-        a = data.toString().split("\n")[1]
-    })
-    return a
+const firstEntryOf = (csvFile: string) => {
+    log("first line is " + readFileLine(csvFile, 0))
+    return readFileLine(csvFile, 0)
+}
+
+const secondEntryOf = (csvFile: string) => {
+    log("second line is " + readFileLine(csvFile, 1))
+    return readFileLine(csvFile, 1)
+}
+
+const readFileLine = (csvFile: string, lineNum: number) => {
+    return readFileSync(csvFile, "utf8").split("\n")[lineNum]
 }

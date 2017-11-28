@@ -57,6 +57,7 @@
         "fp-ts": "^0.6.2",
         "isomorphic-fetch": "^2.2.1",
         "mongodb": "^2.2.33",
+        "nano-seconds": "^1.2.2",
         "xero-node": "^2.10.1"
     }
 }

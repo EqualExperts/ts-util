@@ -4,8 +4,8 @@ import { exportCsv } from "../../src/filesystem/csv"
 import { appendFile } from "fs"
 import * as nano from "nano-seconds"
 
-describe("Exporting ", () => {
-    it("exports content to csv", async () => {
+describe("Csv", () => {
+    it("exports content to csv using separator defined in transformer", async () => {
         // given
         const content = [
             { name: "John Fraga", age: 30, height: 1.5 },
@@ -23,15 +23,16 @@ describe("Exporting ", () => {
 
     it("exports to new csv file on each export call", async () => {
         // when
-        const csvFile1 = await exportCsv([{ a: 1 }], (obj: any) => "1|2")
-        const csvFile2 = await exportCsv([{ a: 1 }], (obj: any) => "1|2")
+        const aCsvFile = await exportCsv([{ a: 1 }], (obj: any) => "1|2")
+        const anotherCsvFile = await exportCsv([{ a: 1 }], (obj: any) => "1|2")
 
         // then
-        const fileCreatedDt1 = fileCreatedTimestamp(csvFile1)
-        const fileCreatedDt2 = fileCreatedTimestamp(csvFile2)
-        expect(nano.difference(fileCreatedDt1, fileCreatedDt2)).toBeGreaterThan(0)
+        expect(filesAreDifferent(aCsvFile, anotherCsvFile)).toBeTruthy()
     })
 })
+
+const filesAreDifferent = (aCsvFile: string, anotherCsvFile: string) =>
+    nano.difference(creationTimeOf(aCsvFile), creationTimeOf(anotherCsvFile)) > 0
 
 const firstEntryOf = (csvFile: string) => readFileLine(csvFile, 0)
 
@@ -40,12 +41,7 @@ const secondEntryOf = (csvFile: string) => readFileLine(csvFile, 1)
 const readFileLine = (csvFile: string, lineNum: number) =>
     readFileSync(csvFile, "utf8").split("\n")[lineNum]
 
-const fileCreatedTimestamp = (file: string) => {
+const creationTimeOf = (file: string) => {
     const createdTime = file.substring(file.indexOf("-") + 1, file.indexOf(".csv"))
     return nano.fromISOString(createdTime)
-}
-
-// TODO remove me
-function log(msg: string) {
-    appendFileSync("/tmp/jest.log.txt", msg + "\n", { encoding: "utf8" })
 }

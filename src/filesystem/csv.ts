@@ -1,10 +1,6 @@
 import { appendFile, appendFileSync } from "fs"
 import * as nano from "nano-seconds"
 
-// TODO remove me
-function log(msg: string) {
-    appendFileSync("/tmp/jest.log.txt", msg + "\n", { encoding: "utf8" })
-}
 // TODO - (very very corner case scenario. as we are using a nano-seconds as a csv file prefix)
 // since csv file is generated using current nano timestamp, if we access this from multiple machines,
 // at the same time. It will append the content to the same file. We need to solve this if it is an issue.

@@ -5,28 +5,29 @@ import { appendFile } from "fs"
 import * as nano from "nano-seconds"
 
 describe("Csv", () => {
-    it("exports content to csv using separator defined in transformer", async () => {
-        // given
+    it("exports content to csv using separator defined in transformers", async () => {
         const content = [
             { name: "John Fraga", age: 30, height: 1.5 },
             { name: "Mary Perrera", age: 20, height: 3.2 },
         ]
-        const transformer: (obj: any) => string = (obj: any) => `${obj.name},${obj.age},${obj.height}`
+        const headerTransformer: () => string = () => "Full Name,Age,Height"
+        const itemTransformer: (obj: any) => string = (obj: any) => `${obj.name},${obj.age},${obj.height}`
 
-        // when
-        const csvFile = await exportCsv(content, transformer)
+        const csvFile = await exportCsv(content, headerTransformer, itemTransformer)
 
-        // then
+        expect(headersOf(csvFile)).toBe("Full Name,Age,Height")
         expect(firstEntryOf(csvFile)).toBe("John Fraga,30,1.5")
         expect(secondEntryOf(csvFile)).toBe("Mary Perrera,20,3.2")
     })
 
     it("exports to new csv file on each export call", async () => {
-        // when
-        const aCsvFile = await exportCsv([{ a: 1 }], (obj: any) => "1|2")
-        const anotherCsvFile = await exportCsv([{ a: 1 }], (obj: any) => "1|2")
+        const content = [{ a: 1 }]
+        const itemTransformer = (obj: any) => "1|2"
+        const headerTransformer = () => "Num1|Num2"
 
-        // then
+        const aCsvFile = await exportCsv(content, headerTransformer, itemTransformer)
+        const anotherCsvFile = await exportCsv(content, headerTransformer, itemTransformer)
+
         expect(filesAreDifferent(aCsvFile, anotherCsvFile)).toBeTruthy()
     })
 })
@@ -34,9 +35,11 @@ describe("Csv", () => {
 const filesAreDifferent = (aCsvFile: string, anotherCsvFile: string) =>
     nano.difference(creationTimeOf(aCsvFile), creationTimeOf(anotherCsvFile)) > 0
 
-const firstEntryOf = (csvFile: string) => readFileLine(csvFile, 0)
+const headersOf = (csvFile: string) => readFileLine(csvFile, 0)
 
-const secondEntryOf = (csvFile: string) => readFileLine(csvFile, 1)
+const firstEntryOf = (csvFile: string) => readFileLine(csvFile, 1)
+
+const secondEntryOf = (csvFile: string) => readFileLine(csvFile, 2)
 
 const readFileLine = (csvFile: string, lineNum: number) =>
     readFileSync(csvFile, "utf8").split("\n")[lineNum]

@@ -7,13 +7,13 @@ it("payrate", async () => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 500000
 
         const client = new BullhornClient({
-            server: "https://rest21.bullhornstaffing.com",
-            authServer: "https://auth.bullhornstaffing.com",
-            clientId: "a89d37d5-9704-4b12-8e82-1f589f54c335",
-            secret: "P7DjeQ624BMI6wt7c5bwt5d4",
+            server: "a",
+            authServer: "b",
+            clientId: "c",
+            secret: "d",
         })
         log("start authenticating....")
-        const c = await client.login("esoftware", "esoft2017!")
+        const c = await client.login("e", "f")
         log("authenticating completed....")
 
         const email = "nikola.tesla@equalexperts.com"

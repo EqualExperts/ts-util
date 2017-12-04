@@ -9,8 +9,12 @@ import {
 import { buildConfigAdapter } from "../../src/config/adapter"
 
 let envVars
+let originalTimeout
 
 beforeAll(() => {
+    originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 8000
+
     prepareProcessEnvVars()
 
     envVars = buildConfigAdapter({

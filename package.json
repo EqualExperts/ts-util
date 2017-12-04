@@ -36,6 +36,9 @@
         "transform": {
             "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
         },
+        "transformIgnorePatterns": [
+            "/node_modules/(?!bullhorn.ts)"
+        ],
         "testRegex": ".*\\.spec\\.(ts|tsx|js)$",
         "roots": [
             "<rootDir>/test"
@@ -53,6 +56,7 @@
         "typescript": "^2.5.3"
     },
     "dependencies": {
+        "bullhorn.ts": "^0.1.3",
         "convict": "^4.0.1",
         "fp-ts": "^0.6.2",
         "isomorphic-fetch": "^2.2.1",

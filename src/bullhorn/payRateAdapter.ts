@@ -1,4 +1,4 @@
-import BullhornClient from "bullhorn.ts"
+import BullhornClient from "tmp-fork-bullhorn/lib/Client"
 
 export const buildBullhornClient: (config: BullhornConfig) => Promise<BullhornClient> =
     (config: BullhornConfig) => {

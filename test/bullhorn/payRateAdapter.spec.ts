@@ -1,5 +1,5 @@
 import "jest"
-import BullhornClient from "bullhorn.ts"
+import BullhornClient from "tmp-fork-bullhorn/lib/Client"
 import * as fs from "fs"
 import * as path from "path"
 import { buildBullhornClient, BullhornConfig } from "../../src/bullhorn/payRateAdapter"
@@ -7,27 +7,27 @@ import { buildConfigAdapter } from "../../src/config/adapter"
 import { appendFileSync } from "fs"
 
 let originalTimeout
-let config
+let bhConfig
 
 beforeAll(async () => {
     originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000
 
-    config = loadBHConfig()
+    const config = loadBHConfig()
+    bhConfig = buildBullhornConfig(config)
 })
 
-describe("Pay rates from Bullhorn", () => {
+describe("Pay Rates from Bullhorn", () => {
     it("connects to bullhorn", async () => {
-        const bhConfig = buildBullhornConfig(config)
         const email = "nikola.tesla@equalexperts.com"
 
         const bhClient: BullhornClient = await buildBullhornClient(bhConfig)
+
         const candidate = await bhClient.search("Candidate",
             {
                 query: `email:${email} or email2:${email} or email3:${email}`,
                 fields: ["id,firstName,lastName,placements"],
             })
-
         log(JSON.stringify(candidate))
         expect(candidate.data.length).toBe(1)
     })

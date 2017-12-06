@@ -5,6 +5,7 @@ import * as path from "path"
 import { buildBullhornClient, BullhornConfig } from "../../src/bullhorn/payRateAdapter"
 import { buildConfigAdapter } from "../../src/config/adapter"
 import { appendFileSync } from "fs"
+import { PayRateDto, buildBullhornPayRateAdapter, BullhornPayRateAdapter } from "../../src/bullhorn/payRateAdapter"
 
 let originalTimeout
 let bhConfig
@@ -17,19 +18,23 @@ beforeAll(async () => {
     bhConfig = buildBullhornConfig(config)
 })
 
-describe("Pay Rates from Bullhorn", () => {
-    it("connects to bullhorn", async () => {
-        const email = "nikola.tesla@equalexperts.com"
-
+describe("Pay rates from Bullhorn", async () => {
+    it("Fetches Pay rate for a given email addresses", async () => {
+        // given
         const bhClient: BullhornClient = await buildBullhornClient(bhConfig)
+        const bhPayRateAdapter: BullhornPayRateAdapter = buildBullhornPayRateAdapter(bhClient)
+        const candidateEmail = "nikola.tesla@equalexperts.com"
+        const otherCandidateEmail = "inewton@equalexperts.com"
 
-        const candidate = await bhClient.search("Candidate",
-            {
-                query: `email:${email} or email2:${email} or email3:${email}`,
-                fields: ["id,firstName,lastName,placements"],
-            })
-        log(JSON.stringify(candidate))
-        expect(candidate.data.length).toBe(1)
+        // when
+        const actualPayRates = await bhPayRateAdapter([candidateEmail, otherCandidateEmail])
+
+        // then
+        const expectedPayRates = [
+            { email: candidateEmail, rates: [600] } as PayRateDto,
+            { email: otherCandidateEmail, rates: [400] } as PayRateDto,
+        ]
+        expect(actualPayRates).toEqual(expectedPayRates)
     })
 })
 

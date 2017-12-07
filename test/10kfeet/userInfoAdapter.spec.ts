@@ -13,7 +13,7 @@ let originalTimeout
 
 beforeAll(() => {
     originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 8000
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 15000
 
     prepareProcessEnvVars()
 

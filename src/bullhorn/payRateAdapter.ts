@@ -30,6 +30,7 @@ export const buildBullhornPayRateAdapter: BuildBullhornPayRateAdapter =
                         fields: ["id,firstName,lastName,placements"],
                     })
 
+                log("Candidate - " + JSON.stringify(candidate))
                 const placementsQuery = candidate.data[0].placements.data.map((p: any) => "id:" + p.id).join(" or ")
 
                 const placementsList = await bhClient.search("Placement",
@@ -37,7 +38,7 @@ export const buildBullhornPayRateAdapter: BuildBullhornPayRateAdapter =
                         query: placementsQuery,
                         fields: ["id,payRate"],
                     })
-
+                log("Payrate - " + JSON.stringify(placementsList))
                 const payRates = placementsList.data.map((placement: any) => placement.payRate)
                 return { email: emailAddress, rates: payRates } as PayRateDto
             })

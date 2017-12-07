@@ -14,12 +14,12 @@ export const buildBullhornClient: BuildBullhornClient =
         return client.login(config.bhUserName, config.bhPassowrd)
     }
 
-export type BullhornPayRateAdapter = (emails: [string]) => Promise<PayRateDto[]>
+export type BullhornPayRateAdapter = (emails: string[]) => Promise<PayRateDto[]>
 export type BuildBullhornPayRateAdapter = (bhClient: BullhornClient) => BullhornPayRateAdapter
 
 export const buildBullhornPayRateAdapter: BuildBullhornPayRateAdapter =
     (bhClient: BullhornClient) => {
-        return (emails: [string]) => {
+        return (emails: string[]) => {
             // TODO - for each candidate (email), we are making a separate api call
             // if this is an issue think of optimising it just by making 1 api call
             // Load test this

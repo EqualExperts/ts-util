@@ -28,7 +28,7 @@ beforeAll(() => {
 })
 
 describe("Invoice Adapter", () => {
-    it("creates an invoice", async () => {
+    xit("creates an invoice", async () => {
         // when
         const createInvoiceAdapter = buildCreateInvoiceAdapter(xeroClient)
         const invoiceDto: InvoiceDto = {

@@ -23,15 +23,15 @@ describe("Pay rates from Bullhorn", async () => {
         // given
         const bhClient: BullhornClient = await buildBullhornClient(bhConfig)
         const bhPayRateAdapter: BullhornPayRateAdapter = buildBullhornPayRateAdapter(bhClient)
-        const nikolaTeslaEmail = "nikola.tesla@equalexperts.com"
+        const pferreiraEmail = "pferreira@equalexperts.com"
         const isacNewtonEmail = "inewton@equalexperts.com"
 
         // when
-        const actualPayRates = await bhPayRateAdapter([nikolaTeslaEmail, isacNewtonEmail])
+        const actualPayRates = await bhPayRateAdapter([pferreiraEmail, isacNewtonEmail])
 
         // then
         const expectedPayRates = [
-            { email: nikolaTeslaEmail, rates: [600] } as PayRateDto,
+            { email: pferreiraEmail, rates: [550] } as PayRateDto,
             { email: isacNewtonEmail, rates: [400] } as PayRateDto,
         ]
         expect(actualPayRates).toEqual(expectedPayRates)

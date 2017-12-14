@@ -22,7 +22,6 @@ beforeAll(() => {
 })
 
 describe("10K Feet Time Entries", () => {
-    // This test is ignored because we don't have test creds for 10kFt
     it("should fetch all TimeEntries from all pages", async () => {
         // given
         const from = "2017-1-1"
@@ -51,6 +50,7 @@ describe("TimeEntries from 10KFeet (Stubbed)", () => {
         expect(dto.day).toEqual(new Date("2017-11-07"))
         expect(dto.hours).toBe(1)
         expect(dto.userId).toBe(380187)
+        expect(dto.assignableId).toBe(12356)
     })
 })
 

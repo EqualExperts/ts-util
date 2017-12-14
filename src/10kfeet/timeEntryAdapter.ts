@@ -4,6 +4,7 @@ export type TimeEntryDto = {
     hours: number
     day: Date
     userId: number,
+    assignableId: string,
 }
 
 export type FetchTimeEntryAdapter = (from: string, to: string) => Promise<TimeEntryDto[]>
@@ -25,4 +26,5 @@ export const extractDto =
         hours: element.hours,
         day: new Date(element.date),
         userId: element.user_id,
+        assignableId: element.assignable_id,
     } as TimeEntryDto)

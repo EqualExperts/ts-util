@@ -19,7 +19,7 @@ beforeAll(async () => {
 })
 
 describe("Pay rates from Bullhorn", async () => {
-    xit("Fetches Pay rate for a given email addresses", async () => {
+    it("Fetches Pay rate for a given email addresses", async () => {
         // given
         const bhClient: BullhornClient = await buildBullhornClient(bhConfig)
         const bhPayRateAdapter: BullhornPayRateAdapter = buildBullhornPayRateAdapter(bhClient)
@@ -34,6 +34,23 @@ describe("Pay rates from Bullhorn", async () => {
             { email: pferreiraEmail, rates: [550] } as PayRateDto,
             { email: isacNewtonEmail, rates: [400] } as PayRateDto,
         ]
+        expect(actualPayRates).toEqual(expectedPayRates)
+    })
+
+    it("Fetches Pay rate for email addresses without a corresponding associate", async () => {
+        // given
+        const bhClient: BullhornClient = await buildBullhornClient(bhConfig)
+        const bhPayRateAdapter: BullhornPayRateAdapter = buildBullhornPayRateAdapter(bhClient)
+        const nonExistentCandidateEmail = "not@noway.com"
+
+        // when
+        const actualPayRates = await bhPayRateAdapter([nonExistentCandidateEmail])
+
+        // then
+        const expectedPayRates = [{
+            email: nonExistentCandidateEmail,
+            rates: [],
+        }]
         expect(actualPayRates).toEqual(expectedPayRates)
     })
 })

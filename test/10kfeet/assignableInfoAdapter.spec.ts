@@ -1,7 +1,7 @@
 import "jest"
 import * as fs from "fs"
 import * as path from "path"
-import { buildFetchAssignableInfoAdapter } from "../../src/10kfeet/assignableInfoAdapter"
+import { buildFetchAssignableInfoAdapter, AssignableInfo } from "../../src/10kfeet/assignableInfoAdapter"
 import { buildConfigAdapter } from "../../src/config/adapter"
 
 let envVars
@@ -28,12 +28,17 @@ describe("10K Feet Assignable Info", () => {
         const token = envVars("TENKFT_API_TOKEN")
 
         // when
-        const underTest: (assignableId: number) => Promise<string> =
+        const underTest: (assignableId: number) => Promise<AssignableInfo> =
             buildFetchAssignableInfoAdapter(baseUrl, token)
         const result = await underTest(assignableId)
 
         // then
-        expect(result).toBe("Getting the most out of 10,000ft")
+        const expected = {
+            id: assignableId,
+            name: "Getting the most out of 10,000ft",
+        } as AssignableInfo
+
+        expect(result).toEqual(expected)
     })
 })
 

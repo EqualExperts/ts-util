@@ -35,6 +35,12 @@ describe("10K Feet Time Entries", () => {
         const result = await underTest(from, to)
 
         expect(result.length).toBe(4)
+        expect(result[0].userId).toBeGreaterThan(0)
+        expect(result[0].assignableId).toBeGreaterThan(0)
+        expect(result[0].assignableName).toBe("Getting the most out of 10,000ft")
+        expect(result[0].email).toBe("esoftware.aslive@equalexperts.com")
+        expect(result[0].firstName).toBe("Equal")
+        expect(result[0].lastName).toBe("Software")
     })
 })
 

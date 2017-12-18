@@ -19,17 +19,11 @@ export const buildCsvExporter: BuildCsvExporter =
     (headerTransformer, transformer) => {
         return async (content) => {
             const csvFileName = "/tmp/csv-" + nano.toISOString(nano.now()) + ".csv"
-            log("csvFileName-" + csvFileName)
-            log("headers-" + `${headerTransformer()}\n`)
             appendFileSync(csvFileName, `${headerTransformer()}\n`)
-            log("headers appended....")
             content.forEach((c) => {
-                log("append entry")
                 const item = `${transformer(c)}\n`
-                log("append entry --- " + item)
                 appendFileSync(csvFileName, item)
             })
-            log("everything completed.... ")
             return csvFileName
         }
     }

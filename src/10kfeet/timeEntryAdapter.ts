@@ -1,7 +1,12 @@
 import { fetchPageData } from "./common"
-import { buildGetUsersInfoAdapterWithResultsPerPage, UserInfoDto } from "./usersInfoAdapter"
+import { buildGetUsersInfoAdapterWithResultsPerPage, UserInfoDto, UNDEFINED_USER } from "./usersInfoAdapter"
 import { uniq } from "ramda"
-import { buildFetchAssignableInfoAdapter, AssignableInfo } from "./assignableInfoAdapter"
+import { buildFetchProjectInfoAdapter, ProjectInfo, ProjectState, UNDEFINED_PROJECT } from "./projectAdapter"
+
+enum AssignmentType {
+    PROJECT = "Project",
+    LEAVE_TYPE = "LeaveType",
+}
 
 export type TimeEntryDto = {
     hours: number
@@ -13,7 +18,9 @@ export type TimeEntryDto = {
     email: string,
 
     assignableId: number,
+    assignableType: string,
     assignableName: string,
+    billable: boolean,
 }
 
 export type FetchTimeEntryAdapter = (from: string, to: string) => Promise<TimeEntryDto[]>
@@ -33,25 +40,31 @@ export const buildFetchTimeEntryAdapterWithResultsPerPage
             const usersInfo: UserInfoDto[] = await getUsersInfoAdapter(
                 uniq(timeEntries.map((te: TimeEntryDto) => te.userId)))
 
-            const fetchAssignableInfo = buildFetchAssignableInfoAdapter(baseUrl, token)
+            const fetchProjectInfo = buildFetchProjectInfoAdapter(baseUrl, token)
 
-            const assignables: AssignableInfo[] = await Promise.all(
-                uniq(timeEntries.map((te: TimeEntryDto) => te.assignableId))
-                    .map(async (assignId: number) => await fetchAssignableInfo(assignId)))
+            const projects: ProjectInfo[] = await Promise.all(
+                    uniq(timeEntries
+                        .filter((te: TimeEntryDto) => te.assignableType !== "LeaveType")
+                        .map((te: TimeEntryDto) => te.assignableId))
+                    .map(async (projectId: number) => await fetchProjectInfo(projectId)))
 
             const result: TimeEntryDto[] = timeEntries.map((te: TimeEntryDto) => {
                 const userInfo: UserInfoDto | undefined =
-                    usersInfo.find((u) => u.userId === te.userId)
-                const assignableInfo: AssignableInfo | undefined =
-                    assignables.find((assign) => assign.id === te.assignableId)
+                    usersInfo.find((u) => u.userId === te.userId) || UNDEFINED_USER
 
-                if (userInfo !== undefined) {
-                    te.firstName = userInfo.firstName
-                    te.lastName = userInfo.lastName
-                    te.email = userInfo.email
-                }
-                if (assignableInfo !== undefined) {
-                    te.assignableName = assignableInfo.name
+                te.firstName = userInfo.firstName
+                te.lastName = userInfo.lastName
+                te.email = userInfo.email
+
+                if (te.assignableType !== AssignmentType.LEAVE_TYPE) {
+                    const projectInfo: ProjectInfo | undefined =
+                        projects.find((project) => project.id === te.assignableId) || UNDEFINED_PROJECT
+
+                    te.assignableName = projectInfo.name
+                    te.billable = projectInfo.state !== ProjectState.INTERNAL
+                } else {
+                    te.assignableName = te.assignableType
+                    te.billable = false
                 }
 
                 return te
@@ -70,4 +83,5 @@ export const extractDto =
         day: new Date(element.date),
         userId: element.user_id,
         assignableId: element.assignable_id,
+        assignableType: element.assignable_type,
     } as TimeEntryDto)

@@ -1,7 +1,7 @@
 import "jest"
 import * as fs from "fs"
 import * as path from "path"
-import { buildFetchAssignableInfoAdapter, AssignableInfo } from "../../src/10kfeet/assignableInfoAdapter"
+import { buildFetchProjectInfoAdapter, ProjectInfo } from "../../src/10kfeet/projectAdapter"
 import { buildConfigAdapter } from "../../src/config/adapter"
 
 let envVars
@@ -20,23 +20,24 @@ beforeAll(() => {
     )
 })
 
-describe("10K Feet Assignable Info", () => {
-    it("should fetch assignable info", async () => {
+describe("10K Feet Project Info", () => {
+    it("should fetch project info", async () => {
         // given
         const assignableId = 10264
         const baseUrl = "https://vnext-api.10000ft.com"
         const token = envVars("TENKFT_API_TOKEN")
 
         // when
-        const underTest: (assignableId: number) => Promise<AssignableInfo> =
-            buildFetchAssignableInfoAdapter(baseUrl, token)
+        const underTest: (assignableId: number) => Promise<ProjectInfo> =
+            buildFetchProjectInfoAdapter(baseUrl, token)
         const result = await underTest(assignableId)
 
         // then
         const expected = {
             id: assignableId,
             name: "Getting the most out of 10,000ft",
-        } as AssignableInfo
+            state: "Internal",
+        } as ProjectInfo
 
         expect(result).toEqual(expected)
     })

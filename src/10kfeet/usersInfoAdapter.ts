@@ -8,7 +8,12 @@ export type UserInfoDto = {
     userId: number,
 }
 
+export const UNDEFINED_USER = {
+    userId: -1, firstName: "[#UNDEF]", lastName: "[#UNDEF]", email: "[#UNDEF]",
+} as UserInfoDto
+
 export type GetUsersInfoAdapter = (userIds: number[]) => Promise<UserInfoDto[]>
+
 export const buildFetchTimeEntryAdapter: (baseUrl: string, token: string) => GetUsersInfoAdapter =
     (baseUrl, token) => buildGetUsersInfoAdapterWithResultsPerPage(baseUrl, token, 20)
 

@@ -38,6 +38,7 @@ describe("10K Feet Time Entries", () => {
         expect(result[0].userId).toBeGreaterThan(0)
         expect(result[0].assignableId).toBeGreaterThan(0)
         expect(result[0].assignableName).toBe("Getting the most out of 10,000ft")
+        expect(result[0].assignableType).toBe("Project")
         expect(result[0].email).toBe("esoftware.aslive@equalexperts.com")
         expect(result[0].firstName).toBe("Equal")
         expect(result[0].lastName).toBe("Software")
@@ -57,6 +58,7 @@ describe("TimeEntries from 10KFeet (Stubbed)", () => {
         expect(dto.hours).toBe(1)
         expect(dto.userId).toBe(380187)
         expect(dto.assignableId).toBe(12356)
+        expect(dto.assignableType).toBe("Project")
     })
 })
 

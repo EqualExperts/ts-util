@@ -1,7 +1,6 @@
 
 import * as nodemailer from "nodemailer"
-import { MailOptions } from "nodemailer/lib/smtp-pool"
-import { SentMessageInfo } from "nodemailer/lib/smtp-connection"
+import { MailOptions, SentMessageInfo } from "nodemailer/lib/smtp-pool"
 
 export type EmailAdapter = (email: Email) => Promise<SentMessageInfo>
 export type BuildEmailAdapter = (smtpConfig: SMTPConfig) => EmailAdapter

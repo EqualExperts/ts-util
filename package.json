@@ -1,6 +1,6 @@
 {
     "name": "ee-ts-util",
-    "version": "2.2.2",
+    "version": "3.0.0",
     "description": "typescript utilities and functions",
     "main": "lib/index.js",
     "scripts": {
@@ -50,6 +50,7 @@
         "@types/jest": "^21.1.5",
         "@types/mongodb": "^2.2.15",
         "@types/node": "^8.0.47",
+        "@types/nodemailer": "^4.3.1",
         "@types/ramda": "^0.25.8",
         "jest": "^21.2.1",
         "ts-jest": "^21.1.4",
@@ -62,8 +63,9 @@
         "isomorphic-fetch": "^2.2.1",
         "mongodb": "^2.2.33",
         "nano-seconds": "^1.2.2",
+        "nodemailer": "^4.4.1",
+        "ramda": "^0.25.0",
         "tmp-fork-bullhorn": "0.0.6",
-        "xero-node": "^2.10.1",
-        "ramda": "^0.25.0"
+        "xero-node": "^2.10.1"
     }
 }

@@ -17,10 +17,9 @@ describe("Email Adapter", () => {
         } as Email
 
         const underTest: EmailAdapter = buildEmailAdapter(fakeSMTPConfig)
-
         const status = await underTest(email)
 
-        expect(status.accepted.length).toBe(1)
+        expect(status).toBe(true)
     })
 })
 

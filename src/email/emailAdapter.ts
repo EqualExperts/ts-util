@@ -2,7 +2,7 @@
 import * as nodemailer from "nodemailer"
 import { MailOptions, SentMessageInfo } from "nodemailer/lib/smtp-pool"
 
-export type EmailAdapter = (email: Email) => Promise<SentMessageInfo>
+export type EmailAdapter = (email: Email) => Promise<boolean>
 export type BuildEmailAdapter = (smtpConfig: SMTPConfig) => EmailAdapter
 export type SMTPConfig = {
     server: string,
@@ -23,7 +23,10 @@ export const buildEmailAdapter: BuildEmailAdapter =
         // Or like mongo connection we should create only once
         const transporter = createTransporter(smtpConfig)
         const mailOptions = buildMailOptions(email)
-        return transporter.sendMail(mailOptions)
+        return transporter.sendMail(mailOptions).then(
+            (sentMessageInfo: SentMessageInfo) =>
+                (sentMessageInfo.accepted.length >= 1 ? Promise.resolve(true) : Promise.resolve(false)),
+        )
     }
 
 const buildMailOptions = (email: Email) => (

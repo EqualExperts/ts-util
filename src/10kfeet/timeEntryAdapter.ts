@@ -29,48 +29,52 @@ export const buildFetchTimeEntryAdapterWithResultsPerPage
     : (baseUrl: string, token: string, resultsPerPage: number) => FetchTimeEntryAdapter =
     (baseUrl: string, token: string, resultsPerPage: number) =>
         async (from: string, to: string) => {
-            const timeEntries: TimeEntryDto[] = await fetchPageData(
-                baseUrl,
-                `/api/v1/time_entries?from=${from}&to=${to}&per_page=${resultsPerPage}`,
-                token,
-                [] as TimeEntryDto[],
-                extractDto)
+            try {
+                const timeEntries: TimeEntryDto[] = await fetchPageData(
+                    baseUrl,
+                    `/api/v1/time_entries?from=${from}&to=${to}&per_page=${resultsPerPage}`,
+                    token,
+                    [] as TimeEntryDto[],
+                    extractDto)
 
-            const getUsersInfoAdapter = buildGetUsersInfoAdapterWithResultsPerPage(baseUrl, token, resultsPerPage)
-            const usersInfo: UserInfoDto[] = await getUsersInfoAdapter(
-                uniq(timeEntries.map((te: TimeEntryDto) => te.userId)))
+                const getUsersInfoAdapter = buildGetUsersInfoAdapterWithResultsPerPage(baseUrl, token, resultsPerPage)
+                const usersInfo: UserInfoDto[] = await getUsersInfoAdapter(
+                    uniq(timeEntries.map((te: TimeEntryDto) => te.userId)))
 
-            const fetchProjectInfo = buildFetchProjectInfoAdapter(baseUrl, token)
+                const fetchProjectInfo = buildFetchProjectInfoAdapter(baseUrl, token)
 
-            const projects: ProjectInfo[] = await Promise.all(
-                    uniq(timeEntries
-                        .filter((te: TimeEntryDto) => te.assignableType !== "LeaveType")
-                        .map((te: TimeEntryDto) => te.assignableId))
-                    .map(async (projectId: number) => await fetchProjectInfo(projectId)))
+                const projects: ProjectInfo[] = await Promise.all(
+                        uniq(timeEntries
+                            .filter((te: TimeEntryDto) => te.assignableType !== "LeaveType")
+                            .map((te: TimeEntryDto) => te.assignableId))
+                        .map(async (projectId: number) => await fetchProjectInfo(projectId)))
 
-            const result: TimeEntryDto[] = timeEntries.map((te: TimeEntryDto) => {
-                const userInfo: UserInfoDto | undefined =
-                    usersInfo.find((u) => u.userId === te.userId) || UNDEFINED_USER
+                const result: TimeEntryDto[] = timeEntries.map((te: TimeEntryDto) => {
+                    const userInfo: UserInfoDto | undefined =
+                        usersInfo.find((u) => u.userId === te.userId) || UNDEFINED_USER
 
-                te.firstName = userInfo.firstName
-                te.lastName = userInfo.lastName
-                te.email = userInfo.email
+                    te.firstName = userInfo.firstName
+                    te.lastName = userInfo.lastName
+                    te.email = userInfo.email
 
-                if (te.assignableType !== AssignmentType.LEAVE_TYPE) {
-                    const projectInfo: ProjectInfo | undefined =
-                        projects.find((project) => project.id === te.assignableId) || UNDEFINED_PROJECT
+                    if (te.assignableType !== AssignmentType.LEAVE_TYPE) {
+                        const projectInfo: ProjectInfo | undefined =
+                            projects.find((project) => project.id === te.assignableId) || UNDEFINED_PROJECT
 
-                    te.assignableName = projectInfo.name
-                    te.billable = projectInfo.state !== ProjectState.INTERNAL
-                } else {
-                    te.assignableName = te.assignableType
-                    te.billable = false
-                }
+                        te.assignableName = projectInfo.name
+                        te.billable = projectInfo.state !== ProjectState.INTERNAL
+                    } else {
+                        te.assignableName = te.assignableType
+                        te.billable = false
+                    }
 
-                return te
-            })
+                    return te
+                })
 
-            return result
+                return result
+            } catch (error) {
+                return Promise.reject(error)
+            }
         }
 
 export const buildFetchTimeEntryAdapter: (baseUrl: string, token: string) => FetchTimeEntryAdapter =

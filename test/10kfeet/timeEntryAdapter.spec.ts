@@ -44,6 +44,25 @@ describe("10K Feet Time Entries", () => {
         expect(result[0].lastName).toBe("Software")
     })
 
+    it("entries that are Leaves should have assignableName equal to assignableType and billable set to false",
+        async () => {
+            // given
+            const from = "2017-12-20"
+            const to = "2017-12-20"
+            const resultsPerPage = 50
+            const baseUrl = "https://vnext-api.10000ft.com"
+            const token = envVars("TENKFT_API_TOKEN")
+
+            const underTest: (from: string, to: string) => Promise<TimeEntryDto[]> =
+                buildFetchTimeEntryAdapterWithResultsPerPage(baseUrl, token, resultsPerPage)
+            const result = await underTest(from, to)
+
+            expect(result.length).toBe(5)
+            expect(result[0].assignableName).toBe("LeaveType")
+            expect(result[0].assignableType).toBe("LeaveType")
+            expect(result[0].billable).toBe(false)
+        })
+
     it("given a bad response then should return a promise rejection with an error", async () => {
         const from = "BAD DATE"
         const to = "BAD DATE"

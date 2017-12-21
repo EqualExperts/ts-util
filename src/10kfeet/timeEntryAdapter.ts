@@ -1,7 +1,9 @@
 import { fetchPageData } from "./common"
 import { buildGetUsersInfoAdapterWithResultsPerPage, UserInfoDto, UNDEFINED_USER } from "./usersInfoAdapter"
 import { uniq } from "ramda"
-import { buildFetchProjectInfoAdapter, ProjectInfo, ProjectState, UNDEFINED_PROJECT } from "./projectAdapter"
+import {
+    buildFetchProjectInfoAdapter, ProjectInfo, ProjectState, UNDEFINED_PROJECT,
+} from "./projectAdapter"
 
 enum AssignmentType {
     PROJECT = "Project",
@@ -25,6 +27,11 @@ export type TimeEntryDto = {
 
 export type FetchTimeEntryAdapter = (from: string, to: string) => Promise<TimeEntryDto[]>
 
+// TODO: this adapter is no more either the TimeEntries adapter or a ts-util adapter
+// we need to refactor this code into an adapter at the backend layer.
+// TimeEntries Adapter should just fetch time entries and all this orchestration should be done at the backend level.
+// Making it work now, but this will need refactoring work in it on the future.
+// author: @jpinho
 export const buildFetchTimeEntryAdapterWithResultsPerPage
     : (baseUrl: string, token: string, resultsPerPage: number) => FetchTimeEntryAdapter =
     (baseUrl: string, token: string, resultsPerPage: number) =>
@@ -62,7 +69,7 @@ export const buildFetchTimeEntryAdapterWithResultsPerPage
                             projects.find((project) => project.id === te.assignableId) || UNDEFINED_PROJECT
 
                         te.assignableName = projectInfo.name
-                        te.billable = projectInfo.state !== ProjectState.INTERNAL
+                        te.billable = projectInfo.billable
                     } else {
                         te.assignableName = te.assignableType
                         te.billable = false

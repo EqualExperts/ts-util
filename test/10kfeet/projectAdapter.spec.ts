@@ -23,20 +23,65 @@ beforeAll(() => {
 describe("10K Feet Project Info", () => {
     it("should fetch project info", async () => {
         // given
-        const assignableId = 10264
+        const projectId = 10264
         const baseUrl = "https://vnext-api.10000ft.com"
         const token = envVars("TENKFT_API_TOKEN")
 
         // when
-        const underTest: (assignableId: number) => Promise<ProjectInfo> =
+        const underTest: (projectId: number) => Promise<ProjectInfo> =
             buildFetchProjectInfoAdapter(baseUrl, token)
-        const result = await underTest(assignableId)
+        const result = await underTest(projectId)
 
         // then
         const expected = {
-            id: assignableId,
+            id: projectId,
             name: "Getting the most out of 10,000ft",
             state: "Internal",
+            billable: false,
+        } as ProjectInfo
+
+        expect(result).toEqual(expected)
+    })
+
+    it("should fetch project info with billable set to true on Confirmed projects ", async () => {
+        // given
+        const projectId = 10353
+        const baseUrl = "https://vnext-api.10000ft.com"
+        const token = envVars("TENKFT_API_TOKEN")
+
+        // when
+        const underTest: (projectId: number) => Promise<ProjectInfo> =
+            buildFetchProjectInfoAdapter(baseUrl, token)
+        const result = await underTest(projectId)
+
+        // then
+        const expected = {
+            id: projectId,
+            name: "Exciting project",
+            state: "Confirmed",
+            billable: true,
+        } as ProjectInfo
+
+        expect(result).toEqual(expected)
+    })
+
+    it("should fetch project info with billable set to true on Tentative projects ", async () => {
+        // given
+        const projectId = 10354
+        const baseUrl = "https://vnext-api.10000ft.com"
+        const token = envVars("TENKFT_API_TOKEN")
+
+        // when
+        const underTest: (projectId: number) => Promise<ProjectInfo> =
+            buildFetchProjectInfoAdapter(baseUrl, token)
+        const result = await underTest(projectId)
+
+        // then
+        const expected = {
+            id: projectId,
+            name: "Tentative Project",
+            state: "Tentative",
+            billable: true,
         } as ProjectInfo
 
         expect(result).toEqual(expected)

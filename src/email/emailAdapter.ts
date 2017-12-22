@@ -15,6 +15,7 @@ export type Email = {
     to: string,
     subject: string,
     body: string,
+    attachmentPath: string,
 }
 
 export const buildEmailAdapter: BuildEmailAdapter =
@@ -35,6 +36,11 @@ const buildMailOptions = (email: Email) => (
         to: email.to,
         subject: email.subject,
         text: email.body,
+        attachments: [
+            {
+                path: email.attachmentPath,
+            },
+        ],
     } as MailOptions
 )
 

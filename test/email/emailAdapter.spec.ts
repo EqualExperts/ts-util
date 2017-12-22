@@ -1,4 +1,6 @@
 import "jest"
+import * as fs from "fs"
+import * as path from "path"
 import {
     SMTPConfig,
     Email,
@@ -6,26 +8,56 @@ import {
     buildEmailAdapter,
 } from "../../src/email/emailAdapter"
 
+beforeAll(() => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 15000
+    prepareProcessEnvVars()
+})
 describe("Email Adapter", () => {
-    // TODO - This is excluded because we need to setup test SMTP server
-    xit("emails to given address", async () => {
-        const email = {
-            from: "john@abc.com",
-            to: "mary@xyz.com",
-            subject: `salary review`,
-            body: "salary statement",
-        } as Email
-
-        const underTest: EmailAdapter = buildEmailAdapter(fakeSMTPConfig)
-        const status = await underTest(email)
+    it("emails to given address", async () => {
+        const underTest: EmailAdapter = buildEmailAdapter(smtpConfig)
+        const status = await underTest(salaryReviewEmail)
 
         expect(status).toBe(true)
     })
 })
 
-const fakeSMTPConfig = {
-    server: "smtp_server",
-    port: 999,
-    userName: "smtp_username",
-    password: "smtp_password",
-} as SMTPConfig
+const salaryReviewEmail = (
+    {
+        from: process.env.RECONCILIATION_REPORT_FROM_EMAIL,
+        to: process.env.RECONCILIATION_REPORT_TO_EMAIL,
+        subject: `salary review for Marie`,
+        body: "salary increment 15%",
+        attachmentPath: path.resolve(__dirname, "../data/report_attachment.csv"),
+    } as Email
+)
+
+const smtpConfig = (
+    {
+        server: process.env.SMTP_SERVER,
+        port: Number(process.env.SMTP_PORT),
+        userName: process.env.SMTP_USERNAME,
+        password: process.env.SMTP_PASSWORD,
+    } as SMTPConfig
+)
+
+const smtpJsonConfig = () => {
+    const keyBaseFilePath = "/keybase/team/ee_software/aslive"
+    const smtpConfigFilePath = path.join(keyBaseFilePath, "email.json")
+    return JSON.parse(fs.readFileSync(smtpConfigFilePath, "utf-8").trim())
+}
+
+function prepareProcessEnvVars() {
+    const keyBaseFilePath = "/keybase/team/ee_software/aslive"
+    const smtpConfigFilePath = path.join(keyBaseFilePath, "email.json")
+
+    if (fs.existsSync(smtpConfigFilePath)) {
+        const smtpJson = JSON.parse(fs.readFileSync(smtpConfigFilePath, "utf-8").trim())
+
+        process.env.SMTP_SERVER = smtpJson.SMTP_SERVER
+        process.env.SMTP_PORT = smtpJson.SMTP_PORT
+        process.env.SMTP_USERNAME = smtpJson.SMTP_USERNAME
+        process.env.SMTP_PASSWORD = smtpJson.SMTP_PASSWORD
+        process.env.RECONCILIATION_REPORT_FROM_EMAIL = smtpJson.RECONCILIATION_REPORT_FROM_EMAIL
+        process.env.RECONCILIATION_REPORT_TO_EMAIL = smtpJson.RECONCILIATION_REPORT_TO_EMAIL
+    }
+}

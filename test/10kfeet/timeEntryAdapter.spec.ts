@@ -30,10 +30,10 @@ describe("10K Feet Time Entries", () => {
     it("should fetch all TimeEntries from all pages", async () => {
         const from = "2017-1-1"
         const to = "2017-11-31"
-        const shorterResultsPerPage = 2
+        const lessResultsPerPage = 2
 
         const underTest: (from: string, to: string) => Promise<TimeEntryDto[]> =
-            buildFetchTimeEntryAdapterWithResultsPerPage(baseUrl, token, shorterResultsPerPage)
+            buildFetchTimeEntryAdapterWithResultsPerPage(baseUrl, token, lessResultsPerPage)
         const result = await underTest(from, to)
 
         expect(result.length).toBe(4)
@@ -74,7 +74,6 @@ describe("10K Feet Time Entries", () => {
         // then
         const firstResult = result[0]
         expect(firstResult.approved).toBe(true)
-        // expect(result[0].approved).toBe(true)
     })
 })
 

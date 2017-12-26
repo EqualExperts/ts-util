@@ -40,7 +40,7 @@ export const buildFetchTimeEntryAdapterWithResultsPerPage
             try {
                 const timeEntries: TimeEntryDto[] = await fetchPageData(
                     baseUrl,
-                    `/api/v1/time_entries?from=${from}&to=${to}&per_page=${resultsPerPage}`,
+                    `/api/v1/time_entries?fields=approvals&from=${from}&to=${to}&per_page=${resultsPerPage}`,
                     token,
                     [] as TimeEntryDto[],
                     extractDto)
@@ -96,4 +96,7 @@ export const extractDto =
         userId: element.user_id,
         assignableId: element.assignable_id,
         assignableType: element.assignable_type,
+        approved: toApprovedOrNot(element.approvals.data),
     } as TimeEntryDto)
+
+const toApprovedOrNot = (element: any) => ( false )

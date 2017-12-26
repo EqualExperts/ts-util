@@ -21,7 +21,30 @@
             "task": null,
             "is_suggestion": false,
             "created_at": "2017-11-08T14:46:38Z",
-            "updated_at": "2017-11-08T14:46:38Z"
+            "updated_at": "2017-11-08T14:46:38Z",
+            "approvals": {
+                "paging": {
+                    "self": "../time_entries/795643/approvals?per_page=1&page=1",
+                    "next": null,
+                    "previous": null,
+                    "page": 1,
+                    "per_page": 1
+                },
+                "data": [
+                    {
+                        "id": 70,
+                        "status": "approved",
+                        "approvable_id": 795643,
+                        "approvable_type": "TimeEntry",
+                        "submitted_by": 2167,
+                        "submitted_at": "2017-12-26T17:25:43Z",
+                        "approved_by": 2167,
+                        "approved_at": "2017-12-26T17:28:01Z",
+                        "created_at": "2017-12-26T17:25:43Z",
+                        "updated_at": "2017-12-26T17:28:01Z"
+                    }
+                ]
+            }
         },
         {
             "id": 671188313,
@@ -37,7 +60,30 @@
             "task": null,
             "is_suggestion": false,
             "created_at": "2017-11-08T14:46:39Z",
-            "updated_at": "2017-11-08T14:46:39Z"
+            "updated_at": "2017-11-08T14:46:39Z",
+            "approvals": {
+                "paging": {
+                    "self": "../time_entries/795643/approvals?per_page=1&page=1",
+                    "next": null,
+                    "previous": null,
+                    "page": 1,
+                    "per_page": 1
+                },
+                "data": [
+                    {
+                        "id": 88,
+                        "status": "pending",
+                        "approvable_id": 795643,
+                        "approvable_type": "TimeEntry",
+                        "submitted_by": 2167,
+                        "submitted_at": "2017-12-26T17:25:43Z",
+                        "approved_by": 2167,
+                        "approved_at": "2017-12-26T17:28:01Z",
+                        "created_at": "2017-12-26T17:25:43Z",
+                        "updated_at": "2017-12-26T17:28:01Z"
+                    }
+                ]
+            }
         }
     ]
 }

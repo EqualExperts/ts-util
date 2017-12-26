@@ -23,6 +23,7 @@ export type TimeEntryDto = {
     assignableType: string,
     assignableName: string,
     billable: boolean,
+    approved: false,
 }
 
 export type FetchTimeEntryAdapter = (from: string, to: string) => Promise<TimeEntryDto[]>

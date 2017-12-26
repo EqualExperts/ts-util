@@ -5,7 +5,7 @@ import { extractDto, TimeEntryDto } from "../../src/10kfeet/timeEntryAdapter"
 import { buildFetchTimeEntryAdapterWithResultsPerPage } from "../../src/10kfeet/timeEntryAdapter"
 import { buildConfigAdapter } from "../../src/config/adapter"
 
-let envVars
+let token
 let originalTimeout
 
 beforeAll(() => {
@@ -14,24 +14,26 @@ beforeAll(() => {
 
     prepareProcessEnvVars()
 
-    envVars = buildConfigAdapter({
+    const envVars = buildConfigAdapter({
         TENKFT_API_TOKEN: {},
     }).getOrElse(
         (wrongConfigMessage) => { throw new Error(wrongConfigMessage) },
     )
+    token = envVars("TENKFT_API_TOKEN")
 })
 
 describe("10K Feet Time Entries", () => {
+
+    const baseUrl = "https://vnext-api.10000ft.com"
+    const resultsPerPage = 50
+
     it("should fetch all TimeEntries from all pages", async () => {
-        // given
         const from = "2017-1-1"
         const to = "2017-11-31"
-        const resultsPerPage = 2
-        const baseUrl = "https://vnext-api.10000ft.com"
-        const token = envVars("TENKFT_API_TOKEN")
+        const shorterResultsPerPage = 2
 
         const underTest: (from: string, to: string) => Promise<TimeEntryDto[]> =
-            buildFetchTimeEntryAdapterWithResultsPerPage(baseUrl, token, resultsPerPage)
+            buildFetchTimeEntryAdapterWithResultsPerPage(baseUrl, token, shorterResultsPerPage)
         const result = await underTest(from, to)
 
         expect(result.length).toBe(4)
@@ -46,12 +48,8 @@ describe("10K Feet Time Entries", () => {
 
     it("entries that are Leaves should have assignableName equal to assignableType and billable set to false",
         async () => {
-            // given
             const from = "2017-12-20"
             const to = "2017-12-20"
-            const resultsPerPage = 50
-            const baseUrl = "https://vnext-api.10000ft.com"
-            const token = envVars("TENKFT_API_TOKEN")
 
             const underTest: (from: string, to: string) => Promise<TimeEntryDto[]> =
                 buildFetchTimeEntryAdapterWithResultsPerPage(baseUrl, token, resultsPerPage)
@@ -62,13 +60,28 @@ describe("10K Feet Time Entries", () => {
             expect(result[0].assignableType).toBe("LeaveType")
             expect(result[0].billable).toBe(false)
         })
+
+    xit("returns an \"approved\" time when there are no \"pending\" approvals", async () => {
+        // given
+        const from = "2017-12-04"
+        const to = "2017-12-09"
+
+        // when
+        const underTest: (from: string, to: string) => Promise<TimeEntryDto[]> =
+        buildFetchTimeEntryAdapterWithResultsPerPage(baseUrl, token, resultsPerPage)
+        const result = await underTest(from, to)
+
+        // then
+        const firstResult = result[0]
+        expect(firstResult.approved).toBe(true)
+        // expect(result[0].approved).toBe(true)
+    })
 })
 
 describe("TimeEntries from 10KFeet (Stubbed)", () => {
     it("should extract into required fields", () => {
         const tenKResponse: string =
             fs.readFileSync(path.resolve(__dirname, "../stubs/10kfttimeentry_response.json"), "utf-8")
-
         const tenKJSON = JSON.parse(tenKResponse)
 
         const dto: TimeEntryDto = extractDto(tenKJSON.data[0])

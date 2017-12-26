@@ -62,16 +62,13 @@ describe("10K Feet Time Entries", () => {
         })
 
     xit("returns an \"approved\" time when there are no \"pending\" approvals", async () => {
-        // given
         const from = "2017-12-04"
         const to = "2017-12-09"
 
-        // when
         const underTest: (from: string, to: string) => Promise<TimeEntryDto[]> =
         buildFetchTimeEntryAdapterWithResultsPerPage(baseUrl, token, resultsPerPage)
         const result = await underTest(from, to)
 
-        // then
         const firstResult = result[0]
         expect(firstResult.approved).toBe(true)
     })

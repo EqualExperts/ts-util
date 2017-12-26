@@ -25,7 +25,7 @@ beforeAll(() => {
 })
 
 describe("10kft User Info Adapter", () => {
-    it("should return users information for a given list of users", async () => {
+    xit("should return users information for a given list of users", async () => {
         // given
         const baseUrl = "https://vnext-api.10000ft.com"
         const token = envVars("TENKFT_API_TOKEN")

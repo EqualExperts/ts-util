@@ -25,12 +25,12 @@ beforeAll(() => {
 })
 
 describe("10kft User Info Adapter", () => {
-    xit("should return users information for a given list of users", async () => {
+    it("should return users information for a given list of users", async () => {
         // given
         const baseUrl = "https://vnext-api.10000ft.com"
         const token = envVars("TENKFT_API_TOKEN")
 
-        const userIds = [2168, 2169]
+        const userIds = [2167, 2204]
         const resultsPerPage = 1
 
         // when
@@ -41,15 +41,15 @@ describe("10kft User Info Adapter", () => {
 
         // then
         const expectedUsersInfo = [{
-            userId: 2168,
-            firstName: "Antonio",
-            lastName: "Banderas",
-            email: "antonio.banderas@zorro.com",
+            userId: 2167,
+            firstName: "Equal",
+            lastName: "Software",
+            email: "esoftware.aslive@equalexperts.com",
         }, {
-            userId: 2169,
-            firstName: "Test",
-            lastName: "User",
-            email: "test@user.com",
+            userId: 2204,
+            firstName: "Leena",
+            lastName: "Bora",
+            email: "lbora@equalexperts.com",
         }]
         expect(result.sort(sortedByEmail)).toEqual(expectedUsersInfo.sort(sortedByEmail))
     })

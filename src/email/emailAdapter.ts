@@ -21,7 +21,7 @@ export type Email = {
 
 export const buildEmailAdapter: BuildEmailAdapter =
     (smtpConfig) => (email) => {
-        // TODO - think if we want to create a createTransporter everytime
+        // TODO : Think if we want to create a createTransporter everytime
         // Or like mongo connection we should create only once
         log("smtpConfig " + JSON.stringify(smtpConfig))
         const transporter = createTransporter(smtpConfig)

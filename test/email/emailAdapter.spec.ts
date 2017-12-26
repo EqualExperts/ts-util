@@ -7,6 +7,7 @@ import {
     EmailAdapter,
     buildEmailAdapter,
 } from "../../src/email/emailAdapter"
+import { appendFileSync } from "fs"
 
 beforeAll(() => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 15000
@@ -14,14 +15,14 @@ beforeAll(() => {
 })
 describe("Email Adapter", () => {
     it("emails to given address", async () => {
-        const underTest: EmailAdapter = buildEmailAdapter(smtpConfig)
-        const status = await underTest(salaryReviewEmail)
+        const underTest: EmailAdapter = buildEmailAdapter(smtpConfig())
+        const status = await underTest(salaryReviewEmail())
 
         expect(status).toBe(true)
     })
 })
 
-const salaryReviewEmail = (
+const salaryReviewEmail = () => (
     {
         from: process.env.RECONCILIATION_REPORT_FROM_EMAIL,
         to: process.env.RECONCILIATION_REPORT_TO_EMAIL,
@@ -31,7 +32,7 @@ const salaryReviewEmail = (
     } as Email
 )
 
-const smtpConfig = (
+const smtpConfig = () => (
     {
         server: process.env.SMTP_SERVER,
         port: Number(process.env.SMTP_PORT),
@@ -52,7 +53,7 @@ function prepareProcessEnvVars() {
 
     if (fs.existsSync(smtpConfigFilePath)) {
         const smtpJson = JSON.parse(fs.readFileSync(smtpConfigFilePath, "utf-8").trim())
-
+        log("smtpJson " + JSON.stringify(smtpJson))
         process.env.SMTP_SERVER = smtpJson.SMTP_SERVER
         process.env.SMTP_PORT = smtpJson.SMTP_PORT
         process.env.SMTP_USERNAME = smtpJson.SMTP_USERNAME
@@ -60,4 +61,8 @@ function prepareProcessEnvVars() {
         process.env.RECONCILIATION_REPORT_FROM_EMAIL = smtpJson.RECONCILIATION_REPORT_FROM_EMAIL
         process.env.RECONCILIATION_REPORT_TO_EMAIL = smtpJson.RECONCILIATION_REPORT_TO_EMAIL
     }
+}
+
+function log(msg: string) {
+    appendFileSync("/tmp/jest.log.txt", new Date() + " - " + msg + "\n", { encoding: "utf8" })
 }

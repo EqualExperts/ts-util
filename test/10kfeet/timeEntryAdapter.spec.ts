@@ -62,23 +62,6 @@ describe("10K Feet Time Entries", () => {
             expect(result[0].assignableType).toBe("LeaveType")
             expect(result[0].billable).toBe(false)
         })
-
-    it("given a bad response then should return a promise rejection with an error", async () => {
-        const from = "BAD DATE"
-        const to = "BAD DATE"
-        const resultsPerPage = 2
-        const baseUrl = "https://vnext-api.10000ft.com"
-        const token = envVars("TENKFT_API_TOKEN")
-
-        const underTest: (from: string, to: string) => Promise<TimeEntryDto[]> =
-            buildFetchTimeEntryAdapterWithResultsPerPage(baseUrl, token, resultsPerPage)
-        const result = underTest(from, to)
-
-        expect(result).rejects.toBe(
-            "[Request Error]" +
-            "[https://vnext-api.10000ft.com/api/v1/time_entries?from=BAD DATE&to=BAD DATE&per_page=2]" +
-            "[HTTP 500 - Internal Server Error][payload:{\"message\":\"internal error\"}]")
-    })
 })
 
 describe("TimeEntries from 10KFeet (Stubbed)", () => {

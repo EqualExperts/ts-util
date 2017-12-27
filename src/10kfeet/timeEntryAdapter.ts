@@ -4,6 +4,7 @@ import { uniq } from "ramda"
 import {
     buildFetchProjectInfoAdapter, ProjectInfo, ProjectState, UNDEFINED_PROJECT,
 } from "./projectAdapter"
+import { fromNullable, none, some } from "fp-ts/lib/Option"
 
 enum AssignmentType {
     PROJECT = "Project",
@@ -115,15 +116,28 @@ export const extractDto =
 // Conclusion 2: Until we refactor the adaptors in ts-util and move domain related logic to the backend,
 //               we have to choose the "less" bad option.
 //               So we are exposing toApprovedOrNot and implementing unit tests for it.
-const toApprovedOrNot: (approvals: Approval[]) => boolean = (approvals: Approval[]) => {
-    const approved = true
-    return approvals.reduce<boolean>((acc, current) => {
-        return acc && isApproved(current)
-    }, approved)
+export const toApprovedOrNot: (maybeApprovals: Approval[]) => boolean = (maybeApprovals: Approval[]) => {
+    return fromEmpty(maybeApprovals).fold(
+        () => false,
+        (approvals: Approval[]) => {
+            const approved = true
+            return approvals.reduce<boolean>(
+                (acc, current) => acc && isApproved(current)
+                , approved,
+            )
+        })
 }
 
-type Approval = {
+// TODO RF : 27/12/2017 : Should be internal (see comments above)
+export type Approval = {
     status: string,
 }
 
 const isApproved = (a: Approval) => a.status === "approved"
+
+const fromEmpty = (maybeArray: Approval[]) => {
+    return fromNullable(maybeArray).fold(
+        () => none,
+        (array: Approval[]) => array.length === 0 ? none : some(array),
+    )
+}

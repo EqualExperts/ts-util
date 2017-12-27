@@ -1,7 +1,7 @@
 import "jest"
 import * as fs from "fs"
 import * as path from "path"
-import { extractDto, TimeEntryDto } from "../../src/10kfeet/timeEntryAdapter"
+import { extractDto, TimeEntryDto, toApprovedOrNot } from "../../src/10kfeet/timeEntryAdapter"
 import { buildFetchTimeEntryAdapterWithResultsPerPage } from "../../src/10kfeet/timeEntryAdapter"
 import { buildConfigAdapter } from "../../src/config/adapter"
 
@@ -61,16 +61,55 @@ describe("10K Feet Time Entries", () => {
             expect(result[0].billable).toBe(false)
         })
 
-    it("returns an \"approved\" time when there are no \"pending\" approvals", async () => {
+    it("returns an \"approved\" timeentry when there are no \"pending\" approvals", async () => {
         const from = "2017-12-04"
         const to = "2017-12-09"
 
         const underTest: (from: string, to: string) => Promise<TimeEntryDto[]> =
-        buildFetchTimeEntryAdapterWithResultsPerPage(baseUrl, token, resultsPerPage)
+            buildFetchTimeEntryAdapterWithResultsPerPage(baseUrl, token, resultsPerPage)
         const result = await underTest(from, to)
 
         const firstResult = result[0]
         expect(firstResult.approved).toBe(true)
+    })
+})
+
+describe("toApprovedOrNot (exposed internal method - see comments on its definition)", () => {
+    it("returns an \"approved\" time entry when there are no \"pending\" approvals", async () => {
+        const approvals = [
+            { status: "approved" },
+        ]
+
+        const result = toApprovedOrNot(approvals)
+
+        expect(result).toBe(true)
+    })
+
+    it("returns a \"pending\" time entry when there is at least one \"pending\" approval", () => {
+        const approvals = [
+            { status: "approved" },
+            { status: "pending" },
+        ]
+
+        const result = toApprovedOrNot(approvals)
+
+        expect(result).toBe(false)
+    })
+
+    it("returns a \"not approved\" time entry when it has undefined approvals", () => {
+        const undefinedApprovals = undefined
+
+        const result = toApprovedOrNot(undefinedApprovals)
+
+        expect(result).toBe(false)
+    })
+
+    it("returns a \"not approved\" time entry when it has NO approvals", () => {
+        const noApprovals = []
+
+        const result = toApprovedOrNot(noApprovals)
+
+        expect(result).toBe(false)
     })
 })
 

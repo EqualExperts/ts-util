@@ -23,7 +23,7 @@ export type TimeEntryDto = {
     assignableType: string,
     assignableName: string,
     billable: boolean,
-    approved: false,
+    approved: boolean,
 }
 
 export type FetchTimeEntryAdapter = (from: string, to: string) => Promise<TimeEntryDto[]>
@@ -99,4 +99,31 @@ export const extractDto =
         approved: toApprovedOrNot(element.approvals.data),
     } as TimeEntryDto)
 
-const toApprovedOrNot = (element: any) => ( false )
+// TODO RF : 27/12/2017 : We have a small dillema here (here comes the story):
+// 1) toApprovedOrNot is clearly an internal function, thus it shouldn't have a unit test.
+//    1.a) another sign that a unit test for toApprovedOrNot is a smell: it deals with external data
+//         (10KFT, that we don't control).
+// 2) the other option is to have integration tests covering all the toApprovedOrNot paths, but that's not good either.
+//    2.a) integration tests are not meant to cover different paths, but to be sure a component "talks" correctly with
+//         the external world.
+//    2.b) these tests would be very fragile and complex to maintain, since they would depend on very specific
+//         combination of data in a staging environment.
+// Conclusion 1: This seems to confirm what our team members are already feeling: that we have too much logic
+//               happening in ts-util adaptors.
+//               If we leave ts-util to convert a external domain to EE domain, and implement business logic in the
+//               backend, we solve this problem.
+// Conclusion 2: Until we refactor the adaptors in ts-util and move domain related logic to the backend,
+//               we have to choose the "less" bad option.
+//               So we are exposing toApprovedOrNot and implementing unit tests for it.
+const toApprovedOrNot: (approvals: Approval[]) => boolean = (approvals: Approval[]) => {
+    const approved = true
+    return approvals.reduce<boolean>((acc, current) => {
+        return acc && isApproved(current)
+    }, approved)
+}
+
+type Approval = {
+    status: string,
+}
+
+const isApproved = (a: Approval) => a.status === "approved"

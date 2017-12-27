@@ -61,7 +61,7 @@ describe("10K Feet Time Entries", () => {
             expect(result[0].billable).toBe(false)
         })
 
-    xit("returns an \"approved\" time when there are no \"pending\" approvals", async () => {
+    it("returns an \"approved\" time when there are no \"pending\" approvals", async () => {
         const from = "2017-12-04"
         const to = "2017-12-09"
 

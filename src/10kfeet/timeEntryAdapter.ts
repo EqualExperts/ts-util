@@ -135,9 +135,9 @@ export type Approval = {
 
 const isApproved = (a: Approval) => a.status === "approved"
 
-const fromEmpty = (maybeArray: Approval[]) => {
+const fromEmpty = <T>(maybeArray: T[]) => {
     return fromNullable(maybeArray).fold(
         () => none,
-        (array: Approval[]) => array.length === 0 ? none : some(array),
+        (array: T[]) => array.length === 0 ? none : some(array),
     )
 }

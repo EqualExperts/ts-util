@@ -31,7 +31,7 @@ describe("Pay rates from Bullhorn", async () => {
 
         // then
         const expectedPayRates = [
-            { email: pferreiraEmail, rates: [550] } as PayRateDto,
+            { email: pferreiraEmail, rates: [0] } as PayRateDto,
             { email: isacNewtonEmail, rates: [400] } as PayRateDto,
         ]
         expect(actualPayRates).toEqual(expectedPayRates)

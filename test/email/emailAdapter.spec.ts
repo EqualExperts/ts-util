@@ -26,9 +26,10 @@ const salaryReviewEmail = () => (
     {
         from: process.env.RECONCILIATION_REPORT_FROM_EMAIL,
         to: process.env.RECONCILIATION_REPORT_TO_EMAIL,
-        subject: `salary review for Marie`,
+        subject: "salary review for Marie",
         body: "salary increment 15%",
-        attachmentPath: path.resolve(__dirname, "../data/report_attachment.csv"),
+        attachmentName: "salary.csv",
+        attachmentContent: "Annual Appraisal,15% Increment",
     } as Email
 )
 

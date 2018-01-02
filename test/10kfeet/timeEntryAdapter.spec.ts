@@ -55,10 +55,9 @@ describe("10K Feet Time Entries", () => {
                 buildFetchTimeEntryAdapterWithResultsPerPage(baseUrl, token, resultsPerPage)
             const result = await underTest(from, to)
 
-            expect(result.length).toBe(5)
-            expect(result[0].assignableName).toBe("LeaveType")
-            expect(result[0].assignableType).toBe("LeaveType")
-            expect(result[0].billable).toBe(false)
+            expect(result[3].assignableName).toBe("LeaveType")
+            expect(result[3].assignableType).toBe("LeaveType")
+            expect(result[3].billable).toBe(false)
         })
 
     it("returns an \"approved\" timeentry when there are no \"pending\" approvals", async () => {

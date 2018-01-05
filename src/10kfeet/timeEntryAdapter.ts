@@ -70,7 +70,7 @@ export const buildFetchTimeEntryAdapterWithResultsPerPage
                         const projectInfo: ProjectInfo | undefined =
                             projects.find((project) => project.id === te.assignableId) || UNDEFINED_PROJECT
 
-                        te.assignableName = projectInfo.name
+                        te.assignableName = projectInfo.clientName
                         te.billable = projectInfo.billable
                     } else {
                         te.assignableName = te.assignableType

@@ -38,6 +38,7 @@ describe("10K Feet Project Info", () => {
             name: "Getting the most out of 10,000ft",
             state: "Internal",
             billable: false,
+            clientName: "HMRC",
         } as ProjectInfo
 
         expect(result).toEqual(expected)
@@ -60,6 +61,7 @@ describe("10K Feet Project Info", () => {
             name: "Exciting project",
             state: "Confirmed",
             billable: true,
+            clientName: "Expert Software",
         } as ProjectInfo
 
         expect(result).toEqual(expected)
@@ -82,6 +84,7 @@ describe("10K Feet Project Info", () => {
             name: "Tentative Project",
             state: "Tentative",
             billable: true,
+            clientName: "Expert Software",
         } as ProjectInfo
 
         expect(result).toEqual(expected)

@@ -8,6 +8,7 @@ export type ProjectInfo = {
     name: string,
     state: string,
     billable: boolean,
+    clientName: string,
 }
 
 export enum ProjectState {
@@ -34,4 +35,5 @@ const toProjectInfo: (resp: any) => ProjectInfo =
         name: resp.name,
         state: resp.project_state,
         billable: resp.project_state !== undefined && resp.project_state !== ProjectState.INTERNAL,
+        clientName: resp.client,
     } as ProjectInfo)

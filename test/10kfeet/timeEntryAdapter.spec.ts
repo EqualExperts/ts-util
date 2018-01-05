@@ -39,7 +39,7 @@ describe("10K Feet Time Entries", () => {
         const firstResult = result[0]
         expect(firstResult.userId).toBeGreaterThan(0)
         expect(firstResult.assignableId).toBeGreaterThan(0)
-        expect(firstResult.assignableName).toBe("Getting the most out of 10,000ft")
+        expect(firstResult.assignableName).toBe("HMRC")
         expect(firstResult.assignableType).toBe("Project")
         expect(firstResult.email).toBe("esoftware.aslive@equalexperts.com")
         expect(firstResult.firstName).toBe("Equal")

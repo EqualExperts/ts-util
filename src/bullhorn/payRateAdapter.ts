@@ -1,4 +1,4 @@
-import BullhornClient from "tmp-fork-bullhorn/lib/Client"
+import BullhornClient from "bullhorn-client/lib/Client"
 import { appendFileSync } from "fs"
 
 export type BuildBullhornClient = (config: BullhornConfig) => Promise<BullhornClient>
@@ -7,6 +7,7 @@ export const buildBullhornClient: BuildBullhornClient =
         const client = new BullhornClient({
             server: config.bhServer,
             authServer: config.bhAuthServer,
+            version: "2.0",
             clientId: config.bhClientId,
             secret: config.bhSecret,
         })

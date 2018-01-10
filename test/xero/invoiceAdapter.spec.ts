@@ -7,7 +7,6 @@ import { buildConfigAdapter } from "../../src/config/adapter"
 let xeroClient: any
 
 beforeAll(() => {
-
     prepareProcessEnvVars()
 
     const envVars = buildConfigAdapter({
@@ -31,17 +30,31 @@ describe("Invoice Adapter", () => {
     it("creates an invoice", async () => {
         // when
         const createInvoiceAdapter = buildCreateInvoiceAdapter(xeroClient)
+
         const invoiceDto: InvoiceDto = {
-            Type: "ACCPAY",
-            Contact: { Name: "Mary" },
             Type: "ACCREC",
+            Contact: { ContactID: "3cbd5263-0965-4c4e-932c-bf50e3297610" },
+            Date: "2018-01-01",
+            DueDate: "2018-01-30",
             LineItems: [{
-                Description: "Monthly rental for property at 56a Wilkins Avenue",
-                Quantity: 6,
+                Description: "Richard Davie Hamilthon - December 2017",
+                Quantity: 20,
                 UnitAmount: 495.00,
-                AccountCode: "200",
+                TaxType: "TAX002",
+            }, {
+                Description: "Leena Davis - December 2017",
+                Quantity: 10,
+                UnitAmount: 600.00,
+                TaxType: "TAX002",
+            }, {
+                Description: "Shabana Begum - December 2017",
+                Quantity: 17,
+                UnitAmount: 750.00,
+                TaxType: "TAX002",
             }],
+            Reference: "PO 1234567",
         }
+
         const result = await createInvoiceAdapter(invoiceDto)
 
         // then

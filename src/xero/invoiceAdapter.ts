@@ -4,13 +4,16 @@ import * as fs from "fs"
 export type InvoiceDto = {
     InvoiceID?: string,
     Type: string,
+    Date?: string,
+    DueDate?: string,
     Contact: ContactDto,
     LineItems: LineItemDto[],
+    Reference?: string,
 }
 
 export type ContactDto = {
     ContactID?: string
-    Name: string,
+    Name?: string,
 }
 
 export type LineItemDto = {
@@ -19,6 +22,7 @@ export type LineItemDto = {
     Description: string,
     UnitAmount: number,
     Quantity: number,
+    TaxType: string,
 }
 
 export type Config = {

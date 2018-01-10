@@ -63,6 +63,8 @@ describe("Invoice Adapter", () => {
 })
 
 function prepareProcessEnvVars() {
+    const dirNameXeroPrivateKeyFile = path.join(__dirname, "../../travis-secrets/xero-int-test-privatekey.pem")
+
     const keyBaseFilePath = "/keybase/team/ee_software/test/xero-credentials"
     const keybaseXeroPrivateKeyFile = path.join(keyBaseFilePath, "privatekey.pem")
     const xeroConsumerKeyFile = path.join(keyBaseFilePath, "consumer-key.txt")
@@ -71,6 +73,9 @@ function prepareProcessEnvVars() {
     if (fs.existsSync(xeroConsumerKeyFile) && fs.existsSync(xeroConsumerSecretFile)) {
         process.env.XERO_CONSUMER_KEY = fs.readFileSync(xeroConsumerKeyFile, "utf-8")
         process.env.XERO_CONSUMER_SECRET = fs.readFileSync(xeroConsumerSecretFile, "utf-8")
+    }
+    if (fs.existsSync(dirNameXeroPrivateKeyFile)) {
+        process.env.XERO_PRIVATE_KEY_PATH = dirNameXeroPrivateKeyFile
     }
     if (fs.existsSync(keybaseXeroPrivateKeyFile)) {
         process.env.XERO_PRIVATE_KEY_PATH = keybaseXeroPrivateKeyFile

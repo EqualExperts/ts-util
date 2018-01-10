@@ -4,8 +4,8 @@ node_js:
 services:
 - mongodb
 before_install:
-- openssl aes-256-cbc -K $encrypted_93d614a3c578_key -iv $encrypted_93d614a3c578_iv
-  -in test/xero/xero-int-test-privatekey.pem.enc -out test/xero/xero-int-test-privatekey.pem
+- openssl aes-256-cbc -K $encrypted_93d614a3c578_key
+  -in travis-secrets/xero-int-test-privatekey.pem.enc -out travis-secrets/xero-int-test-privatekey.pem
   -d
 install:
 - npm install

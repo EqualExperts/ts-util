@@ -34,6 +34,7 @@ describe("Invoice Adapter", () => {
         const invoiceDto: InvoiceDto = {
             Type: "ACCPAY",
             Contact: { Name: "Mary" },
+            Type: "ACCREC",
             LineItems: [{
                 Description: "Monthly rental for property at 56a Wilkins Avenue",
                 Quantity: 6,

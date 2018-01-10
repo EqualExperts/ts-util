@@ -28,7 +28,7 @@ beforeAll(() => {
 })
 
 describe("Invoice Adapter", () => {
-    xit("creates an invoice", async () => {
+    it("creates an invoice", async () => {
         // when
         const createInvoiceAdapter = buildCreateInvoiceAdapter(xeroClient)
         const invoiceDto: InvoiceDto = {
@@ -50,21 +50,14 @@ describe("Invoice Adapter", () => {
 })
 
 function prepareProcessEnvVars() {
-
-    const keyBaseFilePath = "/keybase/team/ee_software/aslive"
-
-    const dirNameXeroPrivateKeyFile = path.join(__dirname, "xero-int-test-privatekey.pem")
-    const keybaseXeroPrivateKeyFile = path.join(keyBaseFilePath, "xero-int-test-privatekey.pem")
-    const xeroConsumerKeyFile = path.join(keyBaseFilePath, "xero-consumer-key.txt")
-    const xeroConsumerSecretFile = path.join(keyBaseFilePath, "xero-consumer-secret.txt")
+    const keyBaseFilePath = "/keybase/team/ee_software/test/xero-credentials"
+    const keybaseXeroPrivateKeyFile = path.join(keyBaseFilePath, "privatekey.pem")
+    const xeroConsumerKeyFile = path.join(keyBaseFilePath, "consumer-key.txt")
+    const xeroConsumerSecretFile = path.join(keyBaseFilePath, "consumer-secret.txt")
 
     if (fs.existsSync(xeroConsumerKeyFile) && fs.existsSync(xeroConsumerSecretFile)) {
         process.env.XERO_CONSUMER_KEY = fs.readFileSync(xeroConsumerKeyFile, "utf-8")
         process.env.XERO_CONSUMER_SECRET = fs.readFileSync(xeroConsumerSecretFile, "utf-8")
-    }
-
-    if (fs.existsSync(dirNameXeroPrivateKeyFile)) {
-        process.env.XERO_PRIVATE_KEY_PATH = dirNameXeroPrivateKeyFile
     }
     if (fs.existsSync(keybaseXeroPrivateKeyFile)) {
         process.env.XERO_PRIVATE_KEY_PATH = keybaseXeroPrivateKeyFile

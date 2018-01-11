@@ -18,7 +18,7 @@ export type ContactDto = {
 
 export type LineItemDto = {
     LineItemID?: string,
-    AccountCode: string,
+    AccountCode?: string,
     Description: string,
     UnitAmount: number,
     Quantity: number,
@@ -40,7 +40,7 @@ export const buildXeroClient = (config: Config) => {
     return new xero.PrivateApplication(config)
 }
 
-export const buildCreateInvoiceAdapter = (xeroClient: any) =>
+export const buildXeroCreateInvoiceAdapter = (xeroClient: any) =>
     async (invoiceDto: InvoiceDto) => {
         const invoiceToBeSaved = xeroClient.core.invoices.newInvoice(invoiceDto)
         const result = await invoiceToBeSaved.save()

@@ -1,5 +1,5 @@
 import "jest"
-import { buildXeroClient, buildCreateInvoiceAdapter, InvoiceDto, Config } from "../../src/xero/invoiceAdapter"
+import { buildXeroClient, buildXeroCreateInvoiceAdapter, InvoiceDto, Config } from "../../src/xero/invoiceAdapter"
 import * as path from "path"
 import fs = require("fs")
 import { buildConfigAdapter } from "../../src/config/adapter"
@@ -27,9 +27,9 @@ beforeAll(() => {
 })
 
 describe("Invoice Adapter", () => {
-    it("creates an invoice", async () => {
+    xit("creates an invoice", async () => {
         // when
-        const createInvoiceAdapter = buildCreateInvoiceAdapter(xeroClient)
+        const createInvoiceAdapter = buildXeroCreateInvoiceAdapter(xeroClient)
 
         const invoiceDto: InvoiceDto = {
             Type: "ACCREC",

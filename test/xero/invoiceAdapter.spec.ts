@@ -25,6 +25,7 @@ beforeAll(() => {
         consumerSecret: envVars("XERO_CONSUMER_SECRET"),
         privateKeyPath: envVars("XERO_PRIVATE_KEY_PATH"),
     }
+
     xeroClient = buildXeroClient(config)
 })
 
@@ -42,17 +43,17 @@ describe("Invoice Adapter", () => {
                 Description: "Richard Davie Hamilthon - December 2017",
                 Quantity: 20,
                 UnitAmount: 495.00,
-                TaxType: "TAX002",
+                TaxType: "OUTPUT",
             }, {
                 Description: "Leena Davis - December 2017",
                 Quantity: 10,
                 UnitAmount: 600.00,
-                TaxType: "TAX002",
+                TaxType: "OUTPUT",
             }, {
                 Description: "Shabana Begum - December 2017",
                 Quantity: 17,
                 UnitAmount: 750.00,
-                TaxType: "TAX002",
+                TaxType: "OUTPUT",
             }],
             Reference: "PO 1234567",
         }

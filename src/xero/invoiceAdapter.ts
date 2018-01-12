@@ -23,6 +23,12 @@ export type LineItemDto = {
     UnitAmount: number,
     Quantity: number,
     TaxType: string,
+    Tracking?: TrackingItemDto[],
+}
+
+export type TrackingItemDto = {
+    Name: string,
+    Option: string,
 }
 
 export type Config = {

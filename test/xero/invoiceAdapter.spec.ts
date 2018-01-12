@@ -23,7 +23,7 @@ beforeAll(() => {
         userAgent: "XERO_INTEGRATION_TESTS",
         consumerKey: envVars("XERO_CONSUMER_KEY"),
         consumerSecret: envVars("XERO_CONSUMER_SECRET"),
-        privateKeyPath: envVars("XERO_PRIVATE_KEY_PATH"),
+        privateKey: fs.readFileSync(envVars("XERO_PRIVATE_KEY_PATH"), "utf8"),
     }
 
     xeroClient = buildXeroClient(config)

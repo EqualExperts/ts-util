@@ -1,6 +1,6 @@
-import { TrackingItemDto } from './../../../src/xero/invoiceAdapter';
+import { TrackingItemDto } from "./../../../src/xero/invoiceAdapter"
 import "jest"
-import { buildXeroClient, buildCreateInvoiceAdapter, InvoiceDto, Config } from "../../../src/xero/invoiceAdapter"
+import { buildXeroClient, buildXeroCreateInvoiceAdapter, InvoiceDto, Config } from "./../../../src/xero/invoiceAdapter"
 import * as path from "path"
 import fs = require("fs")
 import { buildConfigAdapter } from "../../../src/config/adapter"
@@ -47,15 +47,15 @@ describe("Invoice Adapter", () => {
     xit("generate invoice manually to send to finance", async () => {
 
         // when
-        const createInvoiceAdapter = buildCreateInvoiceAdapter(xeroClient)
+        const createInvoiceAdapter = buildXeroCreateInvoiceAdapter(xeroClient)
 
         const invoiceDto: InvoiceDto = {
             Type: "ACCREC",
             Contact: { ContactID: "6295e95a-24c5-4c75-891d-ab085cbf0b3c" },
-            Date: "2017-12-01",
-            DueDate: "2017-12-31",
+            Date: "2017-12-31",
+            DueDate: "2018-01-31",
             LineItems: [{
-                Description: "Richard Sherman",
+                Description: "Richard Sherman - Amplience - December 2017",
                 Quantity: 18,
                 UnitAmount: Math.round(100.00 * 8),
                 TaxType: "OUTPUT2",
@@ -68,7 +68,7 @@ describe("Invoice Adapter", () => {
                     Option: "Dec 2017",
                 }],
             }, {
-                Description: "Steve Bakhtiari",
+                Description: "Steve Bakhtiari - Amplience - December 2017",
                 Quantity: 12,
                 UnitAmount: Math.round(90.63 * 8),
                 TaxType: "OUTPUT2",

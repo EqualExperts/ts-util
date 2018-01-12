@@ -66,7 +66,7 @@ describe("Invoice Adapter", () => {
 })
 
 function prepareProcessEnvVars() {
-    const dirNameXeroPrivateKeyFile = path.join(__dirname, "privatekey.pem.enc")
+    const dirNameXeroPrivateKeyFile = path.join(__dirname, "privatekey.pem")
 
     const keyBaseFilePath = "/keybase/team/ee_software/test/xero-credentials"
     const keybaseXeroPrivateKeyFile = path.join(keyBaseFilePath, "privatekey.pem")

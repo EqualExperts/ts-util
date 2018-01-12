@@ -27,7 +27,7 @@ beforeAll(() => {
 })
 
 describe("Invoice Adapter", () => {
-    xit("creates an invoice", async () => {
+    it("creates an invoice", async () => {
         // when
         const createInvoiceAdapter = buildXeroCreateInvoiceAdapter(xeroClient)
 
@@ -63,7 +63,7 @@ describe("Invoice Adapter", () => {
 })
 
 function prepareProcessEnvVars() {
-    const dirNameXeroPrivateKeyFile = path.join(__dirname, "../../travis-secrets/xero-int-test-privatekey.pem")
+    const dirNameXeroPrivateKeyFile = path.join(__dirname, "privatekey.pem.enc")
 
     const keyBaseFilePath = "/keybase/team/ee_software/test/xero-credentials"
     const keybaseXeroPrivateKeyFile = path.join(keyBaseFilePath, "privatekey.pem")

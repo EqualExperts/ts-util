@@ -9,6 +9,8 @@ let xeroClient: any
 beforeAll(() => {
     prepareProcessEnvVars()
 
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 15000
+
     const envVars = buildConfigAdapter({
         XERO_CONSUMER_KEY: {},
         XERO_CONSUMER_SECRET: {},

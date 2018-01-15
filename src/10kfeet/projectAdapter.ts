@@ -5,6 +5,7 @@ export type BuildFetchProjectInfoAdapter = (baseUrl: string, token: string) => F
 
 export type ProjectInfo = {
     id: number,
+    parentId: number,
     name: string,
     state: string,
     billable: boolean,
@@ -32,6 +33,7 @@ export const buildFetchProjectInfoAdapter: BuildFetchProjectInfoAdapter =
 const toProjectInfo: (resp: any) => ProjectInfo =
     (resp: any) => ({
         id: resp.id,
+        parentId: resp.parent_id,
         name: resp.name,
         state: resp.project_state,
         billable: resp.project_state !== undefined && resp.project_state !== ProjectState.INTERNAL,

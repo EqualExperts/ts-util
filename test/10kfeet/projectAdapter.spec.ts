@@ -21,7 +21,7 @@ beforeAll(() => {
 })
 
 describe("10K Feet Project Info", () => {
-    it("should fetch project info", async () => {
+    it("should fetch project info with billable set to false on Internal projects", async () => {
         // given
         const projectId = 10264
         const baseUrl = "https://vnext-api.10000ft.com"
@@ -35,6 +35,7 @@ describe("10K Feet Project Info", () => {
         // then
         const expected = {
             id: projectId,
+            parentId: null,
             name: "Getting the most out of 10,000ft",
             state: "Internal",
             billable: false,
@@ -58,6 +59,7 @@ describe("10K Feet Project Info", () => {
         // then
         const expected = {
             id: projectId,
+            parentId: 10291,
             name: "Exciting project",
             state: "Confirmed",
             billable: true,
@@ -81,6 +83,7 @@ describe("10K Feet Project Info", () => {
         // then
         const expected = {
             id: projectId,
+            parentId: null,
             name: "Tentative Project",
             state: "Tentative",
             billable: true,

@@ -6,14 +6,6 @@ import { category } from "fp-ts"
 export type FetchAssignableInfoAdapter = (assignableId: number) => Promise<ProjectInfo>
 export type BuildFetchProjectInfoAdapter = (baseUrl: string, token: string) => FetchAssignableInfoAdapter
 
-export type PhaseDto = {
-    budgetItems: BudgetItemsDto,
-}
-
-export type BudgetItemsDto = {
-    category: string,
-}
-
 export type ProjectInfo = {
     id: number,
     parentId: number,
@@ -38,6 +30,14 @@ export const buildFetchProjectInfoAdapter: BuildFetchProjectInfoAdapter =
                 headers: new Headers({ "content-type": "application/json", "auth": token }),
             }).then((response: Response) => (
                 response.json().then(toProjectInfo)))
+
+export type PhaseDto = {
+    budgetItems: BudgetItemsDto,
+}
+
+export type BudgetItemsDto = {
+    category: string,
+}
 
 export const buildFetchPhasesAdapter: (baseUrl: string, token: string) => (projectId: number) => Promise<PhaseDto[]> =
     (baseUrl, token) =>

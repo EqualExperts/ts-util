@@ -1,10 +1,14 @@
 import "jest"
 import * as fs from "fs"
 import * as path from "path"
-import { buildFetchProjectInfoAdapter, ProjectInfo } from "../../src/10kfeet/projectAdapter"
+import {
+    buildFetchProjectInfoAdapter,
+    ProjectInfo,
+    buildFetchPhasesAdapter,
+    PhaseDto } from "../../src/10kfeet/projectAdapter"
 import { buildConfigAdapter } from "../../src/config/adapter"
 
-let envVars
+let token
 let originalTimeout
 
 beforeAll(() => {
@@ -13,26 +17,43 @@ beforeAll(() => {
 
     prepareProcessEnvVars()
 
-    envVars = buildConfigAdapter({
+    const envVars = buildConfigAdapter({
         TENKFT_API_TOKEN: {},
     }).getOrElse(
         (wrongConfigMessage) => { throw new Error(wrongConfigMessage) },
     )
+    token = envVars("TENKFT_API_TOKEN")
 })
 
-describe("10K Feet Project Info", () => {
-    it("should fetch project info with billable set to false on Internal projects", async () => {
-        // given
-        const projectId = 10264
-        const baseUrl = "https://vnext-api.10000ft.com"
-        const token = envVars("TENKFT_API_TOKEN")
+describe("10K Feet Project Adapter", () => {
 
-        // when
-        const underTest: (projectId: number) => Promise<ProjectInfo> =
-            buildFetchProjectInfoAdapter(baseUrl, token)
+    const baseUrl = "https://vnext-api.10000ft.com"
+    xit("fetchs phases of a project", async () => {
+        const projectId = 10291
+
+        const underTest = buildFetchPhasesAdapter(baseUrl, token)
+        const result = underTest(projectId)
+
+        const expectedPhases: PhaseDto[] = [
+            {
+                budgetItems: { category: "PO12220340" },
+            },
+            {
+                budgetItems: { category: "PO12220360" },
+            },
+            {
+                budgetItems: { category: "PO12220310" },
+            },
+        ]
+        expect(result).toEqual(expectedPhases)
+    })
+
+    it("fetchs project with billable set to false on Internal projects", async () => {
+        const projectId = 10264
+
+        const underTest = buildFetchProjectInfoAdapter(baseUrl, token)
         const result = await underTest(projectId)
 
-        // then
         const expected = {
             id: projectId,
             parentId: null,
@@ -45,18 +66,12 @@ describe("10K Feet Project Info", () => {
         expect(result).toEqual(expected)
     })
 
-    it("should fetch project info with billable set to true on Confirmed projects ", async () => {
-        // given
+    it("fetchs project with billable set to true on Confirmed projects ", async () => {
         const projectId = 10353
-        const baseUrl = "https://vnext-api.10000ft.com"
-        const token = envVars("TENKFT_API_TOKEN")
 
-        // when
-        const underTest: (projectId: number) => Promise<ProjectInfo> =
-            buildFetchProjectInfoAdapter(baseUrl, token)
+        const underTest = buildFetchProjectInfoAdapter(baseUrl, token)
         const result = await underTest(projectId)
 
-        // then
         const expected = {
             id: projectId,
             parentId: 10291,
@@ -65,22 +80,15 @@ describe("10K Feet Project Info", () => {
             billable: true,
             clientName: "Expert Software",
         } as ProjectInfo
-
         expect(result).toEqual(expected)
     })
 
-    it("should fetch project info with billable set to true on Tentative projects ", async () => {
-        // given
+    it("fetchs project with billable set to true on Tentative projects ", async () => {
         const projectId = 10354
-        const baseUrl = "https://vnext-api.10000ft.com"
-        const token = envVars("TENKFT_API_TOKEN")
 
-        // when
-        const underTest: (projectId: number) => Promise<ProjectInfo> =
-            buildFetchProjectInfoAdapter(baseUrl, token)
+        const underTest = buildFetchProjectInfoAdapter(baseUrl, token)
         const result = await underTest(projectId)
 
-        // then
         const expected = {
             id: projectId,
             parentId: null,
@@ -89,7 +97,6 @@ describe("10K Feet Project Info", () => {
             billable: true,
             clientName: "Expert Software",
         } as ProjectInfo
-
         expect(result).toEqual(expected)
     })
 })

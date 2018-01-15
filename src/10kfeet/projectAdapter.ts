@@ -3,6 +3,10 @@ import * as fetch from "isomorphic-fetch"
 export type FetchAssignableInfoAdapter = (assignableId: number) => Promise<ProjectInfo>
 export type BuildFetchProjectInfoAdapter = (baseUrl: string, token: string) => FetchAssignableInfoAdapter
 
+export type PhaseDto = {
+
+}
+
 export type ProjectInfo = {
     id: number,
     parentId: number,
@@ -21,14 +25,21 @@ export enum ProjectState {
 export const UNDEFINED_PROJECT = { id: -1, name: "[#UNDEF]", state: "[#UNDEF]" } as ProjectInfo
 
 export const buildFetchProjectInfoAdapter: BuildFetchProjectInfoAdapter =
-    (baseUrl, token) => {
-        return (projectId) => {
-            return fetch(`${baseUrl}/api/v1/projects/${projectId}`, {
+    (baseUrl, token) =>
+        (projectId) =>
+            fetch(`${baseUrl}/api/v1/projects/${projectId}`, {
                 headers: new Headers({ "content-type": "application/json", "auth": token }),
             }).then((response: Response) => (
                 response.json().then(toProjectInfo)))
-        }
-    }
+
+export const buildFetchPhasesAdapter: (baseUrl: string, token: string) => (projectId: number) => Promise<PhaseDto[]> =
+    (baseUrl, token) =>
+        (projectId) =>
+            fetch(`${baseUrl}/api/v1/projects/${projectId}/phases?fields=budget_items`, {
+                headers: new Headers({ "content-type": "application/json", "auth": token }),
+            }).then((response: Response) => (
+                response.json().then(toPhaseDto)),
+            )
 
 const toProjectInfo: (resp: any) => ProjectInfo =
     (resp: any) => ({
@@ -39,3 +50,6 @@ const toProjectInfo: (resp: any) => ProjectInfo =
         billable: resp.project_state !== undefined && resp.project_state !== ProjectState.INTERNAL,
         clientName: resp.client,
     } as ProjectInfo)
+
+const toPhaseDto: (resp: any) => PhaseDto[] =
+    (resp: any) => ([{}])

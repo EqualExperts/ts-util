@@ -118,8 +118,8 @@ export const extractDto =
 // Conclusion 2: Until we refactor the adaptors in ts-util and move domain related logic to the backend,
 //               we have to choose the "less" bad option.
 //               So we are exposing toApprovedOrNot and implementing unit tests for it.
-export const toApprovedOrNot: (maybeApprovals: Approval[]) => boolean = (maybeApprovals: Approval[]) => {
-    return fromEmpty(maybeApprovals).fold(
+export const toApprovedOrNot: (maybeApprovals: Approval[]) => boolean = (maybeApprovals: Approval[]) =>
+    fromEmpty(maybeApprovals).fold(
         () => false,
         (approvals: Approval[]) => {
             const approved = true
@@ -128,7 +128,6 @@ export const toApprovedOrNot: (maybeApprovals: Approval[]) => boolean = (maybeAp
                 , approved,
             )
         })
-}
 
 // TODO RF : 27/12/2017 : Should be internal (see comments above)
 export type Approval = {
@@ -137,6 +136,7 @@ export type Approval = {
 
 const isApproved = (a: Approval) => a.status === "approved"
 
+// This is DUPLICATED in projectAdapter
 const fromEmpty = <T>(maybeArray: T[]) => {
     return fromNullable(maybeArray).fold(
         () => none,

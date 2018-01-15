@@ -1,11 +1,17 @@
 import * as fetch from "isomorphic-fetch"
+import { fromNullable, none, some } from "fp-ts/lib/Option"
 import { fetchPageData } from "./common"
+import { category } from "fp-ts"
 
 export type FetchAssignableInfoAdapter = (assignableId: number) => Promise<ProjectInfo>
 export type BuildFetchProjectInfoAdapter = (baseUrl: string, token: string) => FetchAssignableInfoAdapter
 
 export type PhaseDto = {
+    budgetItems: BudgetItemsDto,
+}
 
+export type BudgetItemsDto = {
+    category: string,
 }
 
 export type ProjectInfo = {
@@ -53,12 +59,22 @@ const toProjectInfo: (resp: any) => ProjectInfo =
         clientName: resp.client,
     } as ProjectInfo)
 
-const toPhaseDto: (resp: any) => PhaseDto =
-    (resp: any) => {
-        // console.log(resp)
-        return {
-            budgetItems: resp.budget_items.data,
-        }
-    }
+const toPhaseDto = (resp: any) =>
+    ({
+        budgetItems: toBudgetItemsDto(resp.budget_items.data),
+    })
+
+const toBudgetItemsDto = (maybeBudgetItems: BudgetItemsDto[]) =>
+    fromEmpty(maybeBudgetItems).fold(
+        () => ({ category: "" }),
+        (budgetItems: BudgetItemsDto[]) => ({ category: budgetItems[0].category }),
+    )
+
+const fromEmpty = <T>(maybeArray: T[]) => {
+    return fromNullable(maybeArray).fold(
+        () => none,
+        (array: T[]) => array.length === 0 ? none : some(array),
+    )
+}
 
 const PHASES_FOR_PAGE = 50

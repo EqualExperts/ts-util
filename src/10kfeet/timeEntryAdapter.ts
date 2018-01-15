@@ -22,6 +22,7 @@ export type TimeEntryDto = {
 
     assignableId: number,
     assignableType: string,
+    parentId: number,
     assignableName: string,
     billable: boolean,
     approved: boolean,
@@ -72,6 +73,7 @@ export const buildFetchTimeEntryAdapterWithResultsPerPage
 
                         te.assignableName = projectInfo.clientName
                         te.billable = projectInfo.billable
+                        te.parentId = projectInfo.parentId
                     } else {
                         te.assignableName = te.assignableType
                         te.billable = false

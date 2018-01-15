@@ -39,11 +39,16 @@ describe("10K Feet Time Entries", () => {
         const firstResult = result[0]
         expect(firstResult.userId).toBeGreaterThan(0)
         expect(firstResult.assignableId).toBeGreaterThan(0)
+        expect(firstResult.parentId).toBeNull()
         expect(firstResult.assignableName).toBe("HMRC")
         expect(firstResult.assignableType).toBe("Project")
         expect(firstResult.email).toBe("esoftware.aslive@equalexperts.com")
         expect(firstResult.firstName).toBe("Equal")
         expect(firstResult.lastName).toBe("Software")
+
+        const fourthResult = result[4]
+        expect(fourthResult.parentId).toBeGreaterThan(0)
+
     })
 
     it("entries that are Leaves should have assignableName equal to assignableType and billable set to false",

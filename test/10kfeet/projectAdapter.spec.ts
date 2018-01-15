@@ -32,7 +32,7 @@ describe("10K Feet Project Adapter", () => {
         const projectId = 10291
 
         const underTest = buildFetchPhasesAdapter(baseUrl, token)
-        const result = underTest(projectId)
+        const result = await underTest(projectId)
 
         const expectedPhases: PhaseDto[] = [
             {

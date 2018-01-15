@@ -1,4 +1,5 @@
 import * as fetch from "isomorphic-fetch"
+import { fetchPageData } from "./common"
 
 export type FetchAssignableInfoAdapter = (assignableId: number) => Promise<ProjectInfo>
 export type BuildFetchProjectInfoAdapter = (baseUrl: string, token: string) => FetchAssignableInfoAdapter
@@ -34,12 +35,13 @@ export const buildFetchProjectInfoAdapter: BuildFetchProjectInfoAdapter =
 
 export const buildFetchPhasesAdapter: (baseUrl: string, token: string) => (projectId: number) => Promise<PhaseDto[]> =
     (baseUrl, token) =>
-        (projectId) =>
-            fetch(`${baseUrl}/api/v1/projects/${projectId}/phases?fields=budget_items`, {
-                headers: new Headers({ "content-type": "application/json", "auth": token }),
-            }).then((response: Response) => (
-                response.json().then(toPhaseDto)),
-            )
+        async (projectId) =>
+            fetchPageData(
+                baseUrl,
+                `/api/v1/projects/${projectId}/phases?fields=budget_items&per_page=${PHASES_FOR_PAGE}`,
+                token,
+                [],
+                toPhaseDto)
 
 const toProjectInfo: (resp: any) => ProjectInfo =
     (resp: any) => ({
@@ -51,5 +53,12 @@ const toProjectInfo: (resp: any) => ProjectInfo =
         clientName: resp.client,
     } as ProjectInfo)
 
-const toPhaseDto: (resp: any) => PhaseDto[] =
-    (resp: any) => ([{}])
+const toPhaseDto: (resp: any) => PhaseDto =
+    (resp: any) => {
+        // console.log(resp)
+        return {
+            budgetItems: resp.budget_items.data,
+        }
+    }
+
+const PHASES_FOR_PAGE = 50

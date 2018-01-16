@@ -39,7 +39,9 @@ export type BudgetItemsDto = {
     category: string,
 }
 
-export const buildFetchPhasesAdapter: (baseUrl: string, token: string) => (projectId: number) => Promise<PhaseDto[]> =
+export type FetchPhasesAdapter = (projectId: number) => Promise<PhaseDto[]>
+
+export const buildFetchPhasesAdapter: (baseUrl: string, token: string) => FetchPhasesAdapter =
     (baseUrl, token) =>
         async (projectId) =>
             fetchPageData(

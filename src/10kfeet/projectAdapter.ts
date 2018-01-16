@@ -70,6 +70,7 @@ const toBudgetItemsDto = (maybeBudgetItems: BudgetItemsDto[]) =>
         (budgetItems: BudgetItemsDto[]) => ({ category: budgetItems[0].category }),
     )
 
+// This is DUPLICATED in timeEntryAdapter
 const fromEmpty = <T>(maybeArray: T[]) => {
     return fromNullable(maybeArray).fold(
         () => none,

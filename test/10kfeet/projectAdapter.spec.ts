@@ -28,6 +28,7 @@ beforeAll(() => {
 describe("10K Feet Project Adapter", () => {
 
     const baseUrl = "https://vnext-api.10000ft.com"
+
     it("fetchs phases of a project", async () => {
         const projectId = 10291
 

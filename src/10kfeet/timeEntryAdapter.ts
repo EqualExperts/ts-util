@@ -26,6 +26,7 @@ export type TimeEntryDto = {
     assignableName: string,
     billable: boolean,
     approved: boolean,
+    hourlyBillRate: number,
 }
 
 export type FetchTimeEntryAdapter = (from: string, to: string) => Promise<TimeEntryDto[]>
@@ -100,6 +101,7 @@ export const extractDto =
         assignableId: element.assignable_id,
         assignableType: element.assignable_type,
         approved: toApprovedOrNot(element.approvals.data),
+        hourlyBillRate: element.bill_rate,
     } as TimeEntryDto)
 
 // TODO RF : 27/12/2017 : We have a small dillema here (here comes the story):

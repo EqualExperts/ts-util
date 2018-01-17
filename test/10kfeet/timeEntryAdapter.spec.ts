@@ -32,8 +32,7 @@ describe("10K Feet Time Entries", () => {
         const to = "2017-11-31"
         const lessResultsPerPage = 2
 
-        const underTest: (from: string, to: string) => Promise<TimeEntryDto[]> =
-            buildFetchTimeEntryAdapterWithResultsPerPage(baseUrl, token, lessResultsPerPage)
+        const underTest = buildFetchTimeEntryAdapterWithResultsPerPage(baseUrl, token, lessResultsPerPage)
         const result = await underTest(from, to)
 
         const firstResult = result[0]
@@ -45,6 +44,7 @@ describe("10K Feet Time Entries", () => {
         expect(firstResult.email).toBe("esoftware.aslive@equalexperts.com")
         expect(firstResult.firstName).toBe("Equal")
         expect(firstResult.lastName).toBe("Software")
+        expect(firstResult.hourlyBillRate).toBe(1)
 
         const fourthResult = result[4]
         expect(fourthResult.parentId).toBeGreaterThan(0)
@@ -56,8 +56,7 @@ describe("10K Feet Time Entries", () => {
             const from = "2017-12-20"
             const to = "2017-12-20"
 
-            const underTest: (from: string, to: string) => Promise<TimeEntryDto[]> =
-                buildFetchTimeEntryAdapterWithResultsPerPage(baseUrl, token, resultsPerPage)
+            const underTest = buildFetchTimeEntryAdapterWithResultsPerPage(baseUrl, token, resultsPerPage)
             const result = await underTest(from, to)
 
             expect(result[3].assignableName).toBe("LeaveType")
@@ -69,8 +68,7 @@ describe("10K Feet Time Entries", () => {
         const from = "2017-12-04"
         const to = "2017-12-09"
 
-        const underTest: (from: string, to: string) => Promise<TimeEntryDto[]> =
-            buildFetchTimeEntryAdapterWithResultsPerPage(baseUrl, token, resultsPerPage)
+        const underTest = buildFetchTimeEntryAdapterWithResultsPerPage(baseUrl, token, resultsPerPage)
         const result = await underTest(from, to)
 
         const firstResult = result[0]

@@ -32,6 +32,7 @@ export const buildFetchProjectInfoAdapter: BuildFetchProjectInfoAdapter =
                 response.json().then(toProjectInfo)))
 
 export type PhaseDto = {
+    id: string,
     budgetItems: BudgetItemsDto,
 }
 
@@ -63,6 +64,7 @@ const toProjectInfo: (resp: any) => ProjectInfo =
 
 const toPhaseDto = (resp: any) =>
     ({
+        id: resp.id,
         budgetItems: toBudgetItemsDto(resp.budget_items.data),
     })
 

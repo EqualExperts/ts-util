@@ -100,7 +100,7 @@ describe("10K Feet Project Adapter", () => {
             name: "Tentative Project",
             state: "Tentative",
             billable: true,
-            clientName: "Expert Software",
+            clientName: "Expert Software1",
         } as ProjectInfo
         expect(result).toEqual(expected)
     })

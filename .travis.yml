@@ -36,3 +36,6 @@ deploy:
   email: esoftware@equalexperts.com
   api_key: "$NPM_TOKEN"
   skip_cleanup: true
+
+notifications:
+    slack: equalexperts:O2ZGWAhxKaIHSH3EV5TdvOYX  

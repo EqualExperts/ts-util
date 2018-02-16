@@ -6,12 +6,14 @@ export type GSuiteConfig = {
     impersonationEmail: string,
 }
 
+// reference: https://developers.google.com/admin-sdk/directory/v1/reference/users/insert
 export type AccountParametersDto = {
     primaryEmail: string,
     name: {
         givenName: string,
         familyName: string,
     },
+    password: string,
 }
 
 export type AccountResultDto = {
@@ -48,7 +50,6 @@ export const buildGSuiteClient = (config: GSuiteConfig): any => {
 }
 
 const authorize = (gsuiteClient: any) => {
-    // TODO: implement this using functional lib?
     const alreadyAuthorized = (gsuiteClient.credentials && gsuiteClient.credentials.access_token)
     if (alreadyAuthorized) {
         return Promise.resolve(gsuiteClient.credentials)
@@ -64,7 +65,6 @@ const authorize = (gsuiteClient: any) => {
 }
 
 const insertAccount = (gsuiteClient: any, resource: any): Promise<AccountResultDto> => {
-    // TODO: implement this using functional lib?
     const admin = google.admin("directory_v1")
     return new Promise((resolve, reject) => {
         admin.users.insert({
@@ -79,9 +79,29 @@ const insertAccount = (gsuiteClient: any, resource: any): Promise<AccountResultD
     })
 }
 
+const removeAccount = (gsuiteClient: any, userEmail: string): Promise<boolean> => {
+    const admin = google.admin("directory_v1")
+    return new Promise((resolve, reject) => {
+        admin.users.delete({
+            auth: gsuiteClient,
+            userKey: userEmail,
+        }, (err: any, response: any) => {
+            if (err) {
+                return reject(err)
+            }
+            return resolve(response.status === 204)
+        })
+    })
+}
+
 export const buildOnboardingAccountCreatorAdapter = (gsuiteClient: any) =>
     async (accountParamsDto: AccountParametersDto) => {
         await authorize(gsuiteClient)
-        const result = await insertAccount(gsuiteClient, accountParamsDto)
-        return result
+        return await insertAccount(gsuiteClient, accountParamsDto)
+    }
+
+export const buildOnboardingAccountRemoverAdapter = (gsuiteClient: any) =>
+    async (userEmail: string) => {
+        await authorize(gsuiteClient)
+        return await removeAccount(gsuiteClient, userEmail)
     }

@@ -6,6 +6,7 @@ import {
     GSuiteConfig,
     buildGSuiteClient,
     buildOnboardingAccountCreatorAdapter,
+    buildOnboardingAccountRemoverAdapter,
 } from "../../src/gsuite/accountAdapter"
 import { buildConfigAdapter } from "../../src/config/adapter"
 
@@ -13,6 +14,13 @@ import { appendFileSync } from "fs"
 
 let originalTimeout
 let gsuiteConfig
+let randomEmail
+
+function guidGenerator(): string {
+    // tslint:disable-next-line:no-bitwise
+    const S4 = () => (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
+    return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4())
+}
 
 beforeAll(async () => {
     originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL
@@ -20,6 +28,7 @@ beforeAll(async () => {
 
     const config = loadConfig()
     gsuiteConfig = buildConfig(config)
+    randomEmail = "tuser" + guidGenerator() + "@aslive.dashboard.equalexperts.pt"
 })
 
 describe("GSuite operations", async () => {
@@ -27,12 +36,14 @@ describe("GSuite operations", async () => {
         // given
         const gsuiteClient = await buildGSuiteClient(gsuiteConfig)
         const accountCreator = buildOnboardingAccountCreatorAdapter(gsuiteClient)
+
         const accountParams = {
-            primaryEmail: "tuser1@aslive.dashboard.equalexperts.pt",
+            primaryEmail: randomEmail,
             name: {
                 givenName: "Test1",
                 familyName: "User1",
             },
+            password: "T&4K^yAXPPC\\h(7}",
         }
 
         // when
@@ -48,8 +59,6 @@ describe("GSuite operations", async () => {
             },
             isAdmin: false,
             isDelegatedAdmin: false,
-            suspended: true,
-            suspensionReason: "WEB_LOGIN_REQUIRED",
             customerId: "C0487729q",
             orgUnitPath: "/",
             isMailboxSetup: false,
@@ -57,17 +66,30 @@ describe("GSuite operations", async () => {
         expect(result.id).toBeTruthy()
         expect(result).toEqual(expect.objectContaining(expectedResult))
     })
+    it("Deletes an account on GSuite", async () => {
+        // given
+        const gsuiteClient = await buildGSuiteClient(gsuiteConfig)
+        const accountRemover = buildOnboardingAccountRemoverAdapter(gsuiteClient)
+
+        const userEmail = randomEmail
+
+        // when
+        const result = await accountRemover(userEmail)
+
+        // then.
+        expect(result).toEqual(true)
+    })
 })
 
 function loadConfigs() {
     const keyBaseFilePath = "/keybase/team/ee_software/aslive"
     const credsFilePath = path.join(keyBaseFilePath, "gsuite.json")
-
+    const impersonationEmail = "esoftware@aslive.dashboard.equalexperts.pt"
     if (fs.existsSync(credsFilePath)) {
         const jsonConfig = JSON.parse(fs.readFileSync(credsFilePath, "utf-8").trim())
         process.env.GSUITE_CLIENT_EMAIL = jsonConfig.client_email
         process.env.GSUITE_PRIVATE_KEY = jsonConfig.private_key
-        process.env.GSUITE_IMPERSONATION_EMAIL = jsonConfig.impersonation_email
+        process.env.GSUITE_IMPERSONATION_EMAIL = impersonationEmail
     }
 }
 

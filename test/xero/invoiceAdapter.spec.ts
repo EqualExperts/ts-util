@@ -31,29 +31,19 @@ beforeAll(() => {
 
 describe("Invoice Adapter", () => {
     it("creates an invoice", async () => {
-        // when
+        // whenadd
         const createInvoiceAdapter = buildXeroCreateInvoiceAdapter(xeroClient)
 
         const invoiceDto: InvoiceDto = {
             Type: "ACCREC",
-            Contact: { ContactID: "3cbd5263-0965-4c4e-932c-bf50e3297610" },
+            Contact: { ContactID: "6295e95a-24c5-4c75-891d-ab085cbf0b3c" },
             Date: "2018-01-01",
             DueDate: "2018-01-30",
             LineItems: [{
                 Description: "Richard Davie Hamilthon - December 2017",
                 Quantity: 20,
                 UnitAmount: 495.00,
-                TaxType: "OUTPUT",
-            }, {
-                Description: "Leena Davis - December 2017",
-                Quantity: 10,
-                UnitAmount: 600.00,
-                TaxType: "OUTPUT",
-            }, {
-                Description: "Shabana Begum - December 2017",
-                Quantity: 17,
-                UnitAmount: 750.00,
-                TaxType: "OUTPUT",
+                TaxType: "OUTPUT2",
             }],
             Reference: "PO 1234567",
         }
@@ -68,7 +58,7 @@ describe("Invoice Adapter", () => {
 function prepareProcessEnvVars() {
     const dirNameXeroPrivateKeyFile = path.join(__dirname, "privatekey.pem")
 
-    const keyBaseFilePath = "/keybase/team/ee_software/test/xero-credentials"
+    const keyBaseFilePath = "/keybase/team/ee_software/aslive/xero-credentials"
     const keybaseXeroPrivateKeyFile = path.join(keyBaseFilePath, "privatekey.pem")
     const xeroConsumerKeyFile = path.join(keyBaseFilePath, "consumer-key.txt")
     const xeroConsumerSecretFile = path.join(keyBaseFilePath, "consumer-secret.txt")

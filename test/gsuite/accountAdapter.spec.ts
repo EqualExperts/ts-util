@@ -84,12 +84,14 @@ describe("GSuite operations", async () => {
 function loadConfigs() {
     const keyBaseFilePath = "/keybase/team/ee_software/aslive"
     const credsFilePath = path.join(keyBaseFilePath, "gsuite.json")
-    const impersonationEmail = "esoftware@aslive.dashboard.equalexperts.pt"
     if (fs.existsSync(credsFilePath)) {
         const jsonConfig = JSON.parse(fs.readFileSync(credsFilePath, "utf-8").trim())
         process.env.GSUITE_CLIENT_EMAIL = jsonConfig.client_email
         process.env.GSUITE_PRIVATE_KEY = jsonConfig.private_key
-        process.env.GSUITE_IMPERSONATION_EMAIL = impersonationEmail
+        process.env.GSUITE_IMPERSONATION_EMAIL = "esoftware@aslive.dashboard.equalexperts.pt"
+    } else {
+        const dirNameGSuitePrivateKeyFile = path.join(__dirname, "gsuite.pem")
+        process.env.GSUITE_PRIVATE_KEY = fs.readFileSync(dirNameGSuitePrivateKeyFile, "utf8")
     }
 }
 

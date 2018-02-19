@@ -5,8 +5,8 @@ import * as path from "path"
 import {
     GSuiteConfig,
     buildGSuiteClient,
-    buildOnboardingAccountCreatorAdapter,
-    buildOnboardingAccountRemoverAdapter,
+    buildAccountCreatorAdapter,
+    buildAccountRemoverAdapter,
 } from "../../src/gsuite/accountAdapter"
 import { buildConfigAdapter } from "../../src/config/adapter"
 
@@ -15,12 +15,6 @@ import { appendFileSync } from "fs"
 let originalTimeout
 let gsuiteConfig
 let randomEmail
-
-function guidGenerator(): string {
-    // tslint:disable-next-line:no-bitwise
-    const S4 = () => (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
-    return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4())
-}
 
 beforeAll(async () => {
     originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL
@@ -35,7 +29,7 @@ describe("GSuite operations", async () => {
     it("Creates an email account on GSuite", async () => {
         // given
         const gsuiteClient = await buildGSuiteClient(gsuiteConfig)
-        const accountCreator = buildOnboardingAccountCreatorAdapter(gsuiteClient)
+        const accountCreator = buildAccountCreatorAdapter(gsuiteClient)
 
         const accountParams = {
             primaryEmail: randomEmail,
@@ -69,7 +63,7 @@ describe("GSuite operations", async () => {
     it("Deletes an account on GSuite", async () => {
         // given
         const gsuiteClient = await buildGSuiteClient(gsuiteConfig)
-        const accountRemover = buildOnboardingAccountRemoverAdapter(gsuiteClient)
+        const accountRemover = buildAccountRemoverAdapter(gsuiteClient)
 
         const userEmail = randomEmail
 
@@ -123,4 +117,10 @@ const buildConfig: (conf: (key: string) => string) => GSuiteConfig = (conf: (key
 
 function log(msg: string) {
     appendFileSync("/tmp/jest.log.txt", new Date() + " - " + msg + "\n", { encoding: "utf8" })
+}
+
+function guidGenerator(): string {
+    // tslint:disable-next-line:no-bitwise
+    const S4 = () => (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
+    return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4())
 }

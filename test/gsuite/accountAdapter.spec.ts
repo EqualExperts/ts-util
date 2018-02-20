@@ -1,12 +1,14 @@
 import "jest"
 import * as fs from "fs"
 import * as path from "path"
+import * as uuid from "uuid/v1"
 
 import {
     GSuiteConfig,
     buildGSuiteClient,
     buildAccountCreatorAdapter,
     buildAccountRemoverAdapter,
+    GsuitAccountCreatorAdapter,
 } from "../../src/gsuite/accountAdapter"
 import { buildConfigAdapter } from "../../src/config/adapter"
 
@@ -22,14 +24,14 @@ beforeAll(async () => {
 
     const config = loadConfig()
     gsuiteConfig = buildConfig(config)
-    randomEmail = "tuser" + guidGenerator() + "@aslive.dashboard.equalexperts.pt"
+    randomEmail = "tuser" + uuid() + "@aslive.dashboard.equalexperts.pt"
 })
 
 describe("GSuite operations", async () => {
     it("Creates an email account on GSuite", async () => {
         // given
         const gsuiteClient = await buildGSuiteClient(gsuiteConfig)
-        const accountCreator = buildAccountCreatorAdapter(gsuiteClient)
+        const accountCreator: GsuitAccountCreatorAdapter = buildAccountCreatorAdapter(gsuiteClient)
 
         const accountParams = {
             primaryEmail: randomEmail,
@@ -117,10 +119,4 @@ const buildConfig: (conf: (key: string) => string) => GSuiteConfig = (conf: (key
 
 function log(msg: string) {
     appendFileSync("/tmp/jest.log.txt", new Date() + " - " + msg + "\n", { encoding: "utf8" })
-}
-
-function guidGenerator(): string {
-    // tslint:disable-next-line:no-bitwise
-    const S4 = () => (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
-    return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4())
 }

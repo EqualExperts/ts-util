@@ -1,6 +1,6 @@
 {
     "name": "ee-ts-util",
-    "version": "6.0.5",
+    "version": "6.0.6",
     "description": "typescript utilities and functions",
     "main": "lib/index.js",
     "scripts": {
@@ -69,6 +69,7 @@
         "nano-seconds": "^1.2.2",
         "nodemailer": "^4.4.1",
         "ramda": "^0.25.0",
+        "uuid": "^3.2.1",
         "xero-node": "^2.10.1"
     }
 }

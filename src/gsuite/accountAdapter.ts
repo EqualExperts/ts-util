@@ -24,7 +24,7 @@ export type AccountResultDto = {
     name: {
         givenName: string,
         familyName: string,
-     },
+    },
     isAdmin: boolean,
     isDelegatedAdmin: boolean,
     creationTime: string,
@@ -35,8 +35,11 @@ export type AccountResultDto = {
     isMailboxSetup: boolean,
 }
 
-export const buildAccountCreatorAdapter = (gsuiteClient: any) =>
-    async (accountParamsDto: AccountParametersDto) => {
+export type GsuitAccountCreatorAdapter = (accountParametersDto: AccountParametersDto) => Promise<AccountResultDto>
+export type BuildAccountCreatorAdapter = (gsuiteClient: any) => GsuitAccountCreatorAdapter
+
+export const buildAccountCreatorAdapter: BuildAccountCreatorAdapter = (gsuiteClient) =>
+    async (accountParamsDto) => {
         await authorize(gsuiteClient)
         return createAccount(gsuiteClient, accountParamsDto)
     }
@@ -77,31 +80,31 @@ const authorize = (gsuiteClient: any) => {
 }
 
 const createAccount = (gsuiteClient: any, resource: any): Promise<AccountResultDto> => {
-        const admin = google.admin("directory_v1")
-        return new Promise((resolve, reject) => {
-            admin.users.insert({
-                auth: gsuiteClient,
-                resource,
-            }, (err: any, response: any) => {
-                if (err) {
-                    return reject(err)
-                }
-                return resolve(response.data as AccountResultDto)
-            })
+    const admin = google.admin("directory_v1")
+    return new Promise((resolve, reject) => {
+        admin.users.insert({
+            auth: gsuiteClient,
+            resource,
+        }, (err: any, response: any) => {
+            if (err) {
+                return reject(err)
+            }
+            return resolve(response.data as AccountResultDto)
         })
-    }
+    })
+}
 
 const removeAccount = (gsuiteClient: any, userEmail: string): Promise<boolean> => {
-        const admin = google.admin("directory_v1")
-        return new Promise((resolve, reject) => {
-            admin.users.delete({
-                auth: gsuiteClient,
-                userKey: userEmail,
-            }, (err: any, response: any) => {
-                if (err) {
-                    return reject(err)
-                }
-                return resolve(response.status === 204)
-            })
+    const admin = google.admin("directory_v1")
+    return new Promise((resolve, reject) => {
+        admin.users.delete({
+            auth: gsuiteClient,
+            userKey: userEmail,
+        }, (err: any, response: any) => {
+            if (err) {
+                return reject(err)
+            }
+            return resolve(response.status === 204)
         })
-    }
+    })
+}

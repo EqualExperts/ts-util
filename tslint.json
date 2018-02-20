@@ -1,11 +1,12 @@
 {
     "extends": "tslint:recommended",
     "rules": {
-      "no-console": [ true ],
+      "no-console": [ false ],
       "semicolon": [true, "never"],
       "ordered-imports": false,
       "interface-over-type-literal": false,
       "member-ordering": false,
-      "object-literal-sort-keys": false
+      "object-literal-sort-keys": false,
+      "trailing-comma": false
     }
   }

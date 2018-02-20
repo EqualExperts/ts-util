@@ -2,13 +2,16 @@ import "jest"
 import * as fs from "fs"
 import * as path from "path"
 import * as uuid from "uuid/v1"
+import * as util from "util"
 
 import {
     GSuiteConfig,
+    GSuiteListAccountOptions,
+    GSuiteAccountCreatorAdapter,
     buildGSuiteClient,
     buildAccountCreatorAdapter,
     buildAccountRemoverAdapter,
-    GSuiteAccountCreatorAdapter,
+    buildAccountCatalogAdapter
 } from "../../src/gsuite/accountAdapter"
 import { buildConfigAdapter } from "../../src/config/adapter"
 
@@ -28,7 +31,8 @@ beforeAll(async () => {
 })
 
 describe("GSuite operations", async () => {
-    it("Creates an email account on GSuite", async () => {
+
+    xit("Creates an email account on GSuite", async () => {
         // given
         const gSuiteClient = await buildGSuiteClient(gSuiteConfig)
         const accountCreator: GSuiteAccountCreatorAdapter = buildAccountCreatorAdapter(gSuiteClient)
@@ -36,7 +40,7 @@ describe("GSuite operations", async () => {
         const accountParams = {
             primaryEmail: randomEmail,
             name: {
-                givenName: "Test1",
+                givenName: "Test 1",
                 familyName: "User1",
             },
             password: "T&4K^yAXPPC\\h(7}",
@@ -62,7 +66,8 @@ describe("GSuite operations", async () => {
         expect(result.id).toBeTruthy()
         expect(result).toEqual(expect.objectContaining(expectedResult))
     })
-    it("Deletes an account on GSuite", async () => {
+
+    xit("Deletes an account on GSuite", async () => {
         // given
         const gSuiteClient = await buildGSuiteClient(gSuiteConfig)
         const accountRemover = buildAccountRemoverAdapter(gSuiteClient)
@@ -72,22 +77,47 @@ describe("GSuite operations", async () => {
         // when
         const result = await accountRemover(userEmail)
 
-        // then.
+        // then
         expect(result).toEqual(true)
+    })
+
+    it("Lists accounts on GSuite", async () => {
+        // given
+        const gSuiteClient = await buildGSuiteClient(gSuiteConfig)
+        const accountCatalog = buildAccountCatalogAdapter(gSuiteClient)
+
+        // when
+        const result = await accountCatalog(({
+            domain: gSuiteConfig.organisation,
+            maxResults: 500,
+            showDeleted: false,
+            viewType: "ADMIN_VIEW",
+            fields: "users(id,isAdmin,name/fullName,primaryEmail)",
+            projection: "full",
+            orderBy: "email"
+        }) as GSuiteListAccountOptions)
+
+        expect(result).not.toBeNull()
+        expect(result.length > 0).toBeTruthy()
     })
 })
 
 function loadConfigs() {
     const keyBaseFilePath = "/keybase/team/ee_software/aslive"
     const credsFilePath = path.join(keyBaseFilePath, "gsuite.json")
+    const configFilePath = path.join(keyBaseFilePath, "gsuite-config.json")
     if (fs.existsSync(credsFilePath)) {
-        const jsonConfig = JSON.parse(fs.readFileSync(credsFilePath, "utf-8").trim())
-        process.env.GSUITE_CLIENT_EMAIL = jsonConfig.client_email
-        process.env.GSUITE_PRIVATE_KEY = jsonConfig.private_key
-        process.env.GSUITE_IMPERSONATION_EMAIL = "esoftware@aslive.dashboard.equalexperts.pt"
+        const credsJson = JSON.parse(fs.readFileSync(credsFilePath, "utf-8").trim())
+        process.env.GSUITE_CLIENT_EMAIL = credsJson.client_email
+        process.env.GSUITE_PRIVATE_KEY = credsJson.private_key
     } else {
         const dirNameGSuitePrivateKeyFile = path.join(__dirname, "gsuite.pem")
         process.env.GSUITE_PRIVATE_KEY = fs.readFileSync(dirNameGSuitePrivateKeyFile, "utf8")
+    }
+    if (fs.existsSync(configFilePath)) {
+        const configJson = JSON.parse(fs.readFileSync(configFilePath, "utf-8").trim())
+        process.env.GSUITE_ORGANISATION = configJson.organisation
+        process.env.GSUITE_IMPERSONATION_EMAIL = configJson.impersonationEmail
     }
 }
 
@@ -104,6 +134,9 @@ const loadConfig = () => {
         GSUITE_IMPERSONATION_EMAIL: {
             format: "*",
         },
+        GSUITE_ORGANISATION: {
+            format: "*",
+        }
     }).getOrElse(
         (wrongConfigMessage) => { throw new Error(wrongConfigMessage) },
     )
@@ -114,6 +147,7 @@ const buildConfig: (conf: (key: string) => string) => GSuiteConfig = (conf: (key
         clientEmail: conf("GSUITE_CLIENT_EMAIL"),
         privateKey: conf("GSUITE_PRIVATE_KEY"),
         impersonationEmail: conf("GSUITE_IMPERSONATION_EMAIL"),
+        organisation: conf("GSUITE_ORGANISATION")
     }
 }
 

@@ -35,19 +35,19 @@ export type AccountResultDto = {
     isMailboxSetup: boolean,
 }
 
-export type GsuitAccountCreatorAdapter = (accountParametersDto: AccountParametersDto) => Promise<AccountResultDto>
-export type BuildAccountCreatorAdapter = (gsuiteClient: any) => GsuitAccountCreatorAdapter
+export type GSuiteAccountCreatorAdapter = (accountParametersDto: AccountParametersDto) => Promise<AccountResultDto>
+export type BuildAccountCreatorAdapter = (gSuiteClient: any) => GSuiteAccountCreatorAdapter
 
-export const buildAccountCreatorAdapter: BuildAccountCreatorAdapter = (gsuiteClient) =>
+export const buildAccountCreatorAdapter: BuildAccountCreatorAdapter = (gSuiteClient) =>
     async (accountParamsDto) => {
-        await authorize(gsuiteClient)
-        return createAccount(gsuiteClient, accountParamsDto)
+        await authorize(gSuiteClient)
+        return createAccount(gSuiteClient, accountParamsDto)
     }
 
-export const buildAccountRemoverAdapter = (gsuiteClient: any) =>
+export const buildAccountRemoverAdapter = (gSuiteClient: any) =>
     async (userEmail: string) => {
-        await authorize(gsuiteClient)
-        return removeAccount(gsuiteClient, userEmail)
+        await authorize(gSuiteClient)
+        return removeAccount(gSuiteClient, userEmail)
     }
 
 export const buildGSuiteClient = (config: GSuiteConfig): any => {
@@ -64,13 +64,13 @@ export const buildGSuiteClient = (config: GSuiteConfig): any => {
     return client
 }
 
-const authorize = (gsuiteClient: any) => {
-    const alreadyAuthorized = (gsuiteClient.credentials && gsuiteClient.credentials.access_token)
+const authorize = (gSuiteClient: any) => {
+    const alreadyAuthorized = (gSuiteClient.credentials && gSuiteClient.credentials.access_token)
     if (alreadyAuthorized) {
-        return Promise.resolve(gsuiteClient.credentials)
+        return Promise.resolve(gSuiteClient.credentials)
     }
     return new Promise((resolve, reject) => {
-        gsuiteClient.authorize((err: any, tokens: any) => {
+        gSuiteClient.authorize((err: any, tokens: any) => {
             if (err) {
                 return reject(err)
             }
@@ -79,11 +79,11 @@ const authorize = (gsuiteClient: any) => {
     })
 }
 
-const createAccount = (gsuiteClient: any, resource: any): Promise<AccountResultDto> => {
+const createAccount = (gSuiteClient: any, resource: any): Promise<AccountResultDto> => {
     const admin = google.admin("directory_v1")
     return new Promise((resolve, reject) => {
         admin.users.insert({
-            auth: gsuiteClient,
+            auth: gSuiteClient,
             resource,
         }, (err: any, response: any) => {
             if (err) {
@@ -94,11 +94,11 @@ const createAccount = (gsuiteClient: any, resource: any): Promise<AccountResultD
     })
 }
 
-const removeAccount = (gsuiteClient: any, userEmail: string): Promise<boolean> => {
+const removeAccount = (gSuiteClient: any, userEmail: string): Promise<boolean> => {
     const admin = google.admin("directory_v1")
     return new Promise((resolve, reject) => {
         admin.users.delete({
-            auth: gsuiteClient,
+            auth: gSuiteClient,
             userKey: userEmail,
         }, (err: any, response: any) => {
             if (err) {

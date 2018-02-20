@@ -8,14 +8,14 @@ import {
     buildGSuiteClient,
     buildAccountCreatorAdapter,
     buildAccountRemoverAdapter,
-    GsuitAccountCreatorAdapter,
+    GSuiteAccountCreatorAdapter,
 } from "../../src/gsuite/accountAdapter"
 import { buildConfigAdapter } from "../../src/config/adapter"
 
 import { appendFileSync } from "fs"
 
 let originalTimeout
-let gsuiteConfig
+let gSuiteConfig
 let randomEmail
 
 beforeAll(async () => {
@@ -23,15 +23,15 @@ beforeAll(async () => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 15000
 
     const config = loadConfig()
-    gsuiteConfig = buildConfig(config)
+    gSuiteConfig = buildConfig(config)
     randomEmail = "tuser" + uuid() + "@aslive.dashboard.equalexperts.pt"
 })
 
 describe("GSuite operations", async () => {
     it("Creates an email account on GSuite", async () => {
         // given
-        const gsuiteClient = await buildGSuiteClient(gsuiteConfig)
-        const accountCreator: GsuitAccountCreatorAdapter = buildAccountCreatorAdapter(gsuiteClient)
+        const gSuiteClient = await buildGSuiteClient(gSuiteConfig)
+        const accountCreator: GSuiteAccountCreatorAdapter = buildAccountCreatorAdapter(gSuiteClient)
 
         const accountParams = {
             primaryEmail: randomEmail,
@@ -64,8 +64,8 @@ describe("GSuite operations", async () => {
     })
     it("Deletes an account on GSuite", async () => {
         // given
-        const gsuiteClient = await buildGSuiteClient(gsuiteConfig)
-        const accountRemover = buildAccountRemoverAdapter(gsuiteClient)
+        const gSuiteClient = await buildGSuiteClient(gSuiteConfig)
+        const accountRemover = buildAccountRemoverAdapter(gSuiteClient)
 
         const userEmail = randomEmail
 

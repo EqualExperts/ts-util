@@ -28,6 +28,7 @@ export type AccountParametersDto = {
         familyName: string,
     },
     password: string,
+    changePasswordAtNextLogin?: boolean,
 }
 
 export type AccountResultDto = {

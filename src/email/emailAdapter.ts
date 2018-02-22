@@ -16,8 +16,8 @@ export type Email = {
     to: string,
     subject: string,
     body: string,
-    attachmentName: string,
-    attachmentContent: string,
+    attachmentName?: string,
+    attachmentContent?: string,
 }
 
 export const buildEmailAdapter: BuildEmailAdapter =

@@ -22,7 +22,7 @@ describe("Email Adapter", () => {
     })
 })
 
-const salaryReviewEmail = () => (
+const salaryReviewEmail = (): Email => (
     {
         from: process.env.RECONCILIATION_REPORT_FROM_EMAIL,
         to: process.env.RECONCILIATION_REPORT_TO_EMAIL,
@@ -30,7 +30,7 @@ const salaryReviewEmail = () => (
         body: "salary increment 15%",
         attachmentName: "salary.csv",
         attachmentContent: "Annual Appraisal,15% Increment",
-    } as Email
+    }
 )
 
 const smtpConfig = () => (

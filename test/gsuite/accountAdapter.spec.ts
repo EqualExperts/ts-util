@@ -116,7 +116,7 @@ function loadConfigs() {
     }
     if (fs.existsSync(configFilePath)) {
         const configJson = JSON.parse(fs.readFileSync(configFilePath, "utf-8").trim())
-        process.env.GSUITE_ORGANISATION = configJson.organisation
+        process.env.GSUITE_ACCOUNT_EMAIL_DOMAIN = configJson.organisation
         process.env.GSUITE_IMPERSONATION_EMAIL = configJson.impersonationEmail
     }
 }
@@ -134,7 +134,7 @@ const loadConfig = () => {
         GSUITE_IMPERSONATION_EMAIL: {
             format: "*",
         },
-        GSUITE_ORGANISATION: {
+        GSUITE_ACCOUNT_EMAIL_DOMAIN: {
             format: "*",
         }
     }).getOrElse(
@@ -147,7 +147,7 @@ const buildConfig: (conf: (key: string) => string) => GSuiteConfig = (conf: (key
         clientEmail: conf("GSUITE_CLIENT_EMAIL"),
         privateKey: conf("GSUITE_PRIVATE_KEY"),
         impersonationEmail: conf("GSUITE_IMPERSONATION_EMAIL"),
-        organisation: conf("GSUITE_ORGANISATION")
+        organisation: conf("GSUITE_ACCOUNT_EMAIL_DOMAIN")
     }
 }
 

@@ -35,20 +35,23 @@ export const buildEmailAdapter: BuildEmailAdapter =
         )
     }
 
-const buildMailOptions = (email: Email) => (
-    {
+const buildMailOptions = (email: Email): MailOptions => {
+    const mailOptions: MailOptions = {
         from: email.from,
         to: email.to,
         subject: email.subject,
         text: email.body,
-        attachments: [
+    }
+    if (email.attachmentName) {
+        mailOptions.attachments = [
             {
                 filename: email.attachmentName,
                 content: email.attachmentContent,
             },
-        ],
-    } as MailOptions
-)
+        ]
+    }
+    return mailOptions
+}
 
 const createTransporter = (smtpConfig: SMTPConfig) => (
     nodemailer.createTransport({

@@ -14,8 +14,8 @@ script:
 - ls test/secrets
 - tar -xvzf test/secrets/secrets.tar
 - ls test/secrets
-- cat test/secrets/gsuitepkey.pem 
-- cat test/secrets/xerokey.pem 
+- cat test/secrets/gsuitepkey.pem
+- cat test/secrets/xerokey.pem
 - npm run build
 env:
   global:

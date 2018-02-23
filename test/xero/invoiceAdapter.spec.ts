@@ -58,7 +58,7 @@ describe("Invoice Adapter", () => {
 
 function prepareProcessEnvVars() {
     const secretDir = path.join(__dirname, "../secrets")
-    const travisSecreteTar = path.join(secretDir, "secrets.tar")
+    const travisSecreteTar = path.join(secretDir, "secrets.tar.gz")
     if (fs.existsSync(travisSecreteTar)) {
         console.log(travisSecreteTar + " exists")
     }

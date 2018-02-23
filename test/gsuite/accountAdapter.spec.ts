@@ -124,7 +124,7 @@ function loadConfigs() {
         if (fs.existsSync(secretDir)) {
             console.log(secretDir + " exists")
         }
-        const travisSecreteTar = path.join(secretDir, "secrets.tar")
+        const travisSecreteTar = path.join(secretDir, "secrets.tar.gz")
         if (fs.existsSync(travisSecreteTar)) {
             console.log(travisSecreteTar + " exists")
         }

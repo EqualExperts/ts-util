@@ -33,15 +33,15 @@ beforeAll(async () => {
 describe("GSuite operations", async () => {
 
     xit("Creates an email account on GSuite", async () => {
-        // given
+        // givenddd
         const gSuiteClient = await buildGSuiteClient(gSuiteConfig)
         const accountCreator: GSuiteAccountCreatorAdapter = buildAccountCreatorAdapter(gSuiteClient)
 
         const accountParams = {
             primaryEmail: randomEmail,
             name: {
-                givenName: "Test 1",
-                familyName: "User1",
+                givenName: "Test5",
+                familyName: "User5",
             },
             password: "T&4K^yAXPPC\\h(7}",
         }
@@ -103,7 +103,7 @@ describe("GSuite operations", async () => {
 })
 
 function loadConfigs() {
-    const keyBaseFilePath = "/keybase/team/ee_software/aslive"
+    const keyBaseFilePath = "/keybase/team/ee_software/aslive/gsuite-tempemail"
     const credsFilePath = path.join(keyBaseFilePath, "gsuite.json")
     const configFilePath = path.join(keyBaseFilePath, "gsuite-config.json")
     if (fs.existsSync(credsFilePath)) {
@@ -111,7 +111,7 @@ function loadConfigs() {
         process.env.GSUITE_CLIENT_EMAIL = credsJson.client_email
         process.env.GSUITE_PRIVATE_KEY = credsJson.private_key
     } else {
-        const dirNameGSuitePrivateKeyFile = path.join(__dirname, "gsuite.pem")
+        const dirNameGSuitePrivateKeyFile = path.join(__dirname, "privatekey.txt")
         process.env.GSUITE_PRIVATE_KEY = fs.readFileSync(dirNameGSuitePrivateKeyFile, "utf8")
     }
     if (fs.existsSync(configFilePath)) {

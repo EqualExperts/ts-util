@@ -24,11 +24,8 @@ export const buildEmailAdapter: BuildEmailAdapter =
     (smtpConfig) => (email) => {
         // TODO : Think if we want to create a createTransporter everytime
         // Or like mongo connection we should create only once
-        log("smtpConfig " + JSON.stringify(smtpConfig))
         const transporter = createTransporter(smtpConfig)
-        log("email - " + JSON.stringify(email))
         const mailOptions = buildMailOptions(email)
-        log("mailOptions " + JSON.stringify(mailOptions))
         return transporter.sendMail(mailOptions).then(
             (sentMessageInfo: SentMessageInfo) =>
                 (sentMessageInfo.accepted.length >= 1 ? Promise.resolve(true) : Promise.resolve(false)),

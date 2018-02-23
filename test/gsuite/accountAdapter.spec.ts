@@ -111,7 +111,7 @@ function loadConfigs() {
         process.env.GSUITE_CLIENT_EMAIL = credsJson.client_email
         process.env.GSUITE_PRIVATE_KEY = credsJson.private_key
     } else {
-        const dirNameGSuitePrivateKeyFile = path.join(__dirname, "privatekey.txt")
+        const dirNameGSuitePrivateKeyFile = path.join(__dirname, "tempemail_private_key.pem")
         process.env.GSUITE_PRIVATE_KEY = fs.readFileSync(dirNameGSuitePrivateKeyFile, "utf8")
     }
     if (fs.existsSync(configFilePath)) {

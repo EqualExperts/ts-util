@@ -5,9 +5,6 @@ services:
 - mongodb
 before_install:
 - openssl aes-256-cbc -K $encrypted_6b2c774d90a9_key -iv $encrypted_6b2c774d90a9_iv
-  -in test/gsuite/privatekey.txt.enc -out test/gsuite/privatekey.txt
-  -d
-- openssl aes-256-cbc -K $encrypted_6b2c774d90a9_key -iv $encrypted_6b2c774d90a9_iv
   -in test/xero/privatekey.pem.enc -out test/xero/privatekey.pem
   -d
 install:

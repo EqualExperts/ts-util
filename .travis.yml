@@ -5,10 +5,10 @@ services:
 - mongodb
 before_install:
 - openssl aes-256-cbc -K $encrypted_6b2c774d90a9_key -iv $encrypted_6b2c774d90a9_iv
-  -in privatekey.txt.enc -out /keybase/team/ee_software/aslive/gsuite-tempemail/privatekey.txt
+  -in test/gsuite/privatekey.txt.enc -out test/gsuite/privatekey.txt
   -d
 - openssl aes-256-cbc -K $encrypted_6b2c774d90a9_key -iv $encrypted_6b2c774d90a9_iv
-  -in privatekey.pem.enc -out /keybase/team/ee_software/test/xero-credentials/privatekey.pem
+  -in test/xero/privatekey.pem.enc -out test/xero/privatekey.pem
   -d
 install:
 - npm install

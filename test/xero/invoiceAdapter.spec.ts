@@ -58,7 +58,10 @@ describe("Invoice Adapter", () => {
 
 function prepareProcessEnvVars() {
     const secretDir = path.join(__dirname, "../secrets")
-    const forTravisSecreteTar = path.join(secretDir, "secrets.tar")
+    const travisSecreteTar = path.join(secretDir, "secrets.tar")
+    if (fs.existsSync(travisSecreteTar)) {
+        console.log(travisSecreteTar + " exists")
+    }
 
     const keyBaseFilePath = "/keybase/team/ee_software/aslive/xero-credentials"
     const keybaseXeroPrivateKeyFile = path.join(keyBaseFilePath, "privatekey.pem")
@@ -69,10 +72,10 @@ function prepareProcessEnvVars() {
         process.env.XERO_CONSUMER_KEY = fs.readFileSync(xeroConsumerKeyFile, "utf-8")
         process.env.XERO_CONSUMER_SECRET = fs.readFileSync(xeroConsumerSecretFile, "utf-8")
     }
-    if (fs.existsSync(forTravisSecreteTar)) {
+    if (fs.existsSync(travisSecreteTar)) {
         const xeroPrivateKeyPath = path.join(secretDir, "xeropkey.pem")
         if (!fs.existsSync(xeroPrivateKeyPath)) {
-            fs.createReadStream(forTravisSecreteTar).pipe(tar.extract(secretDir))
+            fs.createReadStream(travisSecreteTar).pipe(tar.extract(secretDir))
         }
         process.env.XERO_PRIVATE_KEY_PATH = xeroPrivateKeyPath
     }

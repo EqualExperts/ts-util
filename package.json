@@ -69,6 +69,7 @@
         "nano-seconds": "^1.2.2",
         "nodemailer": "^4.4.1",
         "ramda": "^0.25.0",
+        "tar-fs": "^1.16.0",
         "uuid": "^3.2.1",
         "xero-node": "^2.10.1"
     }

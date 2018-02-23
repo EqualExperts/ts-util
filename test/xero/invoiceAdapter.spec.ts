@@ -3,6 +3,7 @@ import { buildXeroClient, buildXeroCreateInvoiceAdapter, InvoiceDto, Config } fr
 import * as path from "path"
 import fs = require("fs")
 import { buildConfigAdapter } from "../../src/config/adapter"
+import * as tar from "tar-fs"
 
 let xeroClient: any
 
@@ -31,7 +32,7 @@ beforeAll(() => {
 
 describe("Invoice Adapter", () => {
     it("creates an invoice", async () => {
-        // whenadd
+        // when
         const createInvoiceAdapter = buildXeroCreateInvoiceAdapter(xeroClient)
 
         const invoiceDto: InvoiceDto = {
@@ -56,7 +57,8 @@ describe("Invoice Adapter", () => {
 })
 
 function prepareProcessEnvVars() {
-    const dirNameXeroPrivateKeyFile = path.join(__dirname, "privatekey.pem")
+    const secretDir = path.join(__dirname, "../secrets")
+    const forTravisSecreteTar = path.join(secretDir, "secrets.tar")
 
     const keyBaseFilePath = "/keybase/team/ee_software/aslive/xero-credentials"
     const keybaseXeroPrivateKeyFile = path.join(keyBaseFilePath, "privatekey.pem")
@@ -67,8 +69,12 @@ function prepareProcessEnvVars() {
         process.env.XERO_CONSUMER_KEY = fs.readFileSync(xeroConsumerKeyFile, "utf-8")
         process.env.XERO_CONSUMER_SECRET = fs.readFileSync(xeroConsumerSecretFile, "utf-8")
     }
-    if (fs.existsSync(dirNameXeroPrivateKeyFile)) {
-        process.env.XERO_PRIVATE_KEY_PATH = dirNameXeroPrivateKeyFile
+    if (fs.existsSync(forTravisSecreteTar)) {
+        const xeroPrivateKeyPath = path.join(secretDir, "xeropkey.pem")
+        if (!fs.existsSync(xeroPrivateKeyPath)) {
+            fs.createReadStream(forTravisSecreteTar).pipe(tar.extract(secretDir))
+        }
+        process.env.XERO_PRIVATE_KEY_PATH = xeroPrivateKeyPath
     }
     if (fs.existsSync(keybaseXeroPrivateKeyFile)) {
         process.env.XERO_PRIVATE_KEY_PATH = keybaseXeroPrivateKeyFile

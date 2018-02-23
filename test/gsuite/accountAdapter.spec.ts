@@ -3,6 +3,7 @@ import * as fs from "fs"
 import * as path from "path"
 import * as uuid from "uuid/v1"
 import * as util from "util"
+import * as tar from "tar-fs"
 
 import {
     GSuiteConfig,
@@ -105,19 +106,27 @@ describe("GSuite operations", async () => {
 function loadConfigs() {
     const keyBaseFilePath = "/keybase/team/ee_software/aslive/gsuite-tempemail"
     const credsFilePath = path.join(keyBaseFilePath, "gsuite.json")
-    const configFilePath = path.join(keyBaseFilePath, "gsuite-config.json")
+
     if (fs.existsSync(credsFilePath)) {
+        // To run locally
         const credsJson = JSON.parse(fs.readFileSync(credsFilePath, "utf-8").trim())
         process.env.GSUITE_CLIENT_EMAIL = credsJson.client_email
         process.env.GSUITE_PRIVATE_KEY = credsJson.private_key
-    } else {
-        const dirNameGSuitePrivateKeyFile = path.join(__dirname, "tempemail_private_key.pem")
-        process.env.GSUITE_PRIVATE_KEY = fs.readFileSync(dirNameGSuitePrivateKeyFile, "utf8")
-    }
-    if (fs.existsSync(configFilePath)) {
+
+        const configFilePath = path.join(keyBaseFilePath, "gsuite-config.json")
         const configJson = JSON.parse(fs.readFileSync(configFilePath, "utf-8").trim())
         process.env.GSUITE_ACCOUNT_EMAIL_DOMAIN = configJson.organisation
         process.env.GSUITE_IMPERSONATION_EMAIL = configJson.impersonationEmail
+
+    } else {
+        // To run on travis
+        const secretDir = path.join(__dirname, "../secrets")
+        const travisSecreteTar = path.join(secretDir, "secrets.tar")
+        const gsuitePrivateKeyPath = path.join(secretDir, "gsuitepkey.pem")
+        if (!fs.existsSync(gsuitePrivateKeyPath)) {
+            fs.createReadStream(travisSecreteTar).pipe(tar.extract(secretDir))
+        }
+        process.env.GSUITE_PRIVATE_KEY = fs.readFileSync(gsuitePrivateKeyPath, "utf8")
     }
 }
 

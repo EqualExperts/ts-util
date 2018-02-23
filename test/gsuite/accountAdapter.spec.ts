@@ -121,11 +121,22 @@ function loadConfigs() {
     } else {
         // To run on travis
         const secretDir = path.join(__dirname, "../secrets")
+        if (fs.existsSync(secretDir)) {
+            console.log(secretDir + " exists")
+        }
         const travisSecreteTar = path.join(secretDir, "secrets.tar")
+        if (fs.existsSync(travisSecreteTar)) {
+            console.log(travisSecreteTar + " exists")
+        }
+
         const gsuitePrivateKeyPath = path.join(secretDir, "gsuitepkey.pem")
         if (!fs.existsSync(gsuitePrivateKeyPath)) {
             fs.createReadStream(travisSecreteTar).pipe(tar.extract(secretDir))
         }
+        if (fs.existsSync(gsuitePrivateKeyPath)) {
+            console.log(gsuitePrivateKeyPath + " exists")
+        }
+
         process.env.GSUITE_PRIVATE_KEY = fs.readFileSync(gsuitePrivateKeyPath, "utf8")
     }
 }

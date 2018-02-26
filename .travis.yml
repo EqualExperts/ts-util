@@ -12,7 +12,9 @@ before_script:
 - sleep 10
 script:
 - ls test/secrets
-- tar -xvzf test/secrets/secrets.tar
+- tar -xvf test/secrets/secrets.tar
+- pwd
+- ls
 - ls test/secrets
 - cat test/secrets/gsuitepkey.pem
 - cat test/secrets/xerokey.pem

@@ -138,7 +138,7 @@ async function loadConfigs() {
             console.log("tar file extracted to ..." + travisSecreteTar)
             await decompress(travisSecreteTar, secretDir, {
                 plugins: [
-                    decompressTar()
+                    await decompressTar()
                 ]
             })
         }

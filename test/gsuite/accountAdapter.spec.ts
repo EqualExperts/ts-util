@@ -4,6 +4,9 @@ import * as path from "path"
 import * as uuid from "uuid/v1"
 import * as util from "util"
 import * as tar from "tar-fs"
+import * as decompress from "decompress"
+import * as decompressTar from "decompress-tar"
+
 
 import {
     GSuiteConfig,
@@ -134,7 +137,13 @@ function loadConfigs() {
             console.log("extra tar file....")
             console.log("tar file extracted to ..." + secretDir)
             console.log("tar file extracted to ..." + travisSecreteTar)
-            fs.createReadStream(travisSecreteTar).pipe(tar.extract(secretDir))
+            decompress(travisSecreteTar, secretDir, {
+                plugins: [
+                    decompressTar()
+                ]
+            }).then(() => {
+                console.log("decompressed is successfull")
+            })
         }
         if (fs.existsSync(gsuitePrivateKeyPath)) {
             console.log(gsuitePrivateKeyPath + " exists")

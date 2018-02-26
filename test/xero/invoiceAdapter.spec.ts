@@ -4,6 +4,8 @@ import * as path from "path"
 import fs = require("fs")
 import { buildConfigAdapter } from "../../src/config/adapter"
 import * as tar from "tar-fs"
+import * as decompress from "decompress"
+import * as decompressTar from "decompress-tar"
 
 let xeroClient: any
 
@@ -32,7 +34,7 @@ beforeAll(() => {
 
 describe("Invoice Adapter", () => {
     it("creates an invoice", async () => {
-        // when
+        // whenddfff
         const createInvoiceAdapter = buildXeroCreateInvoiceAdapter(xeroClient)
 
         const invoiceDto: InvoiceDto = {
@@ -57,29 +59,32 @@ describe("Invoice Adapter", () => {
 })
 
 function prepareProcessEnvVars() {
-    const secretDir = path.join(__dirname, "../secrets")
-    const travisSecreteTar = path.join(secretDir, "secrets.tar.gz")
-    if (fs.existsSync(travisSecreteTar)) {
-        console.log(travisSecreteTar + " exists")
-    }
-
     const keyBaseFilePath = "/keybase/team/ee_software/aslive/xero-credentials"
-    const keybaseXeroPrivateKeyFile = path.join(keyBaseFilePath, "privatekey.pem")
-    const xeroConsumerKeyFile = path.join(keyBaseFilePath, "consumer-key.txt")
-    const xeroConsumerSecretFile = path.join(keyBaseFilePath, "consumer-secret.txt")
 
-    if (fs.existsSync(xeroConsumerKeyFile) && fs.existsSync(xeroConsumerSecretFile)) {
+    // To run locally
+    if (fs.existsSync(keyBaseFilePath)) {
+        const keybaseXeroPrivateKeyFile = path.join(keyBaseFilePath, "privatekey.pem")
+        const xeroConsumerKeyFile = path.join(keyBaseFilePath, "consumer-key.txt")
+        const xeroConsumerSecretFile = path.join(keyBaseFilePath, "consumer-secret.txt")
+
         process.env.XERO_CONSUMER_KEY = fs.readFileSync(xeroConsumerKeyFile, "utf-8")
         process.env.XERO_CONSUMER_SECRET = fs.readFileSync(xeroConsumerSecretFile, "utf-8")
-    }
-    if (fs.existsSync(travisSecreteTar)) {
+        process.env.XERO_PRIVATE_KEY_PATH = keybaseXeroPrivateKeyFile
+    } else {
+        // To run on Travis
+        const secretDir = path.join(__dirname, "../secrets")
+        const travisSecreteTar = path.join(secretDir, "secrets.tar")
+
         const xeroPrivateKeyPath = path.join(secretDir, "xeropkey.pem")
         if (!fs.existsSync(xeroPrivateKeyPath)) {
-            fs.createReadStream(travisSecreteTar).pipe(tar.extract(secretDir))
+            decompress(travisSecreteTar, secretDir, {
+                plugins: [
+                    decompressTar()
+                ]
+            }).then(() => {
+                console.log("decompressed is successfull")
+            })
         }
         process.env.XERO_PRIVATE_KEY_PATH = xeroPrivateKeyPath
-    }
-    if (fs.existsSync(keybaseXeroPrivateKeyFile)) {
-        process.env.XERO_PRIVATE_KEY_PATH = keybaseXeroPrivateKeyFile
     }
 }

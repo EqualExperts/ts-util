@@ -3,9 +3,6 @@ import { buildXeroClient, buildXeroCreateInvoiceAdapter, InvoiceDto, Config } fr
 import * as path from "path"
 import fs = require("fs")
 import { buildConfigAdapter } from "../../src/config/adapter"
-import * as tar from "tar-fs"
-import * as decompress from "decompress"
-import * as decompressTar from "decompress-tar"
 
 let xeroClient: any
 
@@ -34,7 +31,7 @@ beforeAll(() => {
 
 describe("Invoice Adapter", () => {
     it("creates an invoice", async () => {
-        // whenddfff
+        // when
         const createInvoiceAdapter = buildXeroCreateInvoiceAdapter(xeroClient)
 
         const invoiceDto: InvoiceDto = {

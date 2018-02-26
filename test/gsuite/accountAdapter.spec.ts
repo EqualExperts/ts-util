@@ -3,9 +3,6 @@ import * as fs from "fs"
 import * as path from "path"
 import * as uuid from "uuid/v1"
 import * as util from "util"
-import * as tar from "tar-fs"
-import * as decompress from "decompress"
-import * as decompressTar from "decompress-tar"
 
 import {
     GSuiteConfig,

@@ -62,8 +62,6 @@
     "dependencies": {
         "bullhorn-client": "https://github.com/EqualExperts/bullhorn.git#164d2fe355da360291ebfbd55076665d365c282d",
         "convict": "^4.0.1",
-        "decompress": "^4.2.0",
-        "decompress-tar": "^4.1.1",
         "fp-ts": "^0.6.2",
         "googleapis": "^26.0.1",
         "isomorphic-fetch": "^2.2.1",
@@ -71,7 +69,6 @@
         "nano-seconds": "^1.2.2",
         "nodemailer": "^4.4.1",
         "ramda": "^0.25.0",
-        "tar-fs": "^1.16.0",
         "uuid": "^3.2.1",
         "xero-node": "^2.10.1"
     }

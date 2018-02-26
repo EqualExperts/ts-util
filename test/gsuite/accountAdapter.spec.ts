@@ -33,7 +33,7 @@ beforeAll(async () => {
 describe("GSuite operations", async () => {
 
     xit("Creates an email account on GSuite", async () => {
-        // givenddd
+        // given
         const gSuiteClient = await buildGSuiteClient(gSuiteConfig)
         const accountCreator: GSuiteAccountCreatorAdapter = buildAccountCreatorAdapter(gSuiteClient)
 
@@ -82,7 +82,7 @@ describe("GSuite operations", async () => {
     })
 
     it("Lists accounts on GSuite", async () => {
-        // given
+        // givenggg
         const gSuiteClient = await buildGSuiteClient(gSuiteConfig)
         const accountCatalog = buildAccountCatalogAdapter(gSuiteClient)
 

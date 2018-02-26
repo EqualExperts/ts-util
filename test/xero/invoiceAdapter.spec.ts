@@ -58,7 +58,7 @@ describe("Invoice Adapter", () => {
     })
 })
 
-function prepareProcessEnvVars() {
+async function prepareProcessEnvVars() {
     const keyBaseFilePath = "/keybase/team/ee_software/aslive/xero-credentials"
 
     // To run locally
@@ -77,12 +77,10 @@ function prepareProcessEnvVars() {
 
         const xeroPrivateKeyPath = path.join(secretDir, "xeropkey.pem")
         if (!fs.existsSync(xeroPrivateKeyPath)) {
-            decompress(travisSecreteTar, secretDir, {
+            await decompress(travisSecreteTar, secretDir, {
                 plugins: [
                     decompressTar()
                 ]
-            }).then(() => {
-                console.log("decompressed is successfull")
             })
         }
         process.env.XERO_PRIVATE_KEY_PATH = xeroPrivateKeyPath

@@ -105,7 +105,7 @@ describe("GSuite operations", async () => {
     })
 })
 
-function loadConfigs() {
+async function loadConfigs() {
     const keyBaseFilePath = "/keybase/team/ee_software/aslive/gsuite-tempemail"
     const credsFilePath = path.join(keyBaseFilePath, "gsuite.json")
 
@@ -126,7 +126,7 @@ function loadConfigs() {
         if (fs.existsSync(secretDir)) {
             console.log(secretDir + " exists")
         }
-        const travisSecreteTar = path.join(secretDir, "secrets.tar.gz")
+        const travisSecreteTar = path.join(secretDir, "secrets.tar")
         if (fs.existsSync(travisSecreteTar)) {
             console.log(travisSecreteTar + " exists")
         }
@@ -136,12 +136,10 @@ function loadConfigs() {
             console.log("extra tar file....")
             console.log("tar file extracted to ..." + secretDir)
             console.log("tar file extracted to ..." + travisSecreteTar)
-            decompress(travisSecreteTar, secretDir, {
+            await decompress(travisSecreteTar, secretDir, {
                 plugins: [
                     decompressTar()
                 ]
-            }).then(() => {
-                console.log("decompressed is successfull")
             })
         }
         if (fs.existsSync(gsuitePrivateKeyPath)) {

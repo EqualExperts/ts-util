@@ -131,6 +131,9 @@ function loadConfigs() {
 
         const gsuitePrivateKeyPath = path.join(secretDir, "gsuitepkey.pem")
         if (!fs.existsSync(gsuitePrivateKeyPath)) {
+            console.log("extra tar file....")
+            console.log("tar file extracted to ..." + secretDir)
+            console.log("tar file extracted to ..." + travisSecreteTar)
             fs.createReadStream(travisSecreteTar).pipe(tar.extract(secretDir))
         }
         if (fs.existsSync(gsuitePrivateKeyPath)) {

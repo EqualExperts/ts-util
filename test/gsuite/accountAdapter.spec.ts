@@ -107,10 +107,10 @@ describe("GSuite operations", async () => {
 
 async function loadConfigs() {
     const keyBaseFilePath = "/keybase/team/ee_software/aslive/gsuite-tempemail"
-    const credsFilePath = path.join(keyBaseFilePath, "gsuite.json")
 
-    if (fs.existsSync(credsFilePath)) {
+    if (fs.existsSync(keyBaseFilePath)) {
         // To run locally
+        const credsFilePath = path.join(keyBaseFilePath, "gsuite.json")
         const credsJson = JSON.parse(fs.readFileSync(credsFilePath, "utf-8").trim())
         process.env.GSUITE_CLIENT_EMAIL = credsJson.client_email
         process.env.GSUITE_PRIVATE_KEY = credsJson.private_key
@@ -123,29 +123,7 @@ async function loadConfigs() {
     } else {
         // To run on travis
         const secretDir = path.join(__dirname, "../secrets")
-        if (fs.existsSync(secretDir)) {
-            console.log(secretDir + " exists")
-        }
-        const travisSecreteTar = path.join(secretDir, "secrets.tar")
-        if (fs.existsSync(travisSecreteTar)) {
-            console.log(travisSecreteTar + " exists")
-        }
-
         const gsuitePrivateKeyPath = path.join(secretDir, "gsuitepkey.pem")
-        if (!fs.existsSync(gsuitePrivateKeyPath)) {
-            console.log("extra tar file....")
-            console.log("tar file extracted to ..." + secretDir)
-            console.log("tar file extracted to ..." + travisSecreteTar)
-            await decompress(travisSecreteTar, secretDir, {
-                plugins: [
-                    await decompressTar()
-                ]
-            })
-        }
-        if (fs.existsSync(gsuitePrivateKeyPath)) {
-            console.log(gsuitePrivateKeyPath + " exists")
-        }
-
         process.env.GSUITE_PRIVATE_KEY = fs.readFileSync(gsuitePrivateKeyPath, "utf8")
     }
 }

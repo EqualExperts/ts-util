@@ -73,16 +73,6 @@ async function prepareProcessEnvVars() {
     } else {
         // To run on Travis
         const secretDir = path.join(__dirname, "../secrets")
-        const travisSecreteTar = path.join(secretDir, "secrets.tar")
-
-        const xeroPrivateKeyPath = path.join(secretDir, "xeropkey.pem")
-        if (!fs.existsSync(xeroPrivateKeyPath)) {
-            await decompress(travisSecreteTar, secretDir, {
-                plugins: [
-                    decompressTar()
-                ]
-            })
-        }
-        process.env.XERO_PRIVATE_KEY_PATH = xeroPrivateKeyPath
+        process.env.XERO_PRIVATE_KEY_PATH = path.join(secretDir, "xeropkey.pem")
     }
 }

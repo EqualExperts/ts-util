@@ -12,12 +12,8 @@ before_script:
 - sleep 10
 script:
 - ls test/secrets
-- tar -xvf test/secrets/secrets.tar
-- pwd
-- ls
+- tar -xvf test/secrets/secrets.tar -C test/secrets/
 - ls test/secrets
-- cat test/secrets/gsuitepkey.pem
-- cat test/secrets/xerokey.pem
 - npm run build
 env:
   global:

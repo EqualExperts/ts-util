@@ -7,7 +7,6 @@ import * as tar from "tar-fs"
 import * as decompress from "decompress"
 import * as decompressTar from "decompress-tar"
 
-
 import {
     GSuiteConfig,
     GSuiteListAccountOptions,

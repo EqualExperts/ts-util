@@ -74,8 +74,8 @@ export const buildAccountRemoverAdapter = (gSuiteClient: any) =>
         return removeAccount(gSuiteClient, userEmail)
     }
 
-export const buildGSuiteClient = (config: GSuiteConfig): any => {
-    const requiredScopes = [
+export const buildGSuiteClient = (config: GSuiteConfig, scopes?: string[]): any => {
+    const requiredScopes = scopes || [
         "https://www.googleapis.com/auth/admin.directory.user",
     ]
     const client = new google.auth.JWT(
@@ -88,7 +88,7 @@ export const buildGSuiteClient = (config: GSuiteConfig): any => {
     return client
 }
 
-const authorize = (gSuiteClient: any) => {
+export const authorize = (gSuiteClient: any) => {
     const alreadyAuthorized = (gSuiteClient.credentials && gSuiteClient.credentials.access_token)
     if (alreadyAuthorized) {
         return Promise.resolve(gSuiteClient.credentials)

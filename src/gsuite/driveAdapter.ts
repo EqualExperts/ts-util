@@ -5,7 +5,7 @@ import { google } from "googleapis"
 import * as path from "path"
 
 export type GetGDriveFilesInFolderAdapter = (targetFolderId: string) => Promise<string[]>
-export type BuildGetGDriveFilesInFolderAdapter = (gSuiteClient: any) => GetGDriveFilesInFolderAdapter
+export type BuildGetGDriveFilesInFolderAdapter = (gSuiteConfig: GSuiteConfig) => GetGDriveFilesInFolderAdapter
 export type ReadGDriveFileAsyncHandler = (gdriveClient: any, fileId: string, fileName: string) => Promise<string>
 export type GDriveFileMetaInfo = { id: string, name: string }
 

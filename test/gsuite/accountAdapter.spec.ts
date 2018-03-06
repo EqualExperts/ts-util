@@ -5,10 +5,8 @@ import * as uuid from "uuid/v1"
 import * as util from "util"
 
 import {
-    GSuiteConfig,
     GSuiteListAccountOptions,
     GSuiteAccountCreatorAdapter,
-    buildGSuiteClient,
     buildAccountCreatorAdapter,
     buildAccountRemoverAdapter,
     buildAccountCatalogAdapter
@@ -16,6 +14,7 @@ import {
 import { buildConfigAdapter } from "../../src/config/adapter"
 
 import { appendFileSync } from "fs"
+import { buildGSuiteClient, GSuiteConfig } from "../../src/gsuite/client"
 
 let originalTimeout
 let gSuiteConfig

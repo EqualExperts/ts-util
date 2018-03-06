@@ -1,13 +1,7 @@
 import { google } from "googleapis"
 import { AccountResultDto } from "./accountAdapter"
 import * as util from "util"
-
-export type GSuiteConfig = {
-    clientEmail: string,
-    privateKey: string,
-    impersonationEmail: string,
-    organisation: string
-}
+import { authorize } from "./client"
 
 // reference: https://developers.google.com/apis-explorer/#s/admin/directory_v1/directory.users.list
 export type GSuiteListAccountOptions = {
@@ -73,35 +67,6 @@ export const buildAccountRemoverAdapter = (gSuiteClient: any) =>
         await authorize(gSuiteClient)
         return removeAccount(gSuiteClient, userEmail)
     }
-
-export const buildGSuiteClient = (config: GSuiteConfig, scopes?: string[]): any => {
-    const requiredScopes = scopes || [
-        "https://www.googleapis.com/auth/admin.directory.user",
-    ]
-    const client = new google.auth.JWT(
-        config.clientEmail,
-        undefined,
-        config.privateKey,
-        requiredScopes,
-        config.impersonationEmail,
-    )
-    return client
-}
-
-export const authorize = (gSuiteClient: any) => {
-    const alreadyAuthorized = (gSuiteClient.credentials && gSuiteClient.credentials.access_token)
-    if (alreadyAuthorized) {
-        return Promise.resolve(gSuiteClient.credentials)
-    }
-    return new Promise((resolve, reject) => {
-        gSuiteClient.authorize((err: any, tokens: any) => {
-            if (err) {
-                return reject(err)
-            }
-            return resolve(tokens)
-        })
-    })
-}
 
 const createAccount = (gSuiteClient: any, resource: any): Promise<AccountResultDto> => {
     const admin = google.admin("directory_v1")

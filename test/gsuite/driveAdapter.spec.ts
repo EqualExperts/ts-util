@@ -1,3 +1,4 @@
+import { GetGDriveFilesInFolderAdapter, buildGetGDriveFilesInFolderAdapter } from "./../../src/gsuite/driveAdapter"
 import "jest"
 import * as fs from "fs"
 import * as path from "path"
@@ -5,12 +6,8 @@ import * as uuid from "uuid/v1"
 import * as util from "util"
 import { google } from "googleapis"
 
-import {
-    GSuiteConfig,
-    buildGSuiteClient,
-    authorize
-} from "../../src/gsuite/accountAdapter"
 import { buildConfigAdapter } from "../../src/config/adapter"
+import { buildGSuiteClient, GSuiteConfig, authorize } from "../../src/gsuite/client"
 
 import { appendFileSync } from "fs"
 
@@ -20,50 +17,43 @@ const operationsFolderId = "15sWNHqufDU_s9zBqrdNd9MikIrPRIY1o"
 
 beforeAll(async () => {
     originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 15000
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 60000
 
     const config = loadConfig()
     gSuiteConfig = buildConfig(config)
 })
 
-describe("GDrive file operations", async () => {
+describe("GDrive File Operations Adapter", async () => {
 
-    xit("Lists files under a folder on GDrive", async () => {
-        // given
-        const gSuiteClient = buildGSuiteClient(gSuiteConfig, [
-            "https://www.googleapis.com/auth/drive.readonly"
-        ])
-        await authorize(gSuiteClient)
+    it("Downloads files, returning a list of local paths", async () => {
+        // arrange
+        const getGDriveFileInFolder: GetGDriveFilesInFolderAdapter = buildGetGDriveFilesInFolderAdapter(gSuiteConfig)
 
-        const gdrive = google.drive("v3")
-        gdrive.files.list({
-            auth: gSuiteClient,
-            pageSize: 10,
-            q: `parents in '${operationsFolderId}'`
-        }, (err, response) => {
-            if (err) {
-                log("The API returned an error: " + err)
-                return
-            }
-            const files = response.data.files
-            if (!files) {
-                log("Files are null.")
-                log("RESPONSE" + JSON.stringify(response))
-                return
-            }
-            if (files.length === 0) {
-                log("No files found.")
-                return
-            } else {
-                log("Files:")
-                for (const file of files) {
-                    log(file.name)
-                }
-            }
-        })
+        // act
+        const filepaths: string[] = await getGDriveFileInFolder(operationsFolderId)
+        console.log("files downloaded to:", filepaths)
 
-        // when
-        expect(true).toBeTruthy()
+        // assert
+        expect(filepaths).toBeTruthy()
+        expect(filepaths).not.toHaveLength(0)
+    })
+
+    it("Downloads files with content", async () => {
+        // arrange
+        const getGDriveFileInFolder: GetGDriveFilesInFolderAdapter = buildGetGDriveFilesInFolderAdapter(gSuiteConfig)
+
+        // act
+        const filepaths: string[] = await getGDriveFileInFolder(operationsFolderId)
+        console.log("files downloaded to:", filepaths)
+
+        // assert
+        expect(filepaths).toBeTruthy()
+
+        for (const filepath of filepaths) {
+            const buffer: Buffer = fs.readFileSync(filepath)
+            expect(buffer).toBeTruthy()
+            expect(buffer.length).toBeGreaterThan(0)
+        }
     })
 })
 

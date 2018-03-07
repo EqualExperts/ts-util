@@ -28,21 +28,36 @@ export type CampaignMonitorConfig = {
     apiKey: string
 }
 
+export type SendTransactEmailResult = {
+    Status: string,
+    MessageID: string,
+    Recipient: string
+}
+
+export type SendTransactEmailError = {
+    Code: number,
+    Message: string
+}
+
 export type BuildSendTransactionalEmailAdapter = (config: CampaignMonitorConfig) => SendTransactionalEmailAdapter
-export type SendTransactionalEmailAdapter = (emailDetails: TransactionalEmailDetails) => Promise<any>
+export type SendTransactEmailResponse = SendTransactEmailResult[] | SendTransactEmailError
+
+export type SendTransactionalEmailAdapter =
+    (emailDetails: TransactionalEmailDetails) => Promise<SendTransactEmailResponse>
 
 export const buildSendTransactionalEmailAdapter: BuildSendTransactionalEmailAdapter = (config) => {
     const createsend = require("createsend-node")
     const client = new createsend(config)
     return async (emailDetails) =>
-        await new Promise((resolve, reject) => {
+        await new Promise<SendTransactEmailResponse>((resolve, reject) => {
             const smartEmailDetails = buildSmartEmailDetails(emailDetails)
-            client.transactional.sendSmartEmail(smartEmailDetails, (err: any, res: any) => {
-                if (err) {
-                    return reject(err)
-                }
-                resolve(res)
-            })
+            client.transactional.sendSmartEmail(smartEmailDetails,
+                (err: SendTransactEmailError, res: SendTransactEmailResult[]) => {
+                    if (err) {
+                        return reject(err)
+                    }
+                    resolve(res)
+                })
         })
 }
 

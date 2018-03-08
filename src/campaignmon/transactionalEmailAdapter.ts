@@ -4,7 +4,7 @@ import * as mime from "mime-types"
 
 export type FilePath = string
 
-export type TransactionalEmailDetails = {
+export type TransactionalEmailDetailsDto = {
     smartEmailID: string,
     emailTo: string,
     emailPlaceholderValues: object,
@@ -17,7 +17,7 @@ type AttachmentInfo = {
     Type: string
 }
 
-type SmartEmailDetails = {
+type SmartEmailDetailsDto = {
     smartEmailID: string,
     To: string,
     Data: object,
@@ -28,22 +28,22 @@ export type CampaignMonitorConfig = {
     apiKey: string
 }
 
-export type SendTransactEmailResult = {
+export type SendTransactEmailResultDto = {
     Status: string,
     MessageID: string,
     Recipient: string
 }
 
-export type SendTransactEmailError = {
+export type SendTransactEmailErrorDto = {
     Code: number,
     Message: string
 }
 
 export type BuildSendTransactionalEmailAdapter = (config: CampaignMonitorConfig) => SendTransactionalEmailAdapter
-export type SendTransactEmailResponse = SendTransactEmailResult[] | SendTransactEmailError
+export type SendTransactEmailResponse = SendTransactEmailResultDto[] | SendTransactEmailErrorDto
 
 export type SendTransactionalEmailAdapter =
-    (emailDetails: TransactionalEmailDetails) => Promise<SendTransactEmailResponse>
+    (emailDetails: TransactionalEmailDetailsDto) => Promise<SendTransactEmailResponse>
 
 export const buildSendTransactionalEmailAdapter: BuildSendTransactionalEmailAdapter = (config) => {
     const createsend = require("createsend-node")
@@ -52,7 +52,7 @@ export const buildSendTransactionalEmailAdapter: BuildSendTransactionalEmailAdap
         await new Promise<SendTransactEmailResponse>((resolve, reject) => {
             const smartEmailDetails = buildSmartEmailDetails(emailDetails)
             client.transactional.sendSmartEmail(smartEmailDetails,
-                (err: SendTransactEmailError, res: SendTransactEmailResult[]) => {
+                (err: SendTransactEmailErrorDto, res: SendTransactEmailResultDto[]) => {
                     if (err) {
                         return reject(err)
                     }
@@ -75,12 +75,12 @@ const buildAttachment = (attachmentPath: FilePath) => {
     } as AttachmentInfo
 }
 
-const buildSmartEmailDetails = (emailDetails: TransactionalEmailDetails) => {
+const buildSmartEmailDetails = (emailDetails: TransactionalEmailDetailsDto) => {
     const attachments: AttachmentInfo[] = emailDetails.attachments.map(buildAttachment)
     return {
         smartEmailID: emailDetails.smartEmailID,
         To: emailDetails.emailTo,
         Data: emailDetails.emailPlaceholderValues,
         Attachments: attachments
-    } as SmartEmailDetails
+    } as SmartEmailDetailsDto
 }

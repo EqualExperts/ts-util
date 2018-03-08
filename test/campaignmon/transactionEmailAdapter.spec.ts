@@ -7,18 +7,18 @@ import { buildConfigAdapter } from "../../src/config/adapter"
 import {
     CampaignMonitorConfig,
     buildSendTransactionalEmailAdapter,
-    TransactionalEmailDetails,
+    TransactionalEmailDetailsDto,
     SendTransactionalEmailAdapter,
     SendTransactEmailResponse,
-    SendTransactEmailResult,
-    SendTransactEmailError
+    SendTransactEmailResultDto,
+    SendTransactEmailErrorDto
 } from "./../../src/campaignmon/transactionalEmailAdapter"
 
 type BuildCampaignMonitorConfig = (conf: (key: string) => string) => CampaignMonitorConfig
 
 let cmConfig: CampaignMonitorConfig
-let smartEmailDetails: TransactionalEmailDetails
-let smartEmailDetailsWithAttachments: TransactionalEmailDetails
+let smartEmailDetails: TransactionalEmailDetailsDto
+let smartEmailDetailsWithAttachments: TransactionalEmailDetailsDto
 
 beforeAll(async () => {
     const config = loadConfig()
@@ -48,13 +48,13 @@ describe("Transactional Email Adapter", () => {
             Status: "Accepted",
             MessageID: "<not relevant for the test>",
             Recipient: smartEmailDetails.emailTo
-        } as SendTransactEmailResult
+        } as SendTransactEmailResultDto
 
         const underTest: SendTransactionalEmailAdapter = buildSendTransactionalEmailAdapter(cmConfig)
         const result: Promise<SendTransactEmailResponse> = underTest(smartEmailDetails)
 
         result
-            .then((response: SendTransactEmailResult[]) => {
+            .then((response: SendTransactEmailResultDto[]) => {
                 console.log(response)
                 expect(response).toBeTruthy()
                 expect(response).toHaveLength(1)
@@ -62,7 +62,7 @@ describe("Transactional Email Adapter", () => {
                 expect(response[0].MessageID).not.toHaveLength(0)
                 expect(response[0].Recipient).toBe(expectedResponse.Recipient)
             })
-            .catch((error: SendTransactEmailError) => fail("Expected to succeed"))
+            .catch((error: SendTransactEmailErrorDto) => fail("Expected to succeed"))
     })
 
     it("Sends a transactional email with attachments", async () => {
@@ -70,13 +70,13 @@ describe("Transactional Email Adapter", () => {
             Status: "Accepted",
             MessageID: "<not relevant for the test>",
             Recipient: smartEmailDetails.emailTo
-        } as SendTransactEmailResult
+        } as SendTransactEmailResultDto
 
         const underTest: SendTransactionalEmailAdapter = buildSendTransactionalEmailAdapter(cmConfig)
         const result: Promise<SendTransactEmailResponse> = underTest(smartEmailDetailsWithAttachments)
 
         result
-            .then((response: SendTransactEmailResult[]) => {
+            .then((response: SendTransactEmailResultDto[]) => {
                 console.log(response)
                 expect(response).toBeTruthy()
                 expect(response).toHaveLength(1)
@@ -84,23 +84,23 @@ describe("Transactional Email Adapter", () => {
                 expect(response[0].MessageID).not.toHaveLength(0)
                 expect(response[0].Recipient).toBe(expectedResponse.Recipient)
             })
-            .catch((error: SendTransactEmailError) => fail("Expected to succeed"))
+            .catch((error: SendTransactEmailErrorDto) => fail("Expected to succeed"))
     })
 
     it("Fails to send transaction email when the Smart Email Id is not valid", async () => {
             const badSmartEmailDetails = { ...smartEmailDetails }
             badSmartEmailDetails.smartEmailID = "bad smart email id"
-            const expectedResponse: SendTransactEmailError = {
+            const expectedResponse: SendTransactEmailErrorDto = {
                 Code: 926,
                 Message: "Smart email not found."
-            } as SendTransactEmailError
+            } as SendTransactEmailErrorDto
 
             const underTest: SendTransactionalEmailAdapter = buildSendTransactionalEmailAdapter(cmConfig)
             const result: Promise<SendTransactEmailResponse> = underTest(badSmartEmailDetails)
 
             result
-                .then((response: SendTransactEmailResult[]) => fail("Expected to fail"))
-                .catch((error: SendTransactEmailError) => {
+                .then((response: SendTransactEmailResultDto[]) => fail("Expected to fail"))
+                .catch((error: SendTransactEmailErrorDto) => {
                     expect(error).toBeTruthy()
                     expect(error.Code).toBe(expectedResponse.Code)
                     expect(error.Message).toBe(expectedResponse.Message)

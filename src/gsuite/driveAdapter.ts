@@ -21,7 +21,7 @@ export const buildGetGDriveFilesInFolderAdapter: BuildGetGDriveFilesInFolderAdap
     }
 }
 
-export const getGDriveFilesInFolder = async (gSuiteClient: any, targetFolderId: string) => {
+const getGDriveFilesInFolder = async (gSuiteClient: any, targetFolderId: string) => {
     const gdrive = google.drive({
         version: GDRIVE_VERSION,
         auth: gSuiteClient
@@ -45,7 +45,7 @@ export const getGDriveFilesInFolder = async (gSuiteClient: any, targetFolderId: 
     return Promise.all(getMaybeFiles)
 }
 
-export const readGDriveFileAsync: ReadGDriveFileAsyncHandler = (gdriveClient, fileId, fileName) => {
+const readGDriveFileAsync: ReadGDriveFileAsyncHandler = (gdriveClient, fileId, fileName) => {
     return new Promise<string>((resolve, reject) => {
         const fileGet = gdriveClient.files.get(
             { fileId: `${fileId}`, alt: "media" },

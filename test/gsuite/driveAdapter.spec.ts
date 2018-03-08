@@ -25,19 +25,6 @@ beforeAll(async () => {
 
 describe("GDrive File Operations Adapter", async () => {
 
-    it("Downloads files, returning a list of local paths", async () => {
-        // arrange
-        const getGDriveFileInFolder: GetGDriveFilesInFolderAdapter = buildGetGDriveFilesInFolderAdapter(gSuiteConfig)
-
-        // act
-        const filepaths: string[] = await getGDriveFileInFolder(operationsFolderId)
-        console.log("files downloaded to:", filepaths)
-
-        // assert
-        expect(filepaths).toBeTruthy()
-        expect(filepaths).not.toHaveLength(0)
-    })
-
     it("Downloads files with content", async () => {
         // arrange
         const getGDriveFileInFolder: GetGDriveFilesInFolderAdapter = buildGetGDriveFilesInFolderAdapter(gSuiteConfig)
@@ -48,6 +35,7 @@ describe("GDrive File Operations Adapter", async () => {
 
         // assert
         expect(filepaths).toBeTruthy()
+        expect(filepaths).not.toHaveLength(0)
 
         for (const filepath of filepaths) {
             const buffer: Buffer = fs.readFileSync(filepath)

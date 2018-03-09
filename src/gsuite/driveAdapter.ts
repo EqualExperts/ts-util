@@ -28,7 +28,11 @@ const getGDriveFilesInFolder = async (gSuiteClient: any, targetFolderId: string)
     })
     const getMaybeFiles = await new Promise<Array<Promise<string>>>((resolve, reject) => {
         gdrive.files.list(
-            { pageSize: GDRIVE_FINDFILESINFOLDER_PAGELIMIT, q: `parents in '${targetFolderId}'` },
+            {
+                pageSize: GDRIVE_FINDFILESINFOLDER_PAGELIMIT,
+                q: `parents in '${targetFolderId}' and trashed != true`,
+                fields: "files(id, name, trashed)"
+            },
             (err: any, response: any) => {
                 if (err) {
                     reject(err)
@@ -38,7 +42,10 @@ const getGDriveFilesInFolder = async (gSuiteClient: any, targetFolderId: string)
                     resolve([])
                 }
                 const maybeFiles: Array<Promise<string>> =
-                    files.map((f: GDriveFileMetaInfo) => readGDriveFileAsync(gdrive, f.id, f.name))
+                    files.map((f: GDriveFileMetaInfo) => {
+                        console.log(f)
+                        return readGDriveFileAsync(gdrive, f.id, f.name)
+                    })
                 resolve(maybeFiles)
             })
     })

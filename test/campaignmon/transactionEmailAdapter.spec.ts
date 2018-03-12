@@ -26,6 +26,7 @@ beforeAll(async () => {
     smartEmailDetails = {
         smartEmailID: "c73d4408-f246-4f2a-970f-49ac23648cb7",
         emailTo: "esoftware+travisinttest@equalexperts.com",
+        emailCC: "esoftware+travisinttestcc@equalexperts.com",
         emailPlaceholderValues: {
             firstname: "ES",
             client: "Equal Software",
@@ -42,12 +43,16 @@ beforeAll(async () => {
 })
 
 describe("Transactional Email Adapter", () => {
-
     it("Sends a transactional email without attachments", async () => {
-        const expectedResponse = {
+        const expectedResponseTo = {
             Status: "Accepted",
             MessageID: "<not relevant for the test>",
             Recipient: smartEmailDetails.emailTo
+        } as SendTransactEmailResultDto
+        const expectedResponseCC = {
+            Status: "Accepted",
+            MessageID: "<not relevant for the test>",
+            Recipient: smartEmailDetails.emailCC
         } as SendTransactEmailResultDto
 
         const underTest: SendTransactionalEmailAdapter = buildSendTransactionalEmailAdapter(cmConfig)
@@ -57,19 +62,27 @@ describe("Transactional Email Adapter", () => {
             .then((response: SendTransactEmailResultDto[]) => {
                 console.log(response)
                 expect(response).toBeTruthy()
-                expect(response).toHaveLength(1)
-                expect(response[0].Status).toBe(expectedResponse.Status)
+                expect(response).toHaveLength(2)
+                expect(response[0].Status).toBe(expectedResponseTo.Status)
                 expect(response[0].MessageID).not.toHaveLength(0)
-                expect(response[0].Recipient).toBe(expectedResponse.Recipient)
+                expect(response[0].Recipient).toBe(expectedResponseTo.Recipient)
+                expect(response[1].Status).toBe(expectedResponseCC.Status)
+                expect(response[1].MessageID).not.toHaveLength(0)
+                expect(response[1].Recipient).toBe(expectedResponseCC.Recipient)
             })
             .catch((error: SendTransactEmailErrorDto) => fail("Expected to succeed"))
     })
 
     it("Sends a transactional email with attachments", async () => {
-        const expectedResponse = {
+        const expectedResponseTo = {
             Status: "Accepted",
             MessageID: "<not relevant for the test>",
             Recipient: smartEmailDetails.emailTo
+        } as SendTransactEmailResultDto
+        const expectedResponseCC = {
+            Status: "Accepted",
+            MessageID: "<not relevant for the test>",
+            Recipient: smartEmailDetails.emailCC
         } as SendTransactEmailResultDto
 
         const underTest: SendTransactionalEmailAdapter = buildSendTransactionalEmailAdapter(cmConfig)
@@ -79,10 +92,13 @@ describe("Transactional Email Adapter", () => {
             .then((response: SendTransactEmailResultDto[]) => {
                 console.log(response)
                 expect(response).toBeTruthy()
-                expect(response).toHaveLength(1)
-                expect(response[0].Status).toBe(expectedResponse.Status)
+                expect(response).toHaveLength(2)
+                expect(response[0].Status).toBe(expectedResponseTo.Status)
                 expect(response[0].MessageID).not.toHaveLength(0)
-                expect(response[0].Recipient).toBe(expectedResponse.Recipient)
+                expect(response[0].Recipient).toBe(expectedResponseTo.Recipient)
+                expect(response[1].Status).toBe(expectedResponseCC.Status)
+                expect(response[1].MessageID).not.toHaveLength(0)
+                expect(response[1].Recipient).toBe(expectedResponseCC.Recipient)
             })
             .catch((error: SendTransactEmailErrorDto) => fail("Expected to succeed"))
     })

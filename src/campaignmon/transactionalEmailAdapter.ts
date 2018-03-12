@@ -7,6 +7,7 @@ export type FilePath = string
 export type TransactionalEmailDetailsDto = {
     smartEmailID: string,
     emailTo: string,
+    emailCC?: string,
     emailPlaceholderValues: object,
     attachments: FilePath[]
 }
@@ -20,6 +21,7 @@ type AttachmentInfo = {
 type SmartEmailDetailsDto = {
     smartEmailID: string,
     To: string,
+    CC?: string,
     Data: object,
     Attachments: AttachmentInfo[]
 }
@@ -80,6 +82,7 @@ const buildSmartEmailDetails = (emailDetails: TransactionalEmailDetailsDto) => {
     return {
         smartEmailID: emailDetails.smartEmailID,
         To: emailDetails.emailTo,
+        CC: emailDetails.emailCC,
         Data: emailDetails.emailPlaceholderValues,
         Attachments: attachments
     } as SmartEmailDetailsDto

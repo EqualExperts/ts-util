@@ -1,6 +1,6 @@
 {
     "name": "ee-ts-util",
-    "version": "10.1.0",
+    "version": "10.1.2",
     "description": "typescript utilities and functions",
     "main": "lib/index.js",
     "scripts": {
@@ -62,16 +62,17 @@
     "dependencies": {
         "@types/mime-types": "^2.1.0",
         "bullhorn-client": "https://github.com/EqualExperts/bullhorn.git#164d2fe355da360291ebfbd55076665d365c282d",
-        "convict": "^4.0.1",
+        "convict": "^4.0.2",
+        "createsend-node": "^0.8.2",
         "fp-ts": "^0.6.2",
         "googleapis": "^26.0.1",
         "isomorphic-fetch": "^2.2.1",
         "mime-types": "^2.1.18",
+        "moment": "^2.21.0",
         "mongodb": "^2.2.33",
         "nano-seconds": "^1.2.2",
         "nodemailer": "^4.4.1",
         "ramda": "^0.25.0",
-        "createsend-node": "^0.8.2",
         "uuid": "^3.2.1",
         "xero-node": "^2.10.1"
     }

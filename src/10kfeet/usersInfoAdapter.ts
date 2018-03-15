@@ -20,7 +20,8 @@ export const buildFetchTimeEntryAdapter: (baseUrl: string, token: string) => Get
 export const buildGetUsersInfoAdapterWithResultsPerPage: (baseUrl: string, token: string, resultsPerPage: number)
     => GetUsersInfoAdapter =
     (baseUrl, token, perPage) => (userIds) =>
-        (fetchPageData(baseUrl, `/api/v1/users?id=${userIds.join(",")}&per_page=${perPage}`, token, [], extractDtos))
+        (fetchPageData(baseUrl, `/api/v1/users?id=${userIds.join(",")}&with_archived=true&per_page=${perPage}`,
+            token, [], extractDtos))
 
 const extractDtos: (json: any) => UserInfoDto =
     (element: any) => ({

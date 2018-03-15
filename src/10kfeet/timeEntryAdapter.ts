@@ -62,7 +62,10 @@ export const buildFetchTimeEntryAdapterWithResultsPerPage
 
                 const result: TimeEntryDto[] = timeEntries.map((te: TimeEntryDto) => {
                     const userInfo: UserInfoDto | undefined =
-                        usersInfo.find((u) => u.userId === te.userId) || UNDEFINED_USER
+                        usersInfo.find((u) => u.userId === te.userId)
+                    if (!userInfo) {
+                        throw new Error(`Could not find userId ${te.userId}`)
+                    }
 
                     te.firstName = userInfo.firstName
                     te.lastName = userInfo.lastName

@@ -30,7 +30,7 @@ describe("10kft User Info Adapter", () => {
         const baseUrl = "https://vnext-api.10000ft.com"
         const token = envVars("TENKFT_API_TOKEN")
 
-        const userIds = [2167, 2204]
+        const userIds = [2167, 2204, 2769]
         const resultsPerPage = 1
 
         // when
@@ -50,6 +50,11 @@ describe("10kft User Info Adapter", () => {
             firstName: "Leena",
             lastName: "Bora",
             email: "lbora@equalexperts.com",
+        }, {
+            userId: 2769,
+            firstName: "Test",
+            lastName: "Archived",
+            email: null
         }]
         expect(result.sort(sortedByEmail)).toEqual(expectedUsersInfo.sort(sortedByEmail))
     })

@@ -78,7 +78,6 @@ const createAccount = (gSuiteClient: any, resource: any): Promise<AccountResultD
             if (err) {
                 return reject(err)
             }
-            console.log(util.inspect(response))
             return resolve(response.data as AccountResultDto)
         })
     })

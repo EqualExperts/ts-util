@@ -43,7 +43,6 @@ const getGDriveFilesInFolder = async (gSuiteClient: any, targetFolderId: string)
                 }
                 const maybeFiles: Array<Promise<string>> =
                     files.map((f: GDriveFileMetaInfo) => {
-                        console.log(f)
                         return readGDriveFileAsync(gdrive, f.id, f.name)
                     })
                 resolve(maybeFiles)

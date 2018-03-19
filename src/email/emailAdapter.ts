@@ -2,6 +2,7 @@
 import * as nodemailer from "nodemailer"
 import { MailOptions, SentMessageInfo } from "nodemailer/lib/smtp-pool"
 import { appendFileSync } from "fs"
+import * as log4js from "log4js"
 
 export type EmailAdapter = (email: Email) => Promise<boolean>
 export type BuildEmailAdapter = (smtpConfig: SMTPConfig) => EmailAdapter
@@ -24,11 +25,14 @@ export const buildEmailAdapter: BuildEmailAdapter =
     (smtpConfig) => (email) => {
         // TODO : Think if we want to create a createTransporter everytime
         // Or like mongo connection we should create only once
+        const log = log4js.getLogger()
         const transporter = createTransporter(smtpConfig)
         const mailOptions = buildMailOptions(email)
         return transporter.sendMail(mailOptions).then(
-            (sentMessageInfo: SentMessageInfo) =>
-                (sentMessageInfo.accepted.length >= 1 ? Promise.resolve(true) : Promise.resolve(false)),
+            (sentMessageInfo: SentMessageInfo) => {
+                log.info("Email sent status " + JSON.stringify(sentMessageInfo))
+                return (sentMessageInfo.accepted.length >= 1 ? Promise.resolve(true) : Promise.resolve(false))
+            }
         )
     }
 
@@ -61,7 +65,3 @@ const createTransporter = (smtpConfig: SMTPConfig) => (
         },
     })
 )
-
-function log(msg: string) {
-    appendFileSync("/tmp/jest.log.txt", new Date() + " - " + msg + "\n", { encoding: "utf8" })
-}

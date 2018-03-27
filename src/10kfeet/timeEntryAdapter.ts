@@ -20,6 +20,7 @@ export type TimeEntryDto = {
     lastName: string,
     email: string,
 
+    projectName: string,
     assignableId: number,
     assignableType: string,
     parentId: number,
@@ -89,6 +90,7 @@ export const buildFetchTimeEntryAdapterWithResultsPerPage
                         const projectInfo: ProjectInfo | undefined =
                             projects.find((project) => project.id === te.assignableId) || UNDEFINED_PROJECT
 
+                        te.projectName = projectInfo.name
                         te.assignableName = projectInfo.clientName
                         te.billable = projectInfo.billable
                         te.parentId = projectInfo.parentId

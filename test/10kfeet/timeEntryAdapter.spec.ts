@@ -45,6 +45,7 @@ describe("10K Feet Time Entries", () => {
         expect(firstResult.firstName).toBe("Equal")
         expect(firstResult.lastName).toBe("Software")
         expect(firstResult.hourlyBillRate).toBe(1)
+        expect(firstResult.projectName).toBe("Getting the most out of 10,000ft")
         expect(firstResult.status).toEqual([{
             approvable_id: 788396,
             approvable_type: "TimeEntry",

@@ -27,6 +27,20 @@ export type TimeEntryDto = {
     billable: boolean,
     approved: boolean,
     hourlyBillRate: number,
+    status: StatusDto[],
+}
+
+export type StatusDto = {
+    id: number,
+    status: string,
+    approvable_id: number,
+    approvable_type: string,
+    submitted_by: number,
+    submitted_at: string,
+    approved_by: number,
+    approved_at: string,
+    created_at: string,
+    updated_at: string
 }
 
 export type FetchTimeEntryAdapter = (from: string, to: string) => Promise<TimeEntryDto[]>
@@ -55,9 +69,9 @@ export const buildFetchTimeEntryAdapterWithResultsPerPage
                 const fetchProjectInfo = buildFetchProjectInfoAdapter(baseUrl, token)
 
                 const projects: ProjectInfo[] = await Promise.all(
-                        uniq(timeEntries
-                            .filter((te: TimeEntryDto) => te.assignableType !== "LeaveType")
-                            .map((te: TimeEntryDto) => te.assignableId))
+                    uniq(timeEntries
+                        .filter((te: TimeEntryDto) => te.assignableType !== "LeaveType")
+                        .map((te: TimeEntryDto) => te.assignableId))
                         .map(async (projectId: number) => await fetchProjectInfo(projectId)))
 
                 const result: TimeEntryDto[] = timeEntries.map((te: TimeEntryDto) => {
@@ -104,6 +118,7 @@ export const extractDto =
         assignableId: element.assignable_id,
         assignableType: element.assignable_type,
         approved: toApprovedOrNot(element.approvals.data),
+        status: element.approvals.data,
         hourlyBillRate: element.bill_rate,
     } as TimeEntryDto)
 

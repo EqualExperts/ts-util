@@ -1,7 +1,7 @@
 import "jest"
 import * as fs from "fs"
 import * as path from "path"
-import { extractDto, TimeEntryDto, toApprovedOrNot } from "../../src/10kfeet/timeEntryAdapter"
+import { extractDto, TimeEntryDto, toApprovedOrNot, StatusDto } from "../../src/10kfeet/timeEntryAdapter"
 import { buildFetchTimeEntryAdapterWithResultsPerPage } from "../../src/10kfeet/timeEntryAdapter"
 import { buildConfigAdapter } from "../../src/config/adapter"
 
@@ -45,6 +45,18 @@ describe("10K Feet Time Entries", () => {
         expect(firstResult.firstName).toBe("Equal")
         expect(firstResult.lastName).toBe("Software")
         expect(firstResult.hourlyBillRate).toBe(1)
+        expect(firstResult.status).toEqual([{
+            approvable_id: 788396,
+            approvable_type: "TimeEntry",
+            approved_at: "2017-12-18T17:56:44Z",
+            approved_by: 2167,
+            created_at: "2017-12-18T17:56:44Z",
+            id: 1,
+            status: "approved",
+            submitted_at: "2017-12-18T17:56:44Z",
+            submitted_by: 2167,
+            updated_at: "2017-12-18T17:56:44Z"
+        } as StatusDto])
 
         const fourthResult = result[4]
         expect(fourthResult.parentId).toBeGreaterThan(0)

@@ -25,8 +25,8 @@ beforeAll(async () => {
     cmConfig = buildConfig(config)
     smartEmailDetails = {
         smartEmailID: "c73d4408-f246-4f2a-970f-49ac23648cb7",
-        emailTo: "esoftware+travisinttest@equalexperts.com",
-        emailCC: "esoftware+travisinttestcc@equalexperts.com",
+        emailTo: "esoftware@tempemail.equalexperts.pt",
+        emailCC: "esoftware+ccemail@tempemail.equalexperts.pt",
         emailPlaceholderValues: {
             firstname: "ES",
             client: "Equal Software",

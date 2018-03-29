@@ -3,7 +3,7 @@ import * as fs from "fs"
 import * as path from "path"
 import {
     buildFetchSettingsAdapter,
-    Settings,
+    SettingsDto,
 } from "../../src/10kfeet/settingsAdapter"
 import { buildConfigAdapter } from "../../src/config/adapter"
 
@@ -35,7 +35,7 @@ describe("10K Feet Settings Adapter", () => {
         const underTest = buildFetchSettingsAdapter(baseUrl, token)
         const result = await underTest()
 
-        const expectedSettings: Settings = JSON.parse(expectedSettingsResponse) as Settings
+        const expectedSettings: SettingsDto = JSON.parse(expectedSettingsResponse) as SettingsDto
         expect(result).toEqual(expectedSettings)
     })
 

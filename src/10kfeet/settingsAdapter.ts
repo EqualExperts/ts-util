@@ -1,15 +1,17 @@
 import * as fetch from "isomorphic-fetch"
 
 export type BuildFetchSettingsAdapter = (baseUrl: string, token: string) =>
-    () => Promise<Settings>
+    FetchSettingsAdapter
 
-export type Setting = {
+export type FetchSettingsAdapter = () => Promise<SettingsDto>
+
+export type SettingDto = {
     id: number,
     name: string,
     value: string,
 }
 
-export type Settings = Setting[]
+export type SettingsDto = SettingDto[]
 
 export const buildFetchSettingsAdapter: BuildFetchSettingsAdapter =
     (baseUrl, token) =>
@@ -19,6 +21,6 @@ export const buildFetchSettingsAdapter: BuildFetchSettingsAdapter =
             }).then((response: Response) => (
                 response.json().then(toSettings)))
 
-const toSettings: (resp: any) => Settings =
+const toSettings: (resp: any) => SettingsDto =
     (resp: any) =>
-        resp.data as Settings
+        resp.data as SettingsDto

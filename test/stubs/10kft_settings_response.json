@@ -1,0 +1,147 @@
+[
+   {
+      "id": 4586,
+      "name": "working days",
+      "value": "62"
+   },
+   {
+      "id": 4587,
+      "name": "company name",
+      "value": "EE"
+   },
+   {
+      "id": 4588,
+      "name": "hours in workday",
+      "value": "8"
+   },
+   {
+      "id": 4589,
+      "name": "minimum hours reported",
+      "value": "0"
+   },
+   {
+      "id": 4590,
+      "name": "first working day",
+      "value": "1"
+   },
+   {
+      "id": 4591,
+      "name": "activation date",
+      "value": "2017-11-24"
+   },
+   {
+      "id": 4592,
+      "name": "allocate unit",
+      "value": "percentage"
+   },
+   {
+      "id": 4593,
+      "name": "time entry max percent",
+      "value": "3"
+   },
+   {
+      "id": 4594,
+      "name": "time entry min step",
+      "value": "0.125"
+   },
+   {
+      "id": 4595,
+      "name": "time entry min step percent",
+      "value": "0"
+   },
+   {
+      "id": 4596,
+      "name": "show progress",
+      "value": "amounts"
+   },
+   {
+      "id": 4597,
+      "name": "calc incurred using",
+      "value": "confirmed-unconfirmed"
+   },
+   {
+      "id": 4598,
+      "name": "locale",
+      "value": "en-US"
+   },
+   {
+      "id": 4599,
+      "name": "time_entry_approvals",
+      "value": "1"
+   },
+   {
+      "id": 4600,
+      "name": "expense_approvals",
+      "value": "0"
+   },
+   {
+      "id": 4601,
+      "name": "notifications_enabled",
+      "value": "1"
+   },
+   {
+      "id": 4602,
+      "name": "allow_bulk_confirm_time_entries",
+      "value": "1"
+   },
+   {
+      "id": 4603,
+      "name": "restricted_tag_mode",
+      "value": "0"
+   },
+   {
+      "id": 4604,
+      "name": "today_is_incurred",
+      "value": "1"
+   },
+   {
+      "id": 4605,
+      "name": "team_size",
+      "value": "51-100"
+   },
+   {
+      "id": 4606,
+      "name": "how_found",
+      "value": "Other"
+   },
+   {
+      "id": 4607,
+      "name": "time_available_days_into_future",
+      "value": "731"
+   },
+   {
+      "id": 4619,
+      "name": "sample project id",
+      "value": "8f5a737c-00ac-4c28-9ef2-86bf84232064"
+   },
+   {
+      "id": 4982,
+      "name": "billing email",
+      "value": ""
+   },
+   {
+      "id": 4983,
+      "name": "billing address",
+      "value": ""
+   },
+   {
+      "id": 4984,
+      "name": "locale_currency_symbol",
+      "value": ""
+   },
+   {
+      "id": 4985,
+      "name": "calc incurred expenses using",
+      "value": "confirmed"
+   },
+   {
+      "id": 4986,
+      "name": "use weekend_holiday hours",
+      "value": "0"
+   },
+   {
+      "id": null,
+      "name": "time entry mode",
+      "value": "simple"
+   }
+]

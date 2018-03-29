@@ -42,8 +42,8 @@ describe("10K Feet Time Entries", () => {
         expect(firstResult.assignableName).toBe("HMRC")
         expect(firstResult.assignableType).toBe("Project")
         expect(firstResult.email).toBe("esoftware.aslive@equalexperts.com")
-        expect(firstResult.firstName).toBe("Equal")
-        expect(firstResult.lastName).toBe("Software")
+        expect(firstResult.firstName).toBe("Associate")
+        expect(firstResult.lastName).toBe("Joao")
         expect(firstResult.hourlyBillRate).toBe(1)
         expect(firstResult.projectName).toBe("Getting the most out of 10,000ft")
         expect(firstResult.status).toEqual([{

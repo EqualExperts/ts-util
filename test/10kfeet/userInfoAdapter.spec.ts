@@ -42,13 +42,13 @@ describe("10kft User Info Adapter", () => {
         // then
         const expectedUsersInfo = [{
             userId: 2167,
-            firstName: "Equal",
-            lastName: "Software",
+            firstName: "Associate",
+            lastName: "Joao",
             email: "esoftware.aslive@equalexperts.com",
         }, {
             userId: 2204,
-            firstName: "Leena",
-            lastName: "Bora",
+            firstName: "Associate",
+            lastName: "Leena",
             email: "lbora@equalexperts.com",
         }, {
             userId: 2769,

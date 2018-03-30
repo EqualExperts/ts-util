@@ -13,6 +13,8 @@ export type ProjectInfo = {
     state: string,
     billable: boolean,
     clientName: string,
+    startDate: string,
+    endDate: string
 }
 
 export enum ProjectState {
@@ -60,6 +62,8 @@ const toProjectInfo: (resp: any) => ProjectInfo =
         state: resp.project_state,
         billable: resp.project_state !== undefined && resp.project_state !== ProjectState.INTERNAL,
         clientName: resp.client,
+        startDate: resp.starts_at,
+        endDate: resp.ends_at,
     } as ProjectInfo)
 
 const toPhaseDto = (resp: any) =>

@@ -26,7 +26,7 @@ describe("10K Feet Time Entries", () => {
 
     const baseUrl = "https://vnext-api.10000ft.com"
     const resultsPerPage = 50
-
+// gggggg hhh hhh
     it("should fetch all TimeEntries from all pages", async () => {
         const from = "2017-1-1"
         const to = "2017-11-31"
@@ -46,6 +46,8 @@ describe("10K Feet Time Entries", () => {
         expect(firstResult.lastName).toBe("Joao")
         expect(firstResult.hourlyBillRate).toBe(1)
         expect(firstResult.projectName).toBe("Getting the most out of 10,000ft")
+        expect(firstResult.projectOrPhaseStartDate).toBe("2017-11-24")
+        expect(firstResult.projectOrPhaseEndDate).toBe("2018-03-23")
         expect(firstResult.status).toEqual([{
             approvable_id: 788396,
             approvable_type: "TimeEntry",

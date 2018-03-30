@@ -21,6 +21,8 @@ export type TimeEntryDto = {
     email: string,
 
     projectName: string,
+    projectOrPhaseStartDate: string,
+    projectOrPhaseEndDate: string,
     assignableId: number,
     assignableType: string,
     parentId: number,
@@ -94,6 +96,8 @@ export const buildFetchTimeEntryAdapterWithResultsPerPage
                         te.assignableName = projectInfo.clientName
                         te.billable = projectInfo.billable
                         te.parentId = projectInfo.parentId
+                        te.projectOrPhaseStartDate = projectInfo.startDate
+                        te.projectOrPhaseEndDate = projectInfo.endDate
                     } else {
                         te.assignableName = te.assignableType
                         te.billable = false

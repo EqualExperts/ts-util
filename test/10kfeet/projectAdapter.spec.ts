@@ -5,7 +5,8 @@ import {
     buildFetchProjectInfoAdapter,
     ProjectInfo,
     buildFetchPhasesAdapter,
-    PhaseDto } from "../../src/10kfeet/projectAdapter"
+    PhaseDto
+} from "../../src/10kfeet/projectAdapter"
 import { buildConfigAdapter } from "../../src/config/adapter"
 
 let token
@@ -66,6 +67,8 @@ describe("10K Feet Project Adapter", () => {
             state: "Internal",
             billable: false,
             clientName: "HMRC",
+            startDate: "2017-11-24",
+            endDate: "2018-03-23",
         } as ProjectInfo
 
         expect(result).toEqual(expected)
@@ -84,6 +87,8 @@ describe("10K Feet Project Adapter", () => {
             state: "Confirmed",
             billable: true,
             clientName: "Expert Software",
+            startDate: "2017-10-01",
+            endDate: "2018-12-31",
         } as ProjectInfo
         expect(result).toEqual(expected)
     })
@@ -101,6 +106,8 @@ describe("10K Feet Project Adapter", () => {
             state: "Tentative",
             billable: true,
             clientName: "Expert Software",
+            startDate: "2017-12-21",
+            endDate: "2019-02-13",
         } as ProjectInfo
         expect(result).toEqual(expected)
     })

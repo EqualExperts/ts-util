@@ -5,6 +5,7 @@ import {
     buildFetchProjectInfoAdapter, ProjectInfo, ProjectState, UNDEFINED_PROJECT,
 } from "./projectAdapter"
 import { fromNullable, none, some } from "fp-ts/lib/Option"
+import { buildFetchAssignmentsAdapter, FetchAssignmentsAdapater, AssignmentDto } from "./assignmentsAdapter"
 
 enum AssignmentType {
     PROJECT = "Project",
@@ -23,6 +24,8 @@ export type TimeEntryDto = {
     projectName: string,
     projectOrPhaseStartDate: string,
     projectOrPhaseEndDate: string,
+    resourceStartDateOnProjectOrPhase: string,
+    resourceEndDateOnProjectOrPhase: string,
     assignableId: number,
     assignableType: string,
     parentId: number,
@@ -45,6 +48,10 @@ export type StatusDto = {
     created_at: string,
     updated_at: string
 }
+
+export const buildFetchTimeEntryAdapter: (baseUrl: string, token: string) => FetchTimeEntryAdapter =
+    (baseUrl: string, token: string) =>
+        buildFetchTimeEntryAdapterWithResultsPerPage(baseUrl, token, 50)
 
 export type FetchTimeEntryAdapter = (from: string, to: string) => Promise<TimeEntryDto[]>
 
@@ -69,52 +76,79 @@ export const buildFetchTimeEntryAdapterWithResultsPerPage
                 const usersInfo: UserInfoDto[] = await getUsersInfoAdapter(
                     uniq(timeEntries.map((te: TimeEntryDto) => te.userId)))
 
+                const uniqueAssignableIds = uniq(timeEntries
+                    .filter((te: TimeEntryDto) => te.assignableType !== "LeaveType")
+                    .map((te: TimeEntryDto) => te.assignableId))
+
                 const fetchProjectInfo = buildFetchProjectInfoAdapter(baseUrl, token)
-
                 const projects: ProjectInfo[] = await Promise.all(
-                    uniq(timeEntries
-                        .filter((te: TimeEntryDto) => te.assignableType !== "LeaveType")
-                        .map((te: TimeEntryDto) => te.assignableId))
-                        .map(async (projectId: number) => await fetchProjectInfo(projectId)))
+                    uniqueAssignableIds.map(async (projectId: number) => await fetchProjectInfo(projectId)))
 
-                const result: TimeEntryDto[] = timeEntries.map((te: TimeEntryDto) => {
-                    const userInfo: UserInfoDto | undefined =
-                        usersInfo.find((u) => u.userId === te.userId)
-                    if (!userInfo) {
-                        throw new Error(`Could not find userId ${te.userId}`)
-                    }
+                const fetchAssignmentsForAProjectAdapter = buildFetchAssignmentsAdapter(baseUrl, token)
+                const assignmentsMap = new Map<number, AssignmentDto[]>()
+                await Promise.all(uniqueAssignableIds.map(async (assignableId) => {
+                    const assignmentsDtos = await fetchAssignmentsForAProjectAdapter(assignableId)
+                    assignmentsMap.set(assignableId, assignmentsDtos)
+                    return
+                }))
 
-                    te.firstName = userInfo.firstName
-                    te.lastName = userInfo.lastName
-                    te.email = userInfo.email
+                const genuineTimeentries = timeEntries.filter((t) => t.hours > 0)
+                return populateTE(genuineTimeentries, usersInfo, assignmentsMap, projects)
 
-                    if (te.assignableType !== AssignmentType.LEAVE_TYPE) {
-                        const projectInfo: ProjectInfo | undefined =
-                            projects.find((project) => project.id === te.assignableId) || UNDEFINED_PROJECT
-
-                        te.projectName = projectInfo.name
-                        te.assignableName = projectInfo.clientName
-                        te.billable = projectInfo.billable
-                        te.parentId = projectInfo.parentId
-                        te.projectOrPhaseStartDate = projectInfo.startDate
-                        te.projectOrPhaseEndDate = projectInfo.endDate
-                    } else {
-                        te.assignableName = te.assignableType
-                        te.billable = false
-                    }
-
-                    return te
-                })
-
-                return result
             } catch (error) {
                 return Promise.reject(error)
             }
         }
 
-export const buildFetchTimeEntryAdapter: (baseUrl: string, token: string) => FetchTimeEntryAdapter =
-    (baseUrl: string, token: string) =>
-        buildFetchTimeEntryAdapterWithResultsPerPage(baseUrl, token, 50)
+const populateTE = (
+    timeEntries: TimeEntryDto[],
+    usersInfo: UserInfoDto[],
+    assignmentsMap: Map<number, AssignmentDto[]>,
+    projects: ProjectInfo[]) =>
+    timeEntries.map((te: TimeEntryDto) => {
+        const userInfo: UserInfoDto | undefined =
+            usersInfo.find((u) => u.userId === te.userId)
+        if (!userInfo) {
+            throw new Error(`Could not find userId ${te.userId}`)
+        }
+
+        te.firstName = userInfo.firstName
+        te.lastName = userInfo.lastName
+        te.email = userInfo.email
+
+        if (te.assignableType !== AssignmentType.LEAVE_TYPE) {
+            const projectInfo: ProjectInfo | undefined =
+                projects.find((project) => project.id === te.assignableId) || UNDEFINED_PROJECT
+
+            te.projectName = projectInfo.name
+            te.assignableName = projectInfo.clientName
+            te.billable = projectInfo.billable
+            te.parentId = projectInfo.parentId
+            te.projectOrPhaseStartDate = projectInfo.startDate
+            te.projectOrPhaseEndDate = projectInfo.endDate
+
+            populateResourceStartAndEndDate(assignmentsMap, te)
+        } else {
+            te.assignableName = te.assignableType
+            te.billable = false
+        }
+        return te
+    })
+
+const populateResourceStartAndEndDate = (assignmentsMap: Map<number, AssignmentDto[]>, te: TimeEntryDto) => {
+    const assignmentsDtos = assignmentsMap.get(te.assignableId)
+    if (assignmentsDtos) {
+        const assignmentsDtoForUser = assignmentsDtos.filter((dto) => dto.user_id = te.userId)
+        if (assignmentsDtoForUser.length === 0) {
+            throw new Error(`No matching assignments for a user ${te.userId} for project ${te.assignableId}`)
+        }
+        te.resourceStartDateOnProjectOrPhase = assignmentsDtoForUser[0].starts_at
+        te.resourceEndDateOnProjectOrPhase = assignmentsDtoForUser[0].ends_at
+
+    } else {
+        throw new Error(`Assignment not found for ${te.assignableId}`)
+    }
+}
 
 export const extractDto =
     (element: any) => ({

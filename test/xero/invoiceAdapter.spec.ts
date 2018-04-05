@@ -51,7 +51,9 @@ describe("Invoice Adapter", () => {
         const result = await createInvoiceAdapter(invoiceDto)
 
         // then
-        expect(result).toBeTruthy() // containsAnId
+        expect(result.id).toBeTruthy() // containsAnId
+        expect(result.total).toBe(11880) // containsAnId
+
     })
 })
 

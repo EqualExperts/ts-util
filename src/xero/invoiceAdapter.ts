@@ -1,6 +1,10 @@
 import * as xero from "xero-node"
 import * as fs from "fs"
 
+export type InvoiceResultDto = {
+    id: string,
+    total: number
+}
 export type InvoiceDto = {
     InvoiceID?: string,
     Type: string,
@@ -47,8 +51,11 @@ export const buildXeroClient = (config: Config) => {
 }
 
 export const buildXeroCreateInvoiceAdapter = (xeroClient: any) =>
-    async (invoiceDto: InvoiceDto) => {
+    async (invoiceDto: InvoiceDto): Promise<InvoiceResultDto> => {
         const invoiceToBeSaved = xeroClient.core.invoices.newInvoice(invoiceDto)
         const result = await invoiceToBeSaved.save()
-        return result.entities[0]._obj.InvoiceID as string
+        return {
+            id: result.entities[0]._obj.InvoiceID,
+            total: result.entities[0].Total
+        } as InvoiceResultDto
     }

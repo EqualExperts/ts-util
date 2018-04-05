@@ -148,9 +148,10 @@ const populateResourceStartAndEndDate = (assignmentsMap: Map<number, AssignmentD
             log.warn(errorMsg)
             te.resourceStartDateOnProjectOrPhase = te.projectOrPhaseStartDate
             te.resourceEndDateOnProjectOrPhase = te.projectOrPhaseEndDate
+        } else {
+            te.resourceStartDateOnProjectOrPhase = assignmentsDtoForUser[0].starts_at
+            te.resourceEndDateOnProjectOrPhase = assignmentsDtoForUser[0].ends_at
         }
-        te.resourceStartDateOnProjectOrPhase = assignmentsDtoForUser[0].starts_at
-        te.resourceEndDateOnProjectOrPhase = assignmentsDtoForUser[0].ends_at
     } else {
         throw new Error(`Assignment not found for ${te.assignableId}`)
     }

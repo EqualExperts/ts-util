@@ -26,7 +26,6 @@ describe("10K Feet Time Entries", () => {
 
     const baseUrl = "https://vnext-api.10000ft.com"
     const resultsPerPage = 50
-    // gg
     it("should fetch all TimeEntries from all pages", async () => {
         const from = "2017-1-1"
         const to = "2017-11-31"

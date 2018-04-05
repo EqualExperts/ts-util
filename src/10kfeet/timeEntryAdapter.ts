@@ -6,6 +6,7 @@ import {
 } from "./projectAdapter"
 import { fromNullable, none, some } from "fp-ts/lib/Option"
 import { buildFetchAssignmentsAdapter, FetchAssignmentsAdapater, AssignmentDto } from "./assignmentsAdapter"
+import * as log4js from "log4js"
 
 enum AssignmentType {
     PROJECT = "Project",
@@ -136,14 +137,20 @@ const populateTE = (
     })
 
 const populateResourceStartAndEndDate = (assignmentsMap: Map<number, AssignmentDto[]>, te: TimeEntryDto) => {
+    const log = log4js.getLogger()
     const assignmentsDtos = assignmentsMap.get(te.assignableId)
     if (assignmentsDtos) {
-        const assignmentsDtoForUser = assignmentsDtos.filter((dto) => dto.user_id = te.userId)
+        const assignmentsDtoForUser = assignmentsDtos.filter((dto) => dto.user_id === te.userId)
         if (assignmentsDtoForUser.length === 0) {
-            throw new Error(`No matching assignments for a user ${te.userId} for project ${te.assignableId}`)
+            const errorMsg = `No matching assignments for a user ${te.userId} for project ${te.assignableId}.` +
+                `This might have happened because, consultant is removed from project.` +
+                `Best terminate a resource assigning a end date on project than removing from it. `
+            log.warn(errorMsg)
+            te.resourceStartDateOnProjectOrPhase = te.projectOrPhaseStartDate
+            te.resourceEndDateOnProjectOrPhase = te.projectOrPhaseEndDate
         }
-        te.resourceStartDateOnProjectOrPhase = assignmentsDtoForUser[0].starts_at
-        te.resourceEndDateOnProjectOrPhase = assignmentsDtoForUser[0].ends_at
+        te.resourceStartDateOnProjectOrPhase = te.projectOrPhaseStartDate
+        te.resourceEndDateOnProjectOrPhase = te.projectOrPhaseEndDate
 
     } else {
         throw new Error(`Assignment not found for ${te.assignableId}`)

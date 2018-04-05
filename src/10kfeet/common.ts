@@ -1,5 +1,4 @@
 import * as fetch from "isomorphic-fetch"
-import { appendFileSync } from "fs"
 
 export const fetchPageData:
     <T>(baseUrl: string,
@@ -33,7 +32,3 @@ const extractPageData =
             return Promise.resolve(dtoAccumulator)
         }
     }
-
-function log(msg: string) {
-    appendFileSync("/tmp/jest.log.txt", new Date() + " - " + msg + "\n", { encoding: "utf8" })
-}

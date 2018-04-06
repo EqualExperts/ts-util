@@ -39,15 +39,20 @@ describe("10K Feet Project Adapter", () => {
         const expectedPhases: PhaseDto[] = [
             {
                 id: 10292,
+                projectName: "Exciting project",
+                phaseName: "Exciting project",
                 budgetItems: { category: "PO12220340" },
             },
             {
                 id: 10293,
+                projectName: "Exciting project",
+                phaseName: "Non-billable",
                 budgetItems: { category: "PO12220360" },
             },
             {
-                id: 10353
-                ,
+                id: 10353,
+                projectName: "Exciting project",
+                phaseName: "Data Migration From BullHorn",
                 budgetItems: { category: "PO12220310" },
             },
         ]

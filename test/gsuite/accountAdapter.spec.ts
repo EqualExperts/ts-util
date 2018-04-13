@@ -26,7 +26,7 @@ beforeAll(async () => {
 
     const config = loadConfig()
     gSuiteConfig = buildConfig(config)
-    randomEmail = "tuser" + uuid() + "@aslive.dashboard.equalexperts.pt"
+    randomEmail = "tuser" + uuid() + "@tempemail.equalexperts.pt"
 })
 
 describe("GSuite operations", async () => {
@@ -43,6 +43,7 @@ describe("GSuite operations", async () => {
                 familyName: "User5",
             },
             password: "T&4K^yAXPPC\\h(7}",
+            orgUnitPath: "/Exempt from 2 step verification"
         }
 
         // when
@@ -58,8 +59,7 @@ describe("GSuite operations", async () => {
             },
             isAdmin: false,
             isDelegatedAdmin: false,
-            customerId: "C0487729q",
-            orgUnitPath: "/",
+            orgUnitPath: accountParams.orgUnitPath ? accountParams.orgUnitPath : "/",
             isMailboxSetup: false,
         }
         expect(result.id).toBeTruthy()
@@ -81,7 +81,7 @@ describe("GSuite operations", async () => {
     })
 
     it("Lists accounts on GSuite", async () => {
-        // givenggg
+        // given
         const gSuiteClient = await buildGSuiteClient(gSuiteConfig)
         const accountCatalog = buildAccountCatalogAdapter(gSuiteClient)
 

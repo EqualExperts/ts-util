@@ -23,6 +23,7 @@ export type AccountParametersDto = {
     },
     password: string,
     changePasswordAtNextLogin?: boolean,
+    orgUnitPath?: string,
 }
 
 export type AccountResultDto = {

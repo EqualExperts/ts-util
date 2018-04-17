@@ -1,4 +1,9 @@
-import { GetGDriveFilesInFolderAdapter, buildGetGDriveFilesInFolderAdapter } from "./../../src/gsuite/driveAdapter"
+import {
+    GetGDriveFilesInFolderAdapter,
+    buildGetGDriveFilesInFolderAdapter,
+    MoveGDriveFileToFolderAdapter,
+    buildMoveGDriveFileToFolderAdapter
+ } from "./../../src/gsuite/driveAdapter"
 import "jest"
 import * as fs from "fs"
 import * as path from "path"
@@ -43,6 +48,21 @@ describe("GDrive File Operations Adapter", async () => {
             expect(buffer.length).toBeGreaterThan(0)
         }
     })
+
+    xit("Moves file to folder", async () => {
+        // arrange
+        const fileId = "1cm_FWJbIhXJW-zimDVdcNgws0IKtts1v"
+        const targetFolderId = "12Rlda86qYgU6XkAfKzt4wMp__DBRq09o"
+        const moveGDriveFileToFolderAdapter: MoveGDriveFileToFolderAdapter =
+            buildMoveGDriveFileToFolderAdapter(gSuiteConfig)
+
+        // act
+        const result: boolean = await moveGDriveFileToFolderAdapter(fileId, targetFolderId)
+
+        // assert
+        expect(result).toBeTruthy()
+    })
+
 })
 
 async function loadConfigs() {

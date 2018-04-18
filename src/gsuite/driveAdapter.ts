@@ -6,7 +6,7 @@ import * as path from "path"
 
 export type GetGDriveFilesInFolderAdapter = (targetFolderId: string) => Promise<string[]>
 export type BuildGetGDriveFilesInFolderAdapter = (gSuiteConfig: GSuiteConfig) => GetGDriveFilesInFolderAdapter
-export type ListGDriveFilesInFolderAdapter = (folderId: string) => Promise<string[]>
+export type ListGDriveFilesInFolderAdapter = (folderId: string) => Promise<any[]>
 export type BuildListGDriveFilesInFolderAdapter = (gSuiteConfig: GSuiteConfig) => ListGDriveFilesInFolderAdapter
 export type MoveGDriveFileToFolderAdapter = (fileId: string, targetFolderId: string) => Promise<boolean>
 export type BuildMoveGDriveFileToFolderAdapter = (gSuiteConfig: GSuiteConfig) => MoveGDriveFileToFolderAdapter

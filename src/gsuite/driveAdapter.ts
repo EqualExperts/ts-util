@@ -6,8 +6,14 @@ import * as path from "path"
 
 export type GetGDriveFilesInFolderAdapter = (targetFolderId: string) => Promise<string[]>
 export type BuildGetGDriveFilesInFolderAdapter = (gSuiteConfig: GSuiteConfig) => GetGDriveFilesInFolderAdapter
+export type ListGDriveFilesInFolderAdapter = (folderId: string) => Promise<string[]>
+export type BuildListGDriveFilesInFolderAdapter = (gSuiteConfig: GSuiteConfig) => ListGDriveFilesInFolderAdapter
 export type MoveGDriveFileToFolderAdapter = (fileId: string, targetFolderId: string) => Promise<boolean>
 export type BuildMoveGDriveFileToFolderAdapter = (gSuiteConfig: GSuiteConfig) => MoveGDriveFileToFolderAdapter
+export type UpdateGDriveFileParentFolderAdapter =
+    (fileId: string, currentParentIds: string[], targetFolderId: string) => Promise<boolean>
+export type BuildUpdateGDriveFileParentFolderAdapter =
+    (gSuiteConfig: GSuiteConfig) => UpdateGDriveFileParentFolderAdapter
 export type ReadGDriveFileAsyncHandler = (gdriveClient: any, fileId: string, fileName: string) => Promise<string>
 export type GDriveFileMetaInfo = { id: string, name: string }
 
@@ -24,6 +30,15 @@ export const buildGetGDriveFilesInFolderAdapter: BuildGetGDriveFilesInFolderAdap
     }
 }
 
+export const buildListGDriveFilesInFolderAdapter: BuildListGDriveFilesInFolderAdapter =
+    (gSuiteConfig: GSuiteConfig) => {
+        const gsuiteClient = buildGSuiteClient(gSuiteConfig, GDRIVE_SCOPES_READ)
+        return async (folderId) => {
+            await authorize(gsuiteClient)
+            return listGDriveFilesInFolder(gsuiteClient, folderId)
+        }
+    }
+
 export const buildMoveGDriveFileToFolderAdapter: BuildMoveGDriveFileToFolderAdapter = (gSuiteConfig: GSuiteConfig) => {
     const gsuiteClient = buildGSuiteClient(gSuiteConfig, GDRIVE_SCOPES_WRITE)
     return async (fileId, targetFolderId) => {
@@ -31,6 +46,15 @@ export const buildMoveGDriveFileToFolderAdapter: BuildMoveGDriveFileToFolderAdap
         return moveGDriveFileToFolder(gsuiteClient, fileId, targetFolderId)
     }
 }
+
+export const buildUpdateGDriveFileParentFolderAdapter: BuildUpdateGDriveFileParentFolderAdapter =
+    (gSuiteConfig: GSuiteConfig) => {
+        const gsuiteClient = buildGSuiteClient(gSuiteConfig, GDRIVE_SCOPES_WRITE)
+        return async (fileId, currentParentIds, targetFolderId) => {
+            await authorize(gsuiteClient)
+            return updateGDriveFileParentFolder(gsuiteClient, fileId, currentParentIds, targetFolderId)
+        }
+    }
 
 const getGDriveFilesInFolder = async (gSuiteClient: any, targetFolderId: string) => {
     const gdrive = google.drive({
@@ -82,7 +106,28 @@ const readGDriveFileAsync: ReadGDriveFileAsyncHandler = (gdriveClient, fileId, f
     })
 }
 
-const getGDriveFileWithParents = (gSuiteClient: any, fileId: string) => {
+const listGDriveFilesInFolder = (gSuiteClient: any, targetFolderId: string) => {
+    const gdrive = google.drive({
+        version: GDRIVE_VERSION,
+        auth: gSuiteClient
+    })
+    return new Promise<any[]>((resolve, reject) => {
+        gdrive.files.list(
+            {
+                pageSize: GDRIVE_FINDFILESINFOLDER_PAGELIMIT,
+                q: `parents in '${targetFolderId}' and trashed != true`,
+                fields: "files(id, mimeType, name, fileExtension, size, trashed, createdTime, modifiedTime, parents)"
+            },
+            (err: any, response: any) => {
+                if (err) {
+                    reject(err)
+                }
+                resolve(response.data.files)
+            })
+    })
+}
+
+const getGDriveFile = (gSuiteClient: any, fileId: string) => {
     const gdrive = google.drive({
         version: GDRIVE_VERSION,
         auth: gSuiteClient
@@ -90,7 +135,7 @@ const getGDriveFileWithParents = (gSuiteClient: any, fileId: string) => {
     return new Promise<any>((resolve, reject) => {
         gdrive.files.get({
             fileId,
-            fields: "parents",
+            fields: "id, mimeType, name, fileExtension, size, trashed, createdTime, modifiedTime, parents",
         }, (err: any, result: any) => {
             if (err) {
             return reject(err)
@@ -101,13 +146,13 @@ const getGDriveFileWithParents = (gSuiteClient: any, fileId: string) => {
 }
 
 const updateGDriveFileParentFolder =
-    (gSuiteClient: any, fileId: string, currentParents: string[], targetFolderId: string) => {
+    (gSuiteClient: any, fileId: string, currentParentIds: string[], targetFolderId: string) => {
         const gdrive = google.drive({
             version: GDRIVE_VERSION,
             auth: gSuiteClient
         })
         return new Promise<boolean>((resolve, reject) => {
-            const previousParents = currentParents.join(",")
+            const previousParents = currentParentIds.join(",")
             gdrive.files.update({
                 fileId,
                 addParents: targetFolderId,
@@ -123,6 +168,6 @@ const updateGDriveFileParentFolder =
 }
 
 const moveGDriveFileToFolder = async (gSuiteClient: any, fileId: string, targetFolderId: string) => {
-    const file = await getGDriveFileWithParents(gSuiteClient, fileId)
+    const file = await getGDriveFile(gSuiteClient, fileId)
     return await updateGDriveFileParentFolder(gSuiteClient, fileId, file.parents, targetFolderId)
 }

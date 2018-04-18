@@ -1,9 +1,13 @@
 import {
     GetGDriveFilesInFolderAdapter,
     buildGetGDriveFilesInFolderAdapter,
+    ListGDriveFilesInFolderAdapter,
+    buildListGDriveFilesInFolderAdapter,
     MoveGDriveFileToFolderAdapter,
-    buildMoveGDriveFileToFolderAdapter
- } from "./../../src/gsuite/driveAdapter"
+    buildMoveGDriveFileToFolderAdapter,
+    UpdateGDriveFileParentFolderAdapter,
+    buildUpdateGDriveFileParentFolderAdapter
+} from "./../../src/gsuite/driveAdapter"
 import "jest"
 import * as fs from "fs"
 import * as path from "path"
@@ -36,7 +40,7 @@ describe("GDrive File Operations Adapter", async () => {
 
         // act
         const filepaths: string[] = await getGDriveFileInFolder(operationsFolderId)
-        console.log("files downloaded to:", filepaths)
+        // console.log("files downloaded to:", filepaths)
 
         // assert
         expect(filepaths).toBeTruthy()
@@ -47,6 +51,18 @@ describe("GDrive File Operations Adapter", async () => {
             expect(buffer).toBeTruthy()
             expect(buffer.length).toBeGreaterThan(0)
         }
+    })
+
+    it("List files in folder", async () => {
+        // arrange
+        const listGDriveFileInFolder: ListGDriveFilesInFolderAdapter = buildListGDriveFilesInFolderAdapter(gSuiteConfig)
+
+        // act
+        const filelist: any[] = await listGDriveFileInFolder(operationsFolderId)
+
+        // assert
+        expect(filelist).toBeTruthy()
+        expect(filelist).not.toHaveLength(0)
     })
 
     xit("Moves file to folder", async () => {
@@ -63,6 +79,20 @@ describe("GDrive File Operations Adapter", async () => {
         expect(result).toBeTruthy()
     })
 
+    xit("Updates file parents", async () => {
+        // arrange
+        const fileId = "1cm_FWJbIhXJW-zimDVdcNgws0IKtts1v"
+        const previousFolderId = "1Dc6yAGb3tkAyfcBiXQQMVVSuBtDz8oN0"
+        const targetFolderId = "12Rlda86qYgU6XkAfKzt4wMp__DBRq09o"
+        const updateGDriveFileToFolderAdapter: UpdateGDriveFileParentFolderAdapter =
+            buildUpdateGDriveFileParentFolderAdapter(gSuiteConfig)
+
+        // act
+        const result: boolean = await updateGDriveFileToFolderAdapter(fileId, [previousFolderId], targetFolderId)
+
+        // assert
+        expect(result).toBeTruthy()
+    })
 })
 
 async function loadConfigs() {

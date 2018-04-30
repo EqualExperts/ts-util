@@ -15,12 +15,33 @@ export type UpdateGDriveFileParentFolderAdapter =
 export type BuildUpdateGDriveFileParentFolderAdapter =
     (gSuiteConfig: GSuiteConfig) => UpdateGDriveFileParentFolderAdapter
 export type ReadGDriveFileAsyncHandler = (gdriveClient: any, fileId: string, fileName: string) => Promise<string>
-export type GDriveFileMetaInfo = { id: string, name: string }
+export type GDriveFileMetaInfo = {
+    id: string,
+    name: string,
+    mimeType?: string,
+    fileExtension?: string,
+    size?: number,
+    trashed?: boolean,
+    createdTime?: string,
+    modifiedTime?: string,
+    parents?: string[],
+}
+export type GDrivePermission = {
+    id?: string,
+    role: string,
+    type: string,
+    emailAddress: string,
+}
+export type GDrivePermissionStatus = {
+    fileId: string,
+    permissionId: string,
+    removed: boolean,
+}
 
 export const GDRIVE_SCOPES_READ: string[] = ["https://www.googleapis.com/auth/drive.readonly"]
 export const GDRIVE_SCOPES_WRITE: string[] = ["https://www.googleapis.com/auth/drive"]
 export const GDRIVE_VERSION = "v3"
-export const GDRIVE_FINDFILESINFOLDER_PAGELIMIT = 100
+export const GDRIVE_FINDFILESINFOLDER_PAGELIMIT = 1000
 
 export const buildGetGDriveFilesInFolderAdapter: BuildGetGDriveFilesInFolderAdapter = (gSuiteConfig: GSuiteConfig) => {
     const gsuiteClient = buildGSuiteClient(gSuiteConfig, GDRIVE_SCOPES_READ)
@@ -115,14 +136,14 @@ const listGDriveFilesInFolder = (gSuiteClient: any, targetFolderId: string) => {
         gdrive.files.list(
             {
                 pageSize: GDRIVE_FINDFILESINFOLDER_PAGELIMIT,
-                q: `parents in '${targetFolderId}' and trashed != true`,
+                q: `'${targetFolderId}' in parents and trashed != true`,
                 fields: "files(id, mimeType, name, fileExtension, size, trashed, createdTime, modifiedTime, parents)"
             },
             (err: any, response: any) => {
                 if (err) {
                     reject(err)
                 }
-                resolve(response.data.files)
+                resolve(response.data.files as GDriveFileMetaInfo[])
             })
     })
 }
@@ -140,7 +161,7 @@ const getGDriveFile = (gSuiteClient: any, fileId: string) => {
             if (err) {
             return reject(err)
             }
-            resolve(result.data)
+            resolve(result.data as GDriveFileMetaInfo)
         })
     })
 }
@@ -170,4 +191,72 @@ const updateGDriveFileParentFolder =
 const moveGDriveFileToFolder = async (gSuiteClient: any, fileId: string, targetFolderId: string) => {
     const file = await getGDriveFile(gSuiteClient, fileId)
     return await updateGDriveFileParentFolder(gSuiteClient, fileId, file.parents, targetFolderId)
+}
+
+const listGDriveFilePermissions = (gSuiteClient: any, fileId: string) => {
+    const gdrive = google.drive({
+        version: GDRIVE_VERSION,
+        auth: gSuiteClient,
+    })
+    return new Promise((resolve, reject) => {
+        gdrive.permissions.list({
+            fileId,
+            fields: "*",
+        }, (err: any, result: any) => {
+            if (err) {
+                return reject(err)
+            }
+            resolve(result.data.permissions as GDrivePermission[])
+        })
+    })
+}
+
+const removeGDriveFilePermissions = (gSuiteClient: any, fileId: string, permissionIds: string[]) => {
+    const gdrive = google.drive({
+        version: GDRIVE_VERSION,
+        auth: gSuiteClient,
+    })
+    const promises = permissionIds.map((permissionId) =>
+        new Promise((resolve, reject) => {
+            gdrive.permissions.delete({
+                fileId,
+                permissionId,
+            }, (err: any, result: any) => {
+                if (err) {
+                    return reject(err)
+                }
+                resolve({
+                    fileId,
+                    permissionId,
+                    removed: (result.data === "")
+                } as GDrivePermissionStatus)
+            })
+        }))
+    return Promise.all(promises)
+}
+
+const addGDriveFilePermissions = (gSuiteClient: any, fileId: string, permissions: GDrivePermission[]) => {
+    const gdrive = google.drive({
+        version: GDRIVE_VERSION,
+        auth: gSuiteClient,
+    })
+    const promises = permissions.map((permission) =>
+        new Promise((resolve, reject) => {
+            const resource = {
+                role: permission.role,
+                type: permission.type,
+                emailAddress: permission.emailAddress
+            }
+            gdrive.permissions.create({
+                fileId,
+                transferOwnership: (resource.role === "owner"),
+                resource,
+            }, (err: any, result: any) => {
+                if (err) {
+                    return reject(err)
+                }
+                resolve(result.data as GDrivePermission)
+            })
+        }))
+    return Promise.all(promises)
 }

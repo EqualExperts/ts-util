@@ -7,7 +7,7 @@ export type GSuiteConfig = {
     organisation: string
 }
 
-export const buildGSuiteClient = (config: GSuiteConfig, scopes?: string[]): any => {
+export const buildGSuiteClient = (config: GSuiteConfig, scopes?: string[], impersonationEmail?: string): any => {
     const requiredScopes = scopes || [
         "https://www.googleapis.com/auth/admin.directory.user"
     ]
@@ -16,7 +16,7 @@ export const buildGSuiteClient = (config: GSuiteConfig, scopes?: string[]): any 
         undefined,
         config.privateKey,
         requiredScopes,
-        config.impersonationEmail,
+        impersonationEmail || config.impersonationEmail,
     )
     return client
 }

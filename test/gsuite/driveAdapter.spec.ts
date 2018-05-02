@@ -6,7 +6,15 @@ import {
     MoveGDriveFileToFolderAdapter,
     buildMoveGDriveFileToFolderAdapter,
     UpdateGDriveFileParentFolderAdapter,
-    buildUpdateGDriveFileParentFolderAdapter
+    buildUpdateGDriveFileParentFolderAdapter,
+    ListGDriveFilePermissionsAdapter,
+    buildListGDriveFilePermissionsAdapter,
+    RemoveGDriveFilePermissionsAdapter,
+    buildRemoveGDriveFilePermissionsAdapter,
+    AddGDriveFilePermissionsAdapter,
+    buildAddGDriveFilePermissionsAdapter,
+    GDrivePermissionDto,
+    GDrivePermissionStatusDto
 } from "./../../src/gsuite/driveAdapter"
 import "jest"
 import * as fs from "fs"
@@ -92,6 +100,63 @@ describe("GDrive File Operations Adapter", async () => {
 
         // assert
         expect(result).toBeTruthy()
+    })
+
+    it("Lists file permissions", async () => {
+        // arrange
+        const fileId = "18KpE4BXPD8Twhmg6mu0-RomvQsFAzIII"
+        const listGDriveFilePermissionsAdapter: ListGDriveFilePermissionsAdapter =
+            buildListGDriveFilePermissionsAdapter(gSuiteConfig)
+
+        // act
+        const result: GDrivePermissionDto[] = await listGDriveFilePermissionsAdapter(fileId)
+
+        // assert
+        expect(result.length).toBeGreaterThan(0)
+        expect(result[0].type).toBe("user")
+    })
+
+    xit("Adds file permissions", async () => {
+        // arrange
+        const fileId = "18KpE4BXPD8Twhmg6mu0-RomvQsFAzIII"
+        const permissions: GDrivePermissionDto[] = [{
+            role: "reader",
+            type: "user",
+            emailAddress: "esoftware@tempemail.experts.pt"
+        }]
+        const addGDriveFilePermissionsAdapter: AddGDriveFilePermissionsAdapter =
+            buildAddGDriveFilePermissionsAdapter(gSuiteConfig)
+
+        // act
+        const result: GDrivePermissionDto[] = await addGDriveFilePermissionsAdapter(fileId, permissions)
+
+        // assert
+        expect(result.length).toBeGreaterThan(0)
+        expect(result[0].id).toBeTruthy()
+    })
+
+    xit("Removes file permissions", async () => {
+        // arrange
+        const fileId = "18KpE4BXPD8Twhmg6mu0-RomvQsFAzIII"
+        const permissions: GDrivePermissionDto[] = [{
+            role: "reader",
+            type: "user",
+            emailAddress: "esoftware@tempemail.experts.pt"
+        }]
+        const addGDriveFilePermissionsAdapter: AddGDriveFilePermissionsAdapter =
+            buildAddGDriveFilePermissionsAdapter(gSuiteConfig)
+        const addResult: GDrivePermissionDto[] = await addGDriveFilePermissionsAdapter(fileId, permissions)
+        const permissionIds = [addResult[0].id]
+        const removeGDriveFilePermissionsAdapter: RemoveGDriveFilePermissionsAdapter =
+            buildRemoveGDriveFilePermissionsAdapter(gSuiteConfig)
+
+        // act
+        const result: GDrivePermissionStatusDto[] = await removeGDriveFilePermissionsAdapter(fileId, permissionIds)
+
+        // assert
+        expect(result.length).toBeGreaterThan(0)
+        expect(result[0].fileId).toBe(fileId)
+        expect(result[0].removed).toBeTruthy()
     })
 })
 

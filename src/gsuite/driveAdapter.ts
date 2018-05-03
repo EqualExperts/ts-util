@@ -90,14 +90,6 @@ export const buildListGDriveFilesInFolderAdapter: BuildListGDriveFilesInFolderAd
         }
     }
 
-export const buildMoveGDriveFileToFolderAdapter: BuildMoveGDriveFileToFolderAdapter = (gSuiteConfig: GSuiteConfig) => {
-    const gsuiteClient = buildGSuiteClient(gSuiteConfig, GDRIVE_SCOPES_WRITE)
-    return async (fileId, targetFolderId) => {
-        await authorize(gsuiteClient)
-        return moveGDriveFileToFolder(gsuiteClient, fileId, targetFolderId)
-    }
-}
-
 export const buildUpdateGDriveFileParentFolderAdapter: BuildUpdateGDriveFileParentFolderAdapter =
     (gSuiteConfig: GSuiteConfig) => {
         const gsuiteClient = buildGSuiteClient(gSuiteConfig, GDRIVE_SCOPES_WRITE)
@@ -244,11 +236,6 @@ const updateGDriveFileParentFolder =
                 resolve(true)
             })
         })
-}
-
-const moveGDriveFileToFolder = async (gSuiteClient: any, fileId: string, targetFolderId: string) => {
-    const file = await getGDriveFile(gSuiteClient, fileId)
-    return await updateGDriveFileParentFolder(gSuiteClient, fileId, file.parents, targetFolderId)
 }
 
 const listGDriveFilePermissions =

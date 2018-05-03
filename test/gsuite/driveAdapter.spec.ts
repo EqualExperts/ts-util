@@ -1,10 +1,16 @@
+import "jest"
+
+import * as fs from "fs"
+import * as path from "path"
+import * as uuid from "uuid/v1"
+import * as util from "util"
+import { google } from "googleapis"
+
 import {
     GetGDriveFilesInFolderAdapter,
     buildGetGDriveFilesInFolderAdapter,
     ListGDriveFilesInFolderAdapter,
     buildListGDriveFilesInFolderAdapter,
-    MoveGDriveFileToFolderAdapter,
-    buildMoveGDriveFileToFolderAdapter,
     UpdateGDriveFileParentFolderAdapter,
     buildUpdateGDriveFileParentFolderAdapter,
     ListGDriveFilePermissionsAdapter,
@@ -17,12 +23,6 @@ import {
     GDrivePermissionStatusDto,
     GDriveFileMetaInfoDto
 } from "./../../src/gsuite/driveAdapter"
-import "jest"
-import * as fs from "fs"
-import * as path from "path"
-import * as uuid from "uuid/v1"
-import * as util from "util"
-import { google } from "googleapis"
 
 import { buildConfigAdapter } from "../../src/config/adapter"
 import { buildGSuiteClient, GSuiteConfig, authorize } from "../../src/gsuite/client"
@@ -74,20 +74,6 @@ describe("GDrive File Operations Adapter", async () => {
         expect(filelist).not.toHaveLength(0)
         expect(filelist[0].owners).not.toHaveLength(0)
         expect(filelist[0].owners[0].emailAddress).toBeTruthy()
-    })
-
-    xit("Moves file to folder", async () => {
-        // arrange
-        const fileId = "1cm_FWJbIhXJW-zimDVdcNgws0IKtts1v"
-        const targetFolderId = "12Rlda86qYgU6XkAfKzt4wMp__DBRq09o"
-        const moveGDriveFileToFolderAdapter: MoveGDriveFileToFolderAdapter =
-            buildMoveGDriveFileToFolderAdapter(gSuiteConfig)
-
-        // act
-        const result: boolean = await moveGDriveFileToFolderAdapter(fileId, targetFolderId)
-
-        // assert
-        expect(result).toBeTruthy()
     })
 
     xit("Updates file parents", async () => {

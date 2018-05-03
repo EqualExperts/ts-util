@@ -41,6 +41,15 @@ export type GDriveFileMetaInfoDto = {
     createdTime?: string,
     modifiedTime?: string,
     parents?: string[],
+    owners?: GDriveFileOwnerDto[]
+}
+
+export type GDriveFileOwnerDto = {
+    permissionId: string,
+    emailAddress: string,
+    displayName?: string,
+    photoLink?: string,
+    me?: boolean,
 }
 
 export type GDrivePermissionDto = {
@@ -60,6 +69,9 @@ export const GDRIVE_SCOPES_READ: string[] = ["https://www.googleapis.com/auth/dr
 export const GDRIVE_SCOPES_WRITE: string[] = ["https://www.googleapis.com/auth/drive"]
 export const GDRIVE_VERSION = "v3"
 export const GDRIVE_FINDFILESINFOLDER_PAGELIMIT = 1000
+export const GDRIVE_LIST_ORDERBY = "createdTime desc"
+export const GDRIVE_FILE_FIELDS =
+    "id, mimeType, name, fileExtension, size, trashed, createdTime, modifiedTime, parents, owners"
 
 export const buildGetGDriveFilesInFolderAdapter: BuildGetGDriveFilesInFolderAdapter = (gSuiteConfig: GSuiteConfig) => {
     const gsuiteClient = buildGSuiteClient(gSuiteConfig, GDRIVE_SCOPES_READ)
@@ -172,7 +184,7 @@ const readGDriveFileAsync: ReadGDriveFileAsyncHandler = (gdriveClient, fileId, f
     })
 }
 
-const listGDriveFilesInFolder = (gSuiteClient: any, targetFolderId: string) => {
+const listGDriveFilesInFolder = (gSuiteClient: any, folderId: string) => {
     const gdrive = google.drive({
         version: GDRIVE_VERSION,
         auth: gSuiteClient
@@ -181,8 +193,9 @@ const listGDriveFilesInFolder = (gSuiteClient: any, targetFolderId: string) => {
         gdrive.files.list(
             {
                 pageSize: GDRIVE_FINDFILESINFOLDER_PAGELIMIT,
-                q: `'${targetFolderId}' in parents and trashed != true`,
-                fields: "files(id, mimeType, name, fileExtension, size, trashed, createdTime, modifiedTime, parents)"
+                q: `'${folderId}' in parents and trashed != true`,
+                fields: "files(" + GDRIVE_FILE_FIELDS + ")",
+                orderBy: GDRIVE_LIST_ORDERBY
             },
             (err: any, response: any) => {
                 if (err) {
@@ -201,7 +214,7 @@ const getGDriveFile = (gSuiteClient: any, fileId: string) => {
     return new Promise<any>((resolve, reject) => {
         gdrive.files.get({
             fileId,
-            fields: "id, mimeType, name, fileExtension, size, trashed, createdTime, modifiedTime, parents",
+            fields: GDRIVE_FILE_FIELDS,
         }, (err: any, result: any) => {
             if (err) {
             return reject(err)

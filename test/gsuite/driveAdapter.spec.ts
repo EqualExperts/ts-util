@@ -14,7 +14,8 @@ import {
     AddGDriveFilePermissionsAdapter,
     buildAddGDriveFilePermissionsAdapter,
     GDrivePermissionDto,
-    GDrivePermissionStatusDto
+    GDrivePermissionStatusDto,
+    GDriveFileMetaInfoDto
 } from "./../../src/gsuite/driveAdapter"
 import "jest"
 import * as fs from "fs"
@@ -66,11 +67,13 @@ describe("GDrive File Operations Adapter", async () => {
         const listGDriveFileInFolder: ListGDriveFilesInFolderAdapter = buildListGDriveFilesInFolderAdapter(gSuiteConfig)
 
         // act
-        const filelist: any[] = await listGDriveFileInFolder(operationsFolderId)
+        const filelist: GDriveFileMetaInfoDto[] = await listGDriveFileInFolder(operationsFolderId)
 
         // assert
         expect(filelist).toBeTruthy()
         expect(filelist).not.toHaveLength(0)
+        expect(filelist[0].owners).not.toHaveLength(0)
+        expect(filelist[0].owners[0].emailAddress).toBeTruthy()
     })
 
     xit("Moves file to folder", async () => {

@@ -23,12 +23,12 @@ export type ReadGDriveFileAsyncHandler = (gdriveClient: any, fileId: string, fil
 export type ListGDriveFilePermissionsAdapter = (fileId: string) => Promise<GDrivePermissionDto[]>
 export type BuildListGDriveFilePermissionsAdapter = (gSuiteConfig: GSuiteConfig) => ListGDriveFilePermissionsAdapter
 
-export type RemoveGDriveFilePermissionsAdapter = (fileId: string, permissionIds: string[]) =>
-    Promise<GDrivePermissionStatusDto[]>
+export type RemoveGDriveFilePermissionsAdapter =
+    (fileId: string, permissionIds: string[], impersonationEmail?: string) => Promise<GDrivePermissionStatusDto[]>
 export type BuildRemoveGDriveFilePermissionsAdapter = (gSuiteConfig: GSuiteConfig) => RemoveGDriveFilePermissionsAdapter
 
-export type AddGDriveFilePermissionsAdapter = (fileId: string, permissions: GDrivePermissionDto[]) =>
-    Promise<GDrivePermissionDto[]>
+export type AddGDriveFilePermissionsAdapter =
+    (fileId: string, permissions: GDrivePermissionDto[], impersonationEmail?: string) => Promise<GDrivePermissionDto[]>
 export type BuildAddGDriveFilePermissionsAdapter = (gSuiteConfig: GSuiteConfig) => AddGDriveFilePermissionsAdapter
 
 export type GDriveFileMetaInfoDto = {
@@ -110,8 +110,8 @@ export const buildListGDriveFilePermissionsAdapter: BuildListGDriveFilePermissio
 
 export const buildRemoveGDriveFilePermissionsAdapter: BuildRemoveGDriveFilePermissionsAdapter =
     (gSuiteConfig: GSuiteConfig) => {
-        const gsuiteClient = buildGSuiteClient(gSuiteConfig, GDRIVE_SCOPES_WRITE)
-        return async (fileId, permissionIds) => {
+        return async (fileId, permissionIds, impersonationEmail) => {
+            const gsuiteClient = buildGSuiteClient(gSuiteConfig, GDRIVE_SCOPES_WRITE, impersonationEmail)
             await authorize(gsuiteClient)
             return removeGDriveFilePermissions(gsuiteClient, fileId, permissionIds)
         }
@@ -119,8 +119,8 @@ export const buildRemoveGDriveFilePermissionsAdapter: BuildRemoveGDriveFilePermi
 
 export const buildAddGDriveFilePermissionsAdapter: BuildAddGDriveFilePermissionsAdapter =
     (gSuiteConfig: GSuiteConfig) => {
-        const gsuiteClient = buildGSuiteClient(gSuiteConfig, GDRIVE_SCOPES_WRITE)
-        return async (fileId, permissions) => {
+        return async (fileId, permissions, impersonationEmail) => {
+            const gsuiteClient = buildGSuiteClient(gSuiteConfig, GDRIVE_SCOPES_WRITE, impersonationEmail)
             await authorize(gsuiteClient)
             return addGDriveFilePermissions(gsuiteClient, fileId, permissions)
         }

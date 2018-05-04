@@ -130,17 +130,20 @@ describe("GDrive File Operations Adapter", async () => {
         const permissions: GDrivePermissionDto[] = [{
             role: "reader",
             type: "user",
-            emailAddress: "esoftware@tempemail.experts.pt"
+            emailAddress: "esoftware@tempemail.equalexperts.pt"
         }]
+        const impersonationEmail = "esoftware@tempemail.equalexperts.pt"
         const addGDriveFilePermissionsAdapter: AddGDriveFilePermissionsAdapter =
             buildAddGDriveFilePermissionsAdapter(gSuiteConfig)
-        const addResult: GDrivePermissionDto[] = await addGDriveFilePermissionsAdapter(fileId, permissions)
+        const addResult: GDrivePermissionDto[] =
+            await addGDriveFilePermissionsAdapter(fileId, permissions, impersonationEmail)
         const permissionIds = [addResult[0].id]
         const removeGDriveFilePermissionsAdapter: RemoveGDriveFilePermissionsAdapter =
             buildRemoveGDriveFilePermissionsAdapter(gSuiteConfig)
 
         // act
-        const result: GDrivePermissionStatusDto[] = await removeGDriveFilePermissionsAdapter(fileId, permissionIds)
+        const result: GDrivePermissionStatusDto[] =
+            await removeGDriveFilePermissionsAdapter(fileId, permissionIds, impersonationEmail)
 
         // assert
         expect(result.length).toBeGreaterThan(0)

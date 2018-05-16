@@ -43,7 +43,8 @@ beforeAll(async () => {
 })
 
 describe("Transactional Email Adapter", () => {
-    it("Sends a transactional email without attachments", () => {
+    xit("Sends a transactional email without attachments", () => {
+        // ABCD TYU HH
         const expectedResponseTo = {
             Status: "Accepted",
             MessageID: "<not relevant for the test>",
@@ -73,7 +74,7 @@ describe("Transactional Email Adapter", () => {
             .catch((error: SendTransactEmailErrorDto) => fail(`Expected to succeed: ${JSON.stringify(error)}`))
     })
 
-    it("Sends a transactional email with attachments", () => {
+    xit("Sends a transactional email with attachments", () => {
         const expectedResponseTo = {
             Status: "Accepted",
             MessageID: "<not relevant for the test>",
@@ -103,7 +104,7 @@ describe("Transactional Email Adapter", () => {
             .catch((error: SendTransactEmailErrorDto) => fail(`Expected to succeed: ${JSON.stringify(error)}`))
     })
 
-    it("Fails to send transaction email when the Smart Email Id is not valid", () => {
+    xit("Fails to send transaction email when the Smart Email Id is not valid", () => {
             const badSmartEmailDetails = { ...smartEmailDetails }
             badSmartEmailDetails.smartEmailID = "bad smart email id"
             const expectedResponse: SendTransactEmailErrorDto = {

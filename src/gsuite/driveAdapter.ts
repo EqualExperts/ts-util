@@ -7,8 +7,8 @@ import * as path from "path"
 export type GetGDriveFilesInFolderAdapter = (targetFolderId: string) => Promise<string[]>
 export type BuildGetGDriveFilesInFolderAdapter = (gSuiteConfig: GSuiteConfig) => GetGDriveFilesInFolderAdapter
 
-export type ListGDriveFilesInFolderAdapter = (folderId: string) => Promise<GDriveFileMetaInfoDto[]>
-export type BuildListGDriveFilesInFolderAdapter = (gSuiteConfig: GSuiteConfig) => ListGDriveFilesInFolderAdapter
+export type ListGDriveFilesInFoldersAdapter = (folderIds: string[]) => Promise<GDriveFileMetaInfoDto[]>
+export type BuildListGDriveFilesInFoldersAdapter = (gSuiteConfig: GSuiteConfig) => ListGDriveFilesInFoldersAdapter
 
 export type MoveGDriveFileToFolderAdapter = (fileId: string, targetFolderId: string) => Promise<boolean>
 export type BuildMoveGDriveFileToFolderAdapter = (gSuiteConfig: GSuiteConfig) => MoveGDriveFileToFolderAdapter
@@ -81,12 +81,12 @@ export const buildGetGDriveFilesInFolderAdapter: BuildGetGDriveFilesInFolderAdap
     }
 }
 
-export const buildListGDriveFilesInFolderAdapter: BuildListGDriveFilesInFolderAdapter =
+export const buildListGDriveFilesInFoldersAdapter: BuildListGDriveFilesInFoldersAdapter =
     (gSuiteConfig: GSuiteConfig) => {
         const gsuiteClient = buildGSuiteClient(gSuiteConfig, GDRIVE_SCOPES_READ)
-        return async (folderId) => {
+        return async (folderIds) => {
             await authorize(gsuiteClient)
-            return listGDriveFilesInFolder(gsuiteClient, folderId)
+            return listGDriveFilesInFolders(gsuiteClient, folderIds)
         }
     }
 
@@ -176,16 +176,18 @@ const readGDriveFileAsync: ReadGDriveFileAsyncHandler = (gdriveClient, fileId, f
     })
 }
 
-const listGDriveFilesInFolder = (gSuiteClient: any, folderId: string) => {
+const listGDriveFilesInFolders = (gSuiteClient: any, folderIds: string[]) => {
     const gdrive = google.drive({
         version: GDRIVE_VERSION,
         auth: gSuiteClient
     })
+    const parentsQuery = folderIds.map((folderId) => `'${folderId}' in parents`).join(" or ")
+    const query = `(${parentsQuery}) and trashed != true`
     return new Promise<GDriveFileMetaInfoDto[]>((resolve, reject) => {
         gdrive.files.list(
             {
                 pageSize: GDRIVE_FINDFILESINFOLDER_PAGELIMIT,
-                q: `'${folderId}' in parents and trashed != true`,
+                q: query,
                 fields: "files(" + GDRIVE_FILE_FIELDS + ")",
                 orderBy: GDRIVE_LIST_ORDERBY
             },

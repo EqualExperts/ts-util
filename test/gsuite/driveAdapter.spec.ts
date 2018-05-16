@@ -9,8 +9,8 @@ import { google } from "googleapis"
 import {
     GetGDriveFilesInFolderAdapter,
     buildGetGDriveFilesInFolderAdapter,
-    ListGDriveFilesInFolderAdapter,
-    buildListGDriveFilesInFolderAdapter,
+    ListGDriveFilesInFoldersAdapter,
+    buildListGDriveFilesInFoldersAdapter,
     UpdateGDriveFileParentFolderAdapter,
     buildUpdateGDriveFileParentFolderAdapter,
     ListGDriveFilePermissionsAdapter,
@@ -62,12 +62,13 @@ describe("GDrive File Operations Adapter", async () => {
         }
     })
 
-    it("List files in folder", async () => {
+    it("List files in folders", async () => {
         // arrange
-        const listGDriveFileInFolder: ListGDriveFilesInFolderAdapter = buildListGDriveFilesInFolderAdapter(gSuiteConfig)
+        const listGDriveFileInFolders: ListGDriveFilesInFoldersAdapter =
+            buildListGDriveFilesInFoldersAdapter(gSuiteConfig)
 
         // act
-        const filelist: GDriveFileMetaInfoDto[] = await listGDriveFileInFolder(operationsFolderId)
+        const filelist: GDriveFileMetaInfoDto[] = await listGDriveFileInFolders([operationsFolderId])
 
         // assert
         expect(filelist).toBeTruthy()

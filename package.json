@@ -1,6 +1,6 @@
 {
     "name": "ee-ts-util",
-    "version": "14.1.0",
+    "version": "14.1.1",
     "description": "typescript utilities and functions",
     "main": "lib/index.js",
     "scripts": {
@@ -54,8 +54,8 @@
         "@types/node": "^8.0.47",
         "@types/nodemailer": "^4.3.1",
         "@types/ramda": "^0.25.8",
-        "jest": "^21.2.1",
-        "ts-jest": "^21.1.4",
+        "jest": "^22.4.0",
+        "ts-jest": "^22.4.6",
         "tslint": "^5.8.0",
         "typescript": "^2.5.3"
     },
@@ -67,7 +67,7 @@
         "fp-ts": "^0.6.2",
         "googleapis": "^26.0.1",
         "isomorphic-fetch": "^2.2.1",
-        "log4js": "^2.5.3",
+        "log4js": "^2.7.0",
         "mime-types": "^2.1.18",
         "moment": "^2.21.0",
         "mongodb": "^2.2.33",

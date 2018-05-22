@@ -50,6 +50,8 @@ describe("10K Feet Time Entries", () => {
         expect(firstResult.projectOrPhaseEndDate).toBe("2018-03-23")
         expect(firstResult.resourceStartDateOnProjectOrPhase).toBe("2017-11-24")
         expect(firstResult.resourceEndDateOnProjectOrPhase).toBe("2018-03-23")
+        expect(firstResult.createdAt).toBe("2017-11-24T16:11:22Z")
+        expect(firstResult.updatedAt).toBe("2017-11-24T16:11:22Z")
 
         expect(firstResult.status).toEqual([{
             approvable_id: 788396,

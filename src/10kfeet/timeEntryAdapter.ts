@@ -34,6 +34,8 @@ export type TimeEntryDto = {
     billable: boolean,
     approved: boolean,
     hourlyBillRate: number,
+    createdAt: string,
+    updatedAt: string,
     status: StatusDto[],
 }
 
@@ -167,6 +169,8 @@ export const extractDto =
         approved: toApprovedOrNot(element.approvals.data),
         status: element.approvals.data,
         hourlyBillRate: element.bill_rate,
+        createdAt: element.created_at,
+        updatedAt: element.updated_at,
     } as TimeEntryDto)
 
 // TODO RF : 27/12/2017 : We have a small dillema here (here comes the story):

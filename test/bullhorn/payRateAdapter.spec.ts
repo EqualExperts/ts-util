@@ -19,7 +19,7 @@ beforeAll(async () => {
 })
 
 describe("Pay rates from Bullhorn", async () => {
-    it("Fetches Pay rate for a given email addresses", async () => {
+    xit("Fetches Pay rate for a given email addresses", async () => {
         // given hhh hh hhhhh
         const bhClient: BullhornClient = await buildBullhornClient(bhConfig)
         const bhPayRateAdapter: BullhornPayRateAdapter = buildBullhornPayRateAdapter(bhClient)

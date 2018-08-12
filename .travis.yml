@@ -51,7 +51,7 @@ env:
 deploy:
   provider: npm
   email: esoftware@equalexperts.com
-  api_key: "1b62b865-24e0-4fd9-9078-41033bbee10f"
+  api_key: "$NPM_TOKEN"
   skip_cleanup: true
 notifications:
   slack: equalexperts:O2ZGWAhxKaIHSH3EV5TdvOYX

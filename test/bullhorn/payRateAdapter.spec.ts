@@ -14,13 +14,13 @@ beforeAll(async () => {
     originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 15000
 
-    const config = loadBHConfig()
-    bhConfig = buildBullhornConfig(config)
+    // const config = loadBHConfig()
+    bhConfig = buildBullhornConfig()
 })
 
 describe("Pay rates from Bullhorn", async () => {
     it("Fetches Pay rate for a given email addresses", async () => {
-        // given
+        // given hhh hh hhhhh
         const bhClient: BullhornClient = await buildBullhornClient(bhConfig)
         const bhPayRateAdapter: BullhornPayRateAdapter = buildBullhornPayRateAdapter(bhClient)
         const pferreiraEmail = "pferreira@equalexperts.com"
@@ -97,14 +97,14 @@ const loadBHConfig = () => {
     )
 }
 
-const buildBullhornConfig: (conf: (key: string) => string) => BullhornConfig = (conf: (key: string) => string) => {
+const buildBullhornConfig = () => {
     return {
-        bhServer: conf("BH_SERVER"),
-        bhAuthServer: conf("BH_AUTH_SERVER"),
-        bhClientId: conf("BH_CLIENT_ID"),
-        bhSecret: conf("BH_SECRET"),
-        bhUserName: conf("BH_USER_NAME"),
-        bhPassowrd: conf("BH_PASSWORD"),
+        bhServer: "https://rest.bullhornstaffing.com",
+        bhAuthServer: "https://auth.bullhornstaffing.com",
+        bhClientId: "7caeef4e-cb37-4cd8-83c7-b17717c8b69b",
+        bhSecret: "qdAupH00ZqEvj0WTtA3kClPRYXZXC0C2",
+        bhUserName: "equalexpertsapi",
+        bhPassowrd: "apiEE2018!"
     }
 }
 

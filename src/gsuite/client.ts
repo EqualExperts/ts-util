@@ -29,7 +29,7 @@ export const authorize = (gSuiteClient: any) => {
     return new Promise((resolve, reject) => {
         gSuiteClient.authorize((err: any, tokens: any) => {
             if (err) {
-                return reject(err)
+                return reject("GSuite Authorization Error -" + err + " " + JSON.stringify(err))
             }
             return resolve(tokens)
         })

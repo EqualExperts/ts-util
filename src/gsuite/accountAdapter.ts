@@ -77,7 +77,7 @@ const createAccount = (gSuiteClient: any, resource: any): Promise<AccountResultD
             resource,
         }, (err: any, response: any) => {
             if (err) {
-                return reject(err)
+                return reject("GSuite Create Account Error -" + err + " " + JSON.stringify(err))
             }
             return resolve(response.data as AccountResultDto)
         })
@@ -92,7 +92,7 @@ const removeAccount = (gSuiteClient: any, userEmail: string): Promise<boolean> =
             userKey: userEmail,
         }, (err: any, response: any) => {
             if (err) {
-                return reject(err)
+                return reject("GSuite Remove Account Error -" + err + " " + JSON.stringify(err))
             }
             return resolve(response.status === 204)
         })
@@ -109,7 +109,7 @@ const listAccounts = (gsuiteClient: any, listAccountsOptions: GSuiteListAccountO
             ...listAccountsOptions
         }, (err: any, response: any) => {
             if (err) {
-                return reject(err)
+                return reject("GSuite List Account Error -" + err + " " + JSON.stringify(err))
             }
             return resolve(response.data.users ?
                 response.data.users.map((user: any) => user as AccountResultDto) :

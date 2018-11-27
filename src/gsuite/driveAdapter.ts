@@ -193,7 +193,7 @@ const listGDriveFilesInFolders = (gSuiteClient: any, folderIds: string[]) => {
             },
             (err: any, response: any) => {
                 if (err) {
-                    reject("GSuite List Files Error -" + err + " " + JSON.stringify(err))
+                    reject("GSuite List Files Error -" + err)
                 }
                 resolve(response.data.files as GDriveFileMetaInfoDto[])
             })
@@ -211,7 +211,7 @@ const getGDriveFile = (gSuiteClient: any, fileId: string) => {
             fields: GDRIVE_FILE_FIELDS,
         }, (err: any, result: any) => {
             if (err) {
-                return reject("GSuite Get GDrive Files Error -" + err + " " + JSON.stringify(err))
+                return reject("GSuite Get GDrive Files Error -" + err)
             }
             resolve(result.data as GDriveFileMetaInfoDto)
         })
@@ -233,7 +233,7 @@ const updateGDriveFileParentFolder =
                 fields: "id, parents"
             }, (err: any) => {
                 if (err) {
-                    return reject("GSuite move folder Error  -" + err + " " + JSON.stringify(err))
+                    return reject("GSuite move folder Error  -" + err)
                 }
                 resolve(true)
             })
@@ -252,7 +252,7 @@ const listGDriveFilePermissions =
                 fields: "*",
             }, (err: any, result: any) => {
                 if (err) {
-                    return reject("GSuite List GDrive File Permission -" + err + " " + JSON.stringify(err))
+                    return reject("GSuite List GDrive File Permission -" + err)
                 }
                 resolve(result.data.permissions as GDrivePermissionDto[])
             })
@@ -272,7 +272,7 @@ const removeGDriveFilePermissions =
                     permissionId,
                 }, (err: any, result: any) => {
                     if (err) {
-                        return reject("GSuite Remove GDrive File Permission -" + err + " " + JSON.stringify(err))
+                        return reject("GSuite Remove GDrive File Permission -" + err)
                     }
                     resolve({
                         fileId,
@@ -303,7 +303,7 @@ const addGDriveFilePermissions =
                     resource,
                 }, (err: any, result: any) => {
                     if (err) {
-                        return reject("GSuite Add GDrive File Permission -" + err + " " + JSON.stringify(err))
+                        return reject("GSuite Add GDrive File Permission -" + err)
                     }
                     resolve(result.data as GDrivePermissionDto)
                 })

@@ -163,7 +163,7 @@ const readGDriveFileAsync: ReadGDriveFileAsyncHandler = (gdriveClient, fileId, f
             { responseType: "stream" },
             (fgetError: any, fgetResp: any) => {
                 if (fgetError) {
-                    reject("GSuite Read File Error -" + fgetError + " " + JSON.stringify(fgetError))
+                    reject("GSuite Read File Error -" + fgetError)
                 }
                 const relativePath = path.join(os.tmpdir(), fileName)
                 const dest = fs.createWriteStream(relativePath)

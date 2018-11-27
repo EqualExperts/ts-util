@@ -140,7 +140,7 @@ const getGDriveFilesInFolder = async (gSuiteClient: any, targetFolderId: string)
             },
             (err: any, response: any) => {
                 if (err) {
-                    reject("GSuite Get Files and Folders Error - " + err + " " + JSON.stringify(err))
+                    reject("GSuite Get Files and Folders Error - " + err)
                 }
                 const files = response.data.files
                 if (!files || files.length === 0) {

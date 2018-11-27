@@ -3,8 +3,7 @@ import * as fs from "fs"
 import * as path from "path"
 import {
     buildFetchAssignmentsAdapter,
-    AssignmentDto,
-    fetchAssignmentsAdapter
+    AssignmentDto
 } from "../../src/10kfeet/assignmentsAdapter"
 import { buildConfigAdapter } from "../../src/config/adapter"
 
@@ -32,7 +31,7 @@ describe("10K Feet Assignment Adapter", () => {
     it("fetchs assignments for a project", async () => {
         const projectId = 10291
 
-        const underTest: fetchAssignmentsForAProjectAdapter = buildFetchAssignmentsAdapter(baseUrl, token)
+        const underTest = buildFetchAssignmentsAdapter(baseUrl, token)
         const result = await underTest(projectId)
 
         const expectedPhases: AssignmentDto[] = [

@@ -67,7 +67,7 @@
         "fp-ts": "^0.6.8",
         "googleapis": "^26.0.1",
         "isomorphic-fetch": "^2.2.1",
-        "log4js": "^3.0.6",
+        "log4js": "^6.4.0",
         "mime-types": "^2.1.21",
         "moment": "^2.22.2",
         "mongodb": "^2.2.36",

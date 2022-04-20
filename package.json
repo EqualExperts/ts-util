@@ -62,7 +62,7 @@
     "dependencies": {
         "@types/mime-types": "^2.1.0",
         "bullhorn-client": "git+https://github.com/EqualExperts/bullhorn.git#164d2fe355da360291ebfbd55076665d365c282d",
-        "convict": "^4.4.0",
+        "convict": "^6.2.2",
         "createsend-node": "^0.8.2",
         "fp-ts": "^0.6.8",
         "googleapis": "^26.0.1",
